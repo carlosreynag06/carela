@@ -203,7 +203,7 @@ function ServicesPreview() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 2xl:grid-cols-4">
           {services.map((service, index) => {
             const Icon = service.icon;
 
