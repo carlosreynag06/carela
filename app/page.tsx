@@ -602,14 +602,22 @@ function TestimonialsSection() {
         <TestimonialsCarousel testimonials={testimonials} />
 
         <Reveal delay={0.12}>
-          <div className="mt-10 flex flex-col gap-5 border-t border-champagne-gold/14 pt-8 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-2xl font-serif text-2xl text-warm-cream">
-              Tu próxima experiencia de cuidado puede comenzar hoy.
-            </p>
+          <div className="relative mt-12 flex flex-col gap-6 overflow-hidden border border-champagne-gold/22 bg-background/72 px-6 py-6 shadow-premium before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-champagne-gold sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10 lg:py-8">
+            <div className="flex items-center gap-5">
+              <span
+                className="hidden size-12 shrink-0 items-center justify-center border border-champagne-gold/35 bg-champagne-gold/10 text-champagne-gold sm:flex"
+                aria-hidden="true"
+              >
+                <Sparkles size={21} />
+              </span>
+              <p className="max-w-3xl font-serif text-2xl leading-snug text-warm-cream lg:text-3xl">
+                Tu próxima experiencia de cuidado puede comenzar hoy.
+              </p>
+            </div>
             <Button
+              className="shrink-0"
               href={whatsapp.url}
               icon={<MessageCircle size={18} />}
-              variant="secondary"
             >
               Hablar con Leidania
             </Button>
