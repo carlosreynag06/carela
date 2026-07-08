@@ -23,10 +23,40 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "CARELA Beauty & Wellness",
   description:
     "Belleza y bienestar personalizado con Leidania Carela en Puerto Plata.",
+  openGraph: {
+    title: "CARELA Beauty & Wellness",
+    description:
+      "Eleva tu belleza y tu bienestar con una experiencia personalizada en Puerto Plata.",
+    type: "website",
+    locale: "es_DO",
+    siteName: "CARELA Beauty & Wellness",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1731,
+        height: 909,
+        alt: "CARELA Beauty & Wellness - Eleva tu Belleza y tu Bienestar",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CARELA Beauty & Wellness",
+    description:
+      "Eleva tu belleza y tu bienestar con una experiencia personalizada en Puerto Plata.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function RootLayout({
