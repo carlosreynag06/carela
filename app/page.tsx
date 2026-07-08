@@ -467,64 +467,52 @@ function HowItWorksSection() {
 
 function BoutiqueExperience() {
   return (
-    <Section spacing="lg" tone="charcoal">
-      <Container>
-        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <Reveal>
-            <ImageFrame priority="feature" className="aspect-[16/11] min-h-0">
-              <Image
-                src="/images/hero-carela-spa.png"
-                alt="Ambiente boutique de spa con velas, toallas y detalles cálidos"
-                fill
-                sizes="(min-width: 1024px) 45vw, 86vw"
-                className="object-cover object-center"
-              />
-              <div className="absolute bottom-5 left-5 z-20 border border-champagne-gold/20 bg-background/72 px-5 py-4 backdrop-blur-md">
-                <p className="font-script text-3xl text-rose-pink">CARELA</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.24em] text-soft-gold">
-                  Puerto Plata, RD
-                </p>
-              </div>
-            </ImageFrame>
-          </Reveal>
+    <Section
+      className="isolate min-h-[340px] border-y border-champagne-gold/12"
+      spacing="none"
+      tone="black"
+    >
+      <Image
+        src="/images/boutique-experience-divider.png"
+        alt=""
+        fill
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.9),rgba(5,3,4,0.72)_46%,rgba(5,3,4,0.38))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(217,75,140,0.18),transparent_34%)]" />
 
-          <Reveal delay={0.12}>
-            <PremiumCard className="relative overflow-hidden p-7 sm:p-9">
-              <div className="absolute right-0 top-0 size-48 bg-[radial-gradient(circle,rgba(217,75,140,0.16),transparent_68%)]" />
-              <div className="relative">
-                <DecorativeDivider />
-                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-                  Experiencia boutique
-                </p>
-                <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
-                  Una experiencia privada, cálida y pensada solo para ti
-                </h2>
-                <p className="mt-6 text-lead text-muted-taupe">
-                  En CARELA Beauty & Wellness, cada cita se trabaja con calma,
-                  detalle y atención personalizada. No se trata solo de recibir
-                  un servicio, sino de regalarte un momento para desconectarte,
-                  verte mejor y volver a sentirte en balance.
-                </p>
-
-                <div className="mt-8 flex flex-wrap gap-3">
-                  {boutiqueBenefits.map((benefit) => (
-                    <span
-                      key={benefit}
-                      className="inline-flex items-center gap-2 border border-champagne-gold/18 bg-background/45 px-4 py-3 text-sm text-warm-cream/82"
-                    >
-                      <CheckCircle2
-                        className="text-champagne-gold"
-                        size={16}
-                        aria-hidden
-                      />
-                      {benefit}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </PremiumCard>
-          </Reveal>
-        </div>
+      <Container className="relative z-10 flex min-h-[340px] items-center py-12">
+        <Reveal>
+          <div className="max-w-4xl">
+            <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+              Experiencia boutique
+            </p>
+            <h2 className="mt-4 max-w-3xl font-serif text-4xl leading-tight text-champagne-gold text-balance sm:text-5xl">
+              Una experiencia privada, cálida y pensada solo para ti
+            </h2>
+            <p className="mt-5 max-w-2xl text-copy text-warm-cream/82">
+              Cada cita se trabaja con calma, detalle y atención personalizada
+              para que puedas desconectarte, verte mejor y volver a sentirte en
+              balance.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {boutiqueBenefits.map((benefit) => (
+                <span
+                  key={benefit}
+                  className="inline-flex items-center gap-2 border border-champagne-gold/22 bg-background/62 px-4 py-2.5 text-sm text-warm-cream/86 backdrop-blur-md"
+                >
+                  <CheckCircle2
+                    className="text-champagne-gold"
+                    size={16}
+                    aria-hidden
+                  />
+                  {benefit}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </Container>
     </Section>
   );
