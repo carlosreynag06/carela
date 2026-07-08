@@ -2,7 +2,7 @@ export const navItems = [
   { label: "Inicio", href: "/" },
   { label: "Servicios", href: "/servicios" },
   { label: "Sobre Leidania", href: "/sobre-leidania" },
-  { label: "Experiencia", href: "/experiencia" },
+  { label: "Testimonios", href: "/testimonios" },
   { label: "Galeria", href: "/galeria" },
-  { label: "Reservar", href: "/reservar" },
+  { label: "Precios", href: "/precios" },
 ] as const;

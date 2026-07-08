@@ -20,6 +20,7 @@ import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { services } from "@/data/services";
+import { testimonials } from "@/data/testimonials";
 import { whatsapp } from "@/lib/site";
 
 const boutiqueBenefits = [
@@ -70,49 +71,6 @@ const howItWorksItems = [
     description:
       "Leidania organiza la experiencia para que recibas una atención tranquila y cuidada.",
     icon: House,
-  },
-];
-
-const testimonials = [
-  {
-    name: "Laura Méndez",
-    initials: "LM",
-    service: "Masajes relajantes y terapéuticos",
-    image: "/images/testimonial-masajes.png",
-    imageAlt:
-      "Mujer relajada después de una experiencia de masaje en un spa",
-    quote:
-      "Llegué con mucha tensión en los hombros y salí sintiéndome ligera y tranquila. La atención fue muy personal y el ambiente me permitió desconectarme de verdad.",
-  },
-  {
-    name: "Camila Rodríguez",
-    initials: "CR",
-    service: "Tintado de cejas",
-    image: "/images/testimonial-cejas.png",
-    imageAlt:
-      "Mujer admirando el resultado natural de sus cejas frente a un espejo",
-    quote:
-      "Mis cejas quedaron definidas pero muy naturales. Me encantó que Leidania se tomara el tiempo de cuidar la forma y cada detalle del acabado.",
-  },
-  {
-    name: "Natalia Santos",
-    initials: "NS",
-    service: "Postura de pestañas",
-    image: "/images/testimonial-pestanas.png",
-    imageAlt:
-      "Mujer mostrando el acabado elegante de sus pestañas en un ambiente de spa",
-    quote:
-      "El resultado quedó delicado, femenino y cómodo. Mis ojos se ven más expresivos sin sentirse exagerados, exactamente como lo quería.",
-  },
-  {
-    name: "Isabel Peña",
-    initials: "IP",
-    service: "Depilación con cera",
-    image: "/images/testimonial-depilacion.png",
-    imageAlt:
-      "Productos de cuidado calmante para la piel después de una depilación",
-    quote:
-      "Todo fue limpio, cuidadoso y profesional. Mi piel quedó suave y me sentí cómoda durante todo el servicio, de principio a fin.",
   },
 ];
 
@@ -179,7 +137,7 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,3,4,0.62)_0%,rgba(5,3,4,0.12)_42%,rgba(5,3,4,0.8)_100%)]" />
 
       <Container className="relative z-10 flex min-h-svh items-center pt-28">
-        <div className="grid w-full items-center gap-12 py-16 lg:grid-cols-[minmax(0,0.92fr)_minmax(280px,0.48fr)]">
+        <div className="grid w-full items-center gap-12 py-16 lg:grid-cols-[minmax(0,0.9fr)_minmax(380px,0.62fr)]">
           <Reveal>
             <div className="max-w-3xl">
               <DecorativeDivider />
@@ -216,7 +174,7 @@ function Hero() {
           </Reveal>
 
           <Reveal delay={0.12}>
-            <div className="hidden border border-champagne-gold/20 bg-background/48 p-5 shadow-premium backdrop-blur-md lg:block">
+            <div className="hidden aspect-square w-full max-w-[500px] flex-col justify-center justify-self-end border border-champagne-gold/20 bg-background/48 p-8 shadow-premium backdrop-blur-md lg:flex xl:p-10">
               <p className="font-script text-3xl text-rose-pink">
                 CARELA
               </p>
