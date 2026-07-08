@@ -1,7 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight, CheckCircle2, Heart, Sparkles, Stars } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarCheck,
+  CheckCircle2,
+  Heart,
+  House,
+  MessageCircle,
+  ShieldCheck,
+  Sparkles,
+  Stars,
+} from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { DecorativeDivider } from "@/components/DecorativeDivider";
@@ -43,12 +53,59 @@ const massageBenefits = [
   "Modalidad en espacio privado o a domicilio",
 ];
 
+const whyUsItems = [
+  {
+    title: "Trato personal",
+    description:
+      "Cada cita se atiende con calma, escucha y cuidado directo, sin sentirte apurada.",
+    icon: Heart,
+  },
+  {
+    title: "Ambiente cuidado",
+    description:
+      "Una experiencia íntima, limpia y acogedora, con detalles pensados para relajarte.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Belleza con buen gusto",
+    description:
+      "Servicios trabajados con un acabado femenino, natural y elegante.",
+    icon: Sparkles,
+  },
+];
+
+const howItWorksItems = [
+  {
+    step: "01",
+    title: "Escríbenos por WhatsApp",
+    description:
+      "Cuéntanos qué servicio deseas y si prefieres espacio privado o atención a domicilio.",
+    icon: MessageCircle,
+  },
+  {
+    step: "02",
+    title: "Coordinamos los detalles",
+    description:
+      "Se confirma disponibilidad, horario, modalidad y cualquier detalle importante.",
+    icon: CalendarCheck,
+  },
+  {
+    step: "03",
+    title: "Preparamos tu momento",
+    description:
+      "Leidania organiza la experiencia para que recibas una atención tranquila y cuidada.",
+    icon: House,
+  },
+];
+
 export default function Home() {
   return (
     <>
       <Hero />
       <BrandEssenceStrip />
       <ServicesPreview />
+      <WhyUsSection />
+      <HowItWorksSection />
       <BoutiqueExperience />
       <FeaturedMassage />
       <BookingCTASection />
@@ -265,6 +322,144 @@ function ServicesPreview() {
             );
           })}
         </div>
+      </Container>
+    </Section>
+  );
+}
+
+function WhyUsSection() {
+  return (
+    <Section className="border-t border-champagne-gold/12" spacing="lg" tone="charcoal">
+      <Container>
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <Reveal>
+            <ImageFrame className="aspect-[4/5] min-h-0">
+              <Image
+                src="/images/why-carela-dominican-spa.png"
+                alt="Mujer dominicana adulta en uniforme negro preparando toallas en un ambiente spa"
+                fill
+                sizes="(min-width: 1024px) 38vw, 86vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute inset-x-5 bottom-5 z-20 border border-champagne-gold/20 bg-background/76 p-5 backdrop-blur-md">
+                <p className="font-script text-3xl text-rose-pink">
+                  Cuidado boutique
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-taupe">
+                  Una experiencia cercana, elegante y pensada para mujeres que
+                  quieren sentirse bien atendidas.
+                </p>
+              </div>
+            </ImageFrame>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <div>
+              <DecorativeDivider />
+              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                Por qué elegir CARELA
+              </p>
+              <h2 className="mt-4 max-w-4xl font-serif text-section-title text-champagne-gold text-balance">
+                Una atención más personal, más tranquila y más tuya
+              </h2>
+              <p className="mt-6 max-w-2xl text-lead text-muted-taupe">
+                CARELA Beauty & Wellness está pensado para que cada servicio se
+                sienta privado, cuidado y especial. Aquí la belleza y el
+                bienestar se trabajan con detalle, buen gusto y una presencia
+                cálida.
+              </p>
+
+              <div className="mt-9 grid gap-4 md:grid-cols-3">
+                {whyUsItems.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <PremiumCard key={item.title} interactive className="p-5">
+                      <div className="flex size-11 items-center justify-center border border-champagne-gold/28 bg-background/52 text-champagne-gold">
+                        <Icon size={20} aria-hidden />
+                      </div>
+                      <h3 className="mt-5 font-serif text-2xl text-warm-cream">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-muted-taupe">
+                        {item.description}
+                      </p>
+                    </PremiumCard>
+                  );
+                })}
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function HowItWorksSection() {
+  return (
+    <Section className="border-y border-champagne-gold/12" spacing="lg" tone="black">
+      <Container>
+        <Reveal>
+          <div className="grid gap-8 lg:grid-cols-[0.78fr_1fr] lg:items-end">
+            <div>
+              <DecorativeDivider />
+              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                Cómo funciona
+              </p>
+              <h2 className="mt-4 max-w-3xl font-serif text-section-title text-champagne-gold text-balance">
+                Reservar tu momento de cuidado es sencillo
+              </h2>
+            </div>
+            <p className="max-w-xl text-lead text-muted-taupe">
+              El proceso es claro y directo para que puedas coordinar tu cita
+              con confianza, sin formularios complicados ni vueltas
+              innecesarias.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {howItWorksItems.map((item, index) => {
+            const Icon = item.icon;
+
+            return (
+              <Reveal key={item.step} delay={index * 0.08}>
+                <article className="group relative h-full overflow-hidden border border-champagne-gold/16 bg-warm-charcoal/72 p-6 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/45">
+                  <div className="absolute right-5 top-5 font-serif text-6xl leading-none text-champagne-gold/10">
+                    {item.step}
+                  </div>
+                  <div className="relative">
+                    <div className="flex size-12 items-center justify-center border border-champagne-gold/28 bg-background/58 text-champagne-gold">
+                      <Icon size={21} aria-hidden />
+                    </div>
+                    <p className="mt-8 text-eyebrow uppercase tracking-[0.24em] text-rose-pink">
+                      Paso {item.step}
+                    </p>
+                    <h3 className="mt-3 font-serif text-3xl text-warm-cream">
+                      {item.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-muted-taupe">
+                      {item.description}
+                    </p>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <Reveal delay={0.18}>
+          <div className="mt-10 flex flex-col gap-4 border-t border-champagne-gold/12 pt-7 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-2xl text-sm leading-7 text-muted-taupe">
+              La disponibilidad puede variar según el servicio, la zona y el
+              horario.
+            </p>
+            <Button href={whatsapp.url} icon={<ArrowRight size={18} />}>
+              Coordinar por WhatsApp
+            </Button>
+          </div>
+        </Reveal>
       </Container>
     </Section>
   );
