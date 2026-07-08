@@ -73,7 +73,7 @@ Status: completed
 
 Status: completed
 
-- Add Relajate, Realza tu belleza, Brilla diferente.
+- Add Relajate, Eleva tu belleza, Brilla diferente.
 - Add short supporting copy.
 - Build elegant horizontal layout.
 - Build mobile stacked layout.

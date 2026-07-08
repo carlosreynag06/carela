@@ -46,7 +46,7 @@ export const services: Service[] = [
     title: "Tintado de cejas",
     shortTitle: "Cejas",
     description: "Define tu mirada con un acabado natural, limpio y elegante.",
-    benefit: "Para realzar tu expresión sin perder naturalidad.",
+    benefit: "Para elevar tu expresión sin perder naturalidad.",
     imageKey: "beauty-detail",
     imageSrc: "/images/service-cejas-v2.png",
     imageAlt: "Mujer recibiendo tintado de cejas con cuidado profesional",
@@ -65,7 +65,7 @@ export const services: Service[] = [
     title: "Postura de pestañas",
     shortTitle: "Pestañas",
     description:
-    "Realza tus ojos con un resultado femenino, delicado y favorecedor.",
+    "Eleva tus ojos con un resultado femenino, delicado y favorecedor.",
     benefit: "Para sentirte arreglada con un detalle suave y elegante.",
     imageKey: "lashes-detail",
     imageSrc: "/images/service-pestanas-v2.png",

@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { DecorativeDivider } from "@/components/DecorativeDivider";
+import { FAQAccordion } from "@/components/FAQAccordion";
 import { ImageFrame } from "@/components/ImageFrame";
 import { PremiumCard } from "@/components/PremiumCard";
 import { Reveal } from "@/components/Reveal";
@@ -30,7 +31,7 @@ const essenceItems = [
     icon: Heart,
   },
   {
-    title: "Realza tu belleza",
+    title: "Eleva tu belleza",
     description: "Detalles cuidados para verte más pulida y natural.",
     icon: Sparkles,
   },
@@ -135,6 +136,39 @@ const testimonials = [
   },
 ];
 
+const faqItems = [
+  {
+    question: "¿Qué servicios ofrece CARELA?",
+    answer:
+      "Puedes reservar masajes relajantes y terapéuticos, tintado de cejas, postura de pestañas y depilación con cera. Cada servicio se adapta para que recibas una atención personal, tranquila y cuidada.",
+  },
+  {
+    question: "¿Puedo recibir el servicio a domicilio?",
+    answer:
+      "Sí. CARELA ofrece atención en un espacio privado y también a domicilio en Puerto Plata, según el servicio y la disponibilidad. Al escribir por WhatsApp coordinamos la modalidad que prefieras.",
+  },
+  {
+    question: "¿Cómo puedo reservar una cita?",
+    answer:
+      "Escríbele directamente a Leidania por WhatsApp e indica el servicio que deseas, tu horario preferido y si buscas atención privada o a domicilio. Recibirás la confirmación con todos los detalles.",
+  },
+  {
+    question: "¿Cómo debo prepararme para mi cita?",
+    answer:
+      "Al confirmar tu reserva recibirás indicaciones sencillas según el servicio elegido. Si tienes sensibilidad, alguna condición particular o una preferencia importante, coméntala antes de la cita.",
+  },
+  {
+    question: "¿Puedo combinar varios servicios?",
+    answer:
+      "Sí, siempre que el tiempo y la disponibilidad lo permitan. Cuéntale a Leidania qué experiencia deseas y ella te ayudará a organizar una combinación cómoda y armoniosa.",
+  },
+  {
+    question: "¿Qué servicio es mejor para mí?",
+    answer:
+      "Si todavía no estás segura, explica por WhatsApp cómo quieres sentirte o qué resultado buscas. Leidania te orientará personalmente para elegir la opción más adecuada.",
+  },
+];
+
 export default function Home() {
   return (
     <>
@@ -145,6 +179,7 @@ export default function Home() {
       <HowItWorksSection />
       <BoutiqueExperience />
       <TestimonialsSection />
+      <FAQSection />
       <BookingCTASection />
     </>
   );
@@ -277,7 +312,7 @@ function BrandEssenceStrip() {
 
           <div className="mt-9 flex flex-col gap-4 border-t border-champagne-gold/12 pt-6 text-sm leading-7 text-muted-taupe sm:flex-row sm:items-center sm:justify-between">
             <p>
-              Relájate. Realza tu belleza. Brilla diferente.
+              Relájate. Eleva tu belleza. Brilla diferente.
             </p>
             <Link
               href="/reservar"
@@ -620,6 +655,50 @@ function TestimonialsSection() {
   );
 }
 
+function FAQSection() {
+  return (
+    <Section
+      className="border-y border-champagne-gold/12"
+      id="preguntas-frecuentes"
+      spacing="lg"
+      tone="black"
+    >
+      <Container>
+        <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
+          <Reveal>
+            <div className="lg:sticky lg:top-32">
+              <DecorativeDivider />
+              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                Preguntas frecuentes
+              </p>
+              <h2 className="mt-4 max-w-2xl font-serif text-section-title text-champagne-gold text-balance">
+                Todo lo que necesitas saber antes de tu cita
+              </h2>
+              <p className="mt-6 max-w-xl text-lead text-muted-taupe">
+                Encuentra respuestas rápidas sobre los servicios, reservas y
+                modalidades de atención de CARELA.
+              </p>
+              <div className="mt-8">
+                <Button
+                  href={whatsapp.url}
+                  icon={<MessageCircle size={18} />}
+                  variant="secondary"
+                >
+                  Hacer otra pregunta
+                </Button>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <FAQAccordion items={faqItems} />
+          </Reveal>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
 function BookingCTASection() {
   return (
     <Section spacing="lg" tone="black">
@@ -659,7 +738,7 @@ function BookingCTASection() {
                   Reservar por WhatsApp
                 </Button>
                 <p className="max-w-xs text-sm leading-6 text-muted-taupe lg:text-right">
-                  Realza tu belleza. Relájate. Brilla diferente.
+                  Eleva tu belleza. Relájate. Brilla diferente.
                 </p>
               </div>
             </div>

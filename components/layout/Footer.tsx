@@ -28,7 +28,7 @@ export function Footer() {
             Beauty / Wellness / Confidence
           </p>
           <p className="mt-4 max-w-sm text-sm leading-7 text-muted-taupe">
-            Realza tu belleza. Relajate. Brilla diferente.
+            Eleva tu belleza. Relajate. Brilla diferente.
           </p>
           <div className="mt-7">
             <Button
