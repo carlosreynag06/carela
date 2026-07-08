@@ -51,6 +51,7 @@ export default function Home() {
       <ServicesPreview />
       <BoutiqueExperience />
       <FeaturedMassage />
+      <BookingCTASection />
     </>
   );
 }
@@ -406,6 +407,56 @@ function FeaturedMassage() {
             </div>
           </Reveal>
         </div>
+      </Container>
+    </Section>
+  );
+}
+
+function BookingCTASection() {
+  return (
+    <Section spacing="lg" tone="charcoal">
+      <Container>
+        <Reveal>
+          <div className="relative isolate overflow-hidden border border-champagne-gold/28 bg-background shadow-premium">
+            <Image
+              src="/images/hero-carela-spa.png"
+              alt=""
+              fill
+              sizes="86vw"
+              className="object-cover object-center opacity-34"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.96),rgba(5,3,4,0.82)_48%,rgba(5,3,4,0.58))]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(217,75,140,0.22),transparent_34%)]" />
+
+            <div className="relative z-10 grid gap-10 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-14">
+              <div className="max-w-3xl">
+                <DecorativeDivider />
+                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                  Reserva tu momento
+                </p>
+                <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
+                  Reserva tu momento de cuidado
+                </h2>
+                <p className="mt-6 max-w-2xl text-lead text-warm-cream/86">
+                  Escríbele a Leidania por WhatsApp y coordina el servicio,
+                  horario y modalidad que prefieras.
+                </p>
+                <p className="mt-5 text-sm uppercase tracking-[0.24em] text-soft-gold">
+                  Puerto Plata, República Dominicana
+                </p>
+              </div>
+
+              <div className="flex flex-col items-start gap-4 lg:items-end">
+                <Button href={whatsapp.url} icon={<ArrowRight size={18} />} size="lg">
+                  Reservar por WhatsApp
+                </Button>
+                <p className="max-w-xs text-sm leading-6 text-muted-taupe lg:text-right">
+                  Realza tu belleza. Relájate. Brilla diferente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </Container>
     </Section>
   );

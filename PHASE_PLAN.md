@@ -165,7 +165,7 @@ Stop after Phase 11.
 
 ## Phase 12 - Homepage Booking CTA
 
-Status: pending
+Status: completed
 
 - Add premium booking panel.
 - Add WhatsApp CTA.
