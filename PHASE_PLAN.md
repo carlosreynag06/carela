@@ -44,7 +44,7 @@ Stop after Phase 1.
 
 ## Phase 2 - Header + Footer
 
-Status: pending
+Status: completed
 
 - Build responsive Header.
 - Build desktop nav.
