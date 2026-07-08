@@ -203,20 +203,20 @@ function ServicesPreview() {
           </div>
         </Reveal>
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {services.map((service, index) => {
             const Icon = service.icon;
 
             return (
               <Reveal key={service.slug} delay={index * 0.08}>
                 <article className="group flex h-full flex-col overflow-hidden border border-champagne-gold/15 bg-warm-charcoal/70 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/45 hover:bg-warm-charcoal">
-                  <div className="relative aspect-[4/5] overflow-hidden bg-background">
+                  <div className="relative aspect-[16/11] overflow-hidden bg-background">
                     <Image
                       src={service.imageSrc}
                       alt={service.imageAlt}
                       fill
-                      sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition duration-700 group-hover:scale-105"
+                      sizes="(min-width: 1536px) 20vw, (min-width: 768px) 40vw, 80vw"
+                      className="object-cover object-center transition duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/8 to-transparent" />
                     <div className="absolute left-4 top-4 flex size-11 items-center justify-center border border-champagne-gold/35 bg-background/68 text-champagne-gold backdrop-blur">

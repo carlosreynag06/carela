@@ -3,7 +3,7 @@ import { ImagePlaceholder } from "@/components/brand/ImagePlaceholder";
 
 export default function ReservarPage() {
   return (
-    <section className="mx-auto grid min-h-[68vh] w-full max-w-[var(--max-site-width)] content-center gap-8 px-6 py-24 sm:px-8 lg:grid-cols-[1fr_380px]">
+    <section className="mx-auto grid min-h-[68vh] w-[var(--site-shell-width)] max-w-[var(--max-site-width)] content-center gap-8 py-24 lg:grid-cols-[1fr_380px]">
       <div>
         <p className="text-sm uppercase tracking-[0.28em] text-rose-pink">
           Fase 17

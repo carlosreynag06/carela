@@ -30,7 +30,7 @@ export const services: Service[] = [
     benefit: "Para relajarte, respirar mejor y salir renovada.",
     imageKey: "massage-room",
     imageSrc: "/images/service-masajes.png",
-    imageAlt: "Toallas, aceite y velas para un masaje relajante",
+    imageAlt: "Mujer recibiendo un masaje relajante en ambiente privado",
     icon: HandHeart,
     includes: [
       "Ambiente relajante",
@@ -49,7 +49,7 @@ export const services: Service[] = [
     benefit: "Para realzar tu expresión sin perder naturalidad.",
     imageKey: "beauty-detail",
     imageSrc: "/images/service-cejas.png",
-    imageAlt: "Herramientas elegantes para tintado de cejas",
+    imageAlt: "Mujer recibiendo tintado de cejas con cuidado profesional",
     icon: Eye,
     includes: [
       "Diseño visual cuidadoso",
@@ -69,7 +69,7 @@ export const services: Service[] = [
     benefit: "Para sentirte arreglada con un detalle suave y elegante.",
     imageKey: "lashes-detail",
     imageSrc: "/images/service-pestanas.png",
-    imageAlt: "Pestañas, pinzas y detalles dorados para postura de pestañas",
+    imageAlt: "Mujer recibiendo postura de pestañas en estudio boutique",
     icon: Sparkles,
     includes: [
       "Preparación cuidadosa",
@@ -89,7 +89,7 @@ export const services: Service[] = [
     benefit: "Para sentir la piel limpia, suave y bien cuidada.",
     imageKey: "waxing-prep",
     imageSrc: "/images/service-depilacion.png",
-    imageAlt: "Preparación elegante para depilación con cera",
+    imageAlt: "Depilación con cera en pierna con atención profesional",
     icon: Flower2,
     includes: [
       "Preparación del área",

@@ -11,7 +11,10 @@
   --candle-amber: #c77a38;
   --warm-cream: #f7efe7;
   --muted-taupe: #b8a49b;
-  --max-site-width: 1180px;
+  --site-edge-gap: 10vw;
+  --site-shell-width: calc(100vw - (var(--site-edge-gap) * 2));
+  --site-shell-max-width: 1680px;
+  --max-site-width: min(var(--site-shell-width), var(--site-shell-max-width));
   --section-space-sm: 4rem;
   --section-space-md: 6rem;
   --section-space-lg: 8rem;

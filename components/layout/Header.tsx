@@ -40,7 +40,7 @@ export function Header() {
           : "border-champagne-gold/10 bg-background/62 backdrop-blur-md",
       )}
     >
-      <div className="mx-auto flex h-20 w-full max-w-[var(--max-site-width)] items-center justify-between px-6 sm:px-8">
+      <div className="mx-auto flex h-20 w-[var(--site-shell-width)] max-w-[var(--max-site-width)] items-center justify-between">
         <Logo onClick={() => setMenuOpen(false)} />
 
         <nav
@@ -92,7 +92,7 @@ export function Header() {
             : "pointer-events-none -translate-y-4 opacity-0",
         )}
       >
-        <div className="mx-auto flex w-full max-w-[var(--max-site-width)] flex-col">
+        <div className="mx-auto flex w-[var(--site-shell-width)] max-w-[var(--max-site-width)] flex-col">
           <p className="flex items-center gap-2 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
             <Sparkles size={14} aria-hidden="true" />
             Beauty / Wellness / Confidence

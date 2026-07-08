@@ -10,7 +10,7 @@ type ContainerProps = {
 const sizeClasses = {
   default: "max-w-[var(--max-site-width)]",
   narrow: "max-w-4xl",
-  wide: "max-w-[1280px]",
+  wide: "max-w-[var(--site-shell-max-width)]",
 };
 
 export function Container({
@@ -19,7 +19,7 @@ export function Container({
   size = "default",
 }: ContainerProps) {
   return (
-    <div className={cn("mx-auto w-full px-6 sm:px-8", sizeClasses[size], className)}>
+    <div className={cn("mx-auto w-[var(--site-shell-width)]", sizeClasses[size], className)}>
       {children}
     </div>
   );

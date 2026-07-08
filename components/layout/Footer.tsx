@@ -13,7 +13,7 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/60 to-transparent" />
       <div className="absolute bottom-0 right-0 size-80 bg-[radial-gradient(circle,rgba(143,31,84,0.2),transparent_66%)]" />
 
-      <div className="relative mx-auto grid w-full max-w-[var(--max-site-width)] gap-10 px-6 py-14 sm:px-8 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr]">
+      <div className="relative mx-auto grid w-[var(--site-shell-width)] max-w-[var(--max-site-width)] gap-10 py-14 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr]">
         <div>
           <DecorativeDivider />
           <Link href="/" className="mt-6 block leading-none" aria-label="CARELA Inicio">
@@ -81,8 +81,8 @@ export function Footer() {
         </FooterColumn>
       </div>
 
-      <div className="relative border-t border-champagne-gold/12 px-6 py-5 sm:px-8">
-        <div className="mx-auto flex w-full max-w-[var(--max-site-width)] flex-col gap-2 text-xs text-muted-taupe sm:flex-row sm:items-center sm:justify-between">
+      <div className="relative border-t border-champagne-gold/12 py-5">
+        <div className="mx-auto flex w-[var(--site-shell-width)] max-w-[var(--max-site-width)] flex-col gap-2 text-xs text-muted-taupe sm:flex-row sm:items-center sm:justify-between">
           <p>{site.name}</p>
           <p>Atencion personalizada por {site.owner}</p>
         </div>
