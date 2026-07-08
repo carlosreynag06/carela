@@ -5,6 +5,8 @@ import { ArrowRight, CheckCircle2, Heart, Sparkles, Stars } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { DecorativeDivider } from "@/components/DecorativeDivider";
+import { ImageFrame } from "@/components/ImageFrame";
+import { PremiumCard } from "@/components/PremiumCard";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
 import { services } from "@/data/services";
@@ -28,12 +30,27 @@ const essenceItems = [
   },
 ];
 
+const boutiqueBenefits = [
+  "Atención directa de Leidania",
+  "Ambiente acogedor",
+  "Servicio a domicilio disponible",
+];
+
+const massageBenefits = [
+  "Ambiente tranquilo y preparado con detalle",
+  "Atención personalizada según cómo te sientas",
+  "Enfoque en zonas de tensión y cansancio",
+  "Modalidad en espacio privado o a domicilio",
+];
+
 export default function Home() {
   return (
     <>
       <Hero />
       <BrandEssenceStrip />
       <ServicesPreview />
+      <BoutiqueExperience />
+      <FeaturedMassage />
     </>
   );
 }
@@ -246,6 +263,148 @@ function ServicesPreview() {
               </Reveal>
             );
           })}
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function BoutiqueExperience() {
+  return (
+    <Section spacing="lg" tone="charcoal">
+      <Container>
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <Reveal>
+            <ImageFrame priority="feature" className="aspect-[16/11] min-h-0">
+              <Image
+                src="/images/hero-carela-spa.png"
+                alt="Ambiente boutique de spa con velas, toallas y detalles cálidos"
+                fill
+                sizes="(min-width: 1024px) 45vw, 86vw"
+                className="object-cover object-center"
+              />
+              <div className="absolute bottom-5 left-5 z-20 border border-champagne-gold/20 bg-background/72 px-5 py-4 backdrop-blur-md">
+                <p className="font-script text-3xl text-rose-pink">CARELA</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.24em] text-soft-gold">
+                  Puerto Plata, RD
+                </p>
+              </div>
+            </ImageFrame>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <PremiumCard className="relative overflow-hidden p-7 sm:p-9">
+              <div className="absolute right-0 top-0 size-48 bg-[radial-gradient(circle,rgba(217,75,140,0.16),transparent_68%)]" />
+              <div className="relative">
+                <DecorativeDivider />
+                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                  Experiencia boutique
+                </p>
+                <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
+                  Una experiencia privada, cálida y pensada solo para ti
+                </h2>
+                <p className="mt-6 text-lead text-muted-taupe">
+                  En CARELA Beauty & Wellness, cada cita se trabaja con calma,
+                  detalle y atención personalizada. No se trata solo de recibir
+                  un servicio, sino de regalarte un momento para desconectarte,
+                  verte mejor y volver a sentirte en balance.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  {boutiqueBenefits.map((benefit) => (
+                    <span
+                      key={benefit}
+                      className="inline-flex items-center gap-2 border border-champagne-gold/18 bg-background/45 px-4 py-3 text-sm text-warm-cream/82"
+                    >
+                      <CheckCircle2
+                        className="text-champagne-gold"
+                        size={16}
+                        aria-hidden
+                      />
+                      {benefit}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </PremiumCard>
+          </Reveal>
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function FeaturedMassage() {
+  return (
+    <Section className="border-y border-champagne-gold/12" spacing="lg" tone="black">
+      <Container>
+        <div className="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
+          <Reveal>
+            <div>
+              <DecorativeDivider />
+              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                Masajes
+              </p>
+              <h2 className="mt-4 max-w-3xl font-serif text-section-title text-champagne-gold text-balance">
+                Masajes para relajar el cuerpo y soltar la tensión
+              </h2>
+              <p className="mt-6 max-w-2xl text-lead text-muted-taupe">
+                Ideal para quienes sienten cansancio, estrés o tensión
+                acumulada. Leidania crea una experiencia tranquila y
+                personalizada para ayudarte a descansar, respirar mejor y salir
+                renovada.
+              </p>
+
+              <div className="mt-8 grid gap-3">
+                {massageBenefits.map((benefit) => (
+                  <span
+                    key={benefit}
+                    className="flex items-start gap-3 border-l border-champagne-gold/35 pl-4 text-sm leading-7 text-warm-cream/82"
+                  >
+                    <CheckCircle2
+                      className="mt-1 shrink-0 text-champagne-gold"
+                      size={17}
+                      aria-hidden
+                    />
+                    {benefit}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-9">
+                <Button href={whatsapp.url} icon={<ArrowRight size={18} />}>
+                  Quiero reservar un masaje
+                </Button>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.12}>
+            <div className="relative">
+              <div className="absolute -inset-4 bg-[radial-gradient(circle_at_50%_45%,rgba(143,31,84,0.24),transparent_62%)]" />
+              <ImageFrame
+                priority="feature"
+                className="relative aspect-[16/10] min-h-0 border-champagne-gold/35"
+              >
+                <Image
+                  src="/images/service-masajes-v2.png"
+                  alt="Mujer recibiendo masaje relajante en un ambiente cálido"
+                  fill
+                  sizes="(min-width: 1024px) 48vw, 86vw"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-x-5 bottom-5 z-20 border border-champagne-gold/20 bg-background/74 p-5 backdrop-blur-md sm:max-w-md">
+                  <p className="font-serif text-3xl text-warm-cream">
+                    Un momento para descansar
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-muted-taupe">
+                    Cuidado personal con ritmo tranquilo, atención directa y un
+                    ambiente preparado para relajarte.
+                  </p>
+                </div>
+              </ImageFrame>
+            </div>
+          </Reveal>
         </div>
       </Container>
     </Section>

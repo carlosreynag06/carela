@@ -97,7 +97,7 @@ Stop after Phase 5.
 
 ## Phase 6 - Homepage Boutique Experience Section
 
-Status: pending
+Status: completed
 
 - Build split layout.
 - Add image frame.
@@ -105,11 +105,10 @@ Status: pending
 - Add three benefit pills.
 - Add motion reveal.
 
-Stop after Phase 6.
 
 ## Phase 7 - Homepage Featured Massage Section
 
-Status: pending
+Status: completed
 
 - Add massage-focused copy.
 - Add large image.
