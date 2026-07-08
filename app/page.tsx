@@ -10,6 +10,7 @@ import {
   MessageCircle,
   ShieldCheck,
   Sparkles,
+  Star,
   Stars,
 } from "lucide-react";
 import { Button } from "@/components/Button";
@@ -98,6 +99,49 @@ const howItWorksItems = [
   },
 ];
 
+const testimonials = [
+  {
+    name: "Laura Méndez",
+    initials: "LM",
+    service: "Masajes relajantes y terapéuticos",
+    image: "/images/testimonial-masajes.png",
+    imageAlt:
+      "Mujer relajada después de una experiencia de masaje en un spa",
+    quote:
+      "Llegué con mucha tensión en los hombros y salí sintiéndome ligera y tranquila. La atención fue muy personal y el ambiente me permitió desconectarme de verdad.",
+  },
+  {
+    name: "Camila Rodríguez",
+    initials: "CR",
+    service: "Tintado de cejas",
+    image: "/images/testimonial-cejas.png",
+    imageAlt:
+      "Mujer admirando el resultado natural de sus cejas frente a un espejo",
+    quote:
+      "Mis cejas quedaron definidas pero muy naturales. Me encantó que Leidania se tomara el tiempo de cuidar la forma y cada detalle del acabado.",
+  },
+  {
+    name: "Natalia Santos",
+    initials: "NS",
+    service: "Postura de pestañas",
+    image: "/images/testimonial-pestanas.png",
+    imageAlt:
+      "Mujer mostrando el acabado elegante de sus pestañas en un ambiente de spa",
+    quote:
+      "El resultado quedó delicado, femenino y cómodo. Mis ojos se ven más expresivos sin sentirse exagerados, exactamente como lo quería.",
+  },
+  {
+    name: "Isabel Peña",
+    initials: "IP",
+    service: "Depilación con cera",
+    image: "/images/testimonial-depilacion.png",
+    imageAlt:
+      "Productos de cuidado calmante para la piel después de una depilación",
+    quote:
+      "Todo fue limpio, cuidadoso y profesional. Mi piel quedó suave y me sentí cómoda durante todo el servicio, de principio a fin.",
+  },
+];
+
 export default function Home() {
   return (
     <>
@@ -107,6 +151,7 @@ export default function Home() {
       <WhyUsSection />
       <HowItWorksSection />
       <BoutiqueExperience />
+      <TestimonialsSection />
       <FeaturedMassage />
       <BookingCTASection />
     </>
@@ -511,6 +556,116 @@ function BoutiqueExperience() {
                 </span>
               ))}
             </div>
+          </div>
+        </Reveal>
+      </Container>
+    </Section>
+  );
+}
+
+function TestimonialsSection() {
+  return (
+    <Section
+      className="border-b border-champagne-gold/12"
+      id="testimonios"
+      spacing="lg"
+      tone="charcoal"
+    >
+      <Container>
+        <Reveal>
+          <div className="grid gap-8 border-b border-champagne-gold/14 pb-10 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div className="max-w-4xl">
+              <DecorativeDivider />
+              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                Testimonios
+              </p>
+              <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
+                Experiencias que se sienten y se recuerdan
+              </h2>
+              <p className="mt-5 max-w-2xl text-lead text-muted-taupe">
+                Cuatro servicios, cuatro maneras de regalarte un momento de
+                cuidado hecho con atención, calma y detalle.
+              </p>
+            </div>
+
+            <Button
+              href={whatsapp.url}
+              icon={<ArrowRight size={18} />}
+              iconPosition="right"
+              size="lg"
+            >
+              Reservar mi cita
+            </Button>
+          </div>
+        </Reveal>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          {testimonials.map((testimonial, index) => (
+            <Reveal key={testimonial.name} delay={(index % 2) * 0.08}>
+              <article className="group flex h-full flex-col overflow-hidden border border-champagne-gold/16 bg-background/72 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/42">
+                <div className="flex items-center gap-4 p-5 sm:p-6">
+                  <span
+                    className="flex size-12 shrink-0 items-center justify-center border border-champagne-gold/38 bg-champagne-gold/10 font-serif text-lg text-champagne-gold"
+                    aria-hidden="true"
+                  >
+                    {testimonial.initials}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-serif text-2xl text-warm-cream">
+                      {testimonial.name}
+                    </h3>
+                    <p className="mt-1 text-xs uppercase tracking-[0.2em] text-rose-pink">
+                      {testimonial.service}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative aspect-[16/10] overflow-hidden border-y border-champagne-gold/12">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.imageAlt}
+                    fill
+                    sizes="(min-width: 768px) 43vw, 86vw"
+                    className="object-cover object-center transition duration-700 group-hover:scale-[1.025]"
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <div
+                    className="flex gap-1 text-champagne-gold"
+                    aria-label="5 de 5 estrellas"
+                  >
+                    {Array.from({ length: 5 }).map((_, starIndex) => (
+                      <Star
+                        key={starIndex}
+                        size={16}
+                        fill="currentColor"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </div>
+                  <blockquote className="mt-5 font-serif text-xl leading-8 text-warm-cream/92 sm:text-2xl sm:leading-9">
+                    “{testimonial.quote}”
+                  </blockquote>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.12}>
+          <div className="mt-10 flex flex-col gap-5 border-t border-champagne-gold/14 pt-8 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-2xl font-serif text-2xl text-warm-cream">
+              Tu próxima experiencia de cuidado puede comenzar hoy.
+            </p>
+            <Button
+              href={whatsapp.url}
+              icon={<MessageCircle size={18} />}
+              variant="secondary"
+            >
+              Hablar con Leidania
+            </Button>
           </div>
         </Reveal>
       </Container>
