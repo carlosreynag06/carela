@@ -58,7 +58,7 @@ Stop after Phase 2.
 
 ## Phase 3 - Homepage Hero
 
-Status: pending
+Status: completed
 
 - Build full premium hero layout.
 - Add background image or generated visual.
@@ -69,11 +69,9 @@ Status: pending
 - Add trust line.
 - Add motion reveal.
 
-Stop after Phase 3.
-
 ## Phase 4 - Homepage Brand Essence Strip
 
-Status: pending
+Status: completed
 
 - Add Relajate, Realza tu belleza, Brilla diferente.
 - Add short supporting copy.
