@@ -1,4 +1,5 @@
 import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/Button";
 import { whatsapp } from "@/lib/site";
 
 type WhatsAppCTAProps = {
@@ -11,14 +12,12 @@ export function WhatsAppCTA({
   label = "Reservar por WhatsApp",
 }: WhatsAppCTAProps) {
   return (
-    <a
+    <Button
       href={whatsapp.url}
-      target="_blank"
-      rel="noreferrer"
-      className="inline-flex items-center justify-center gap-2 border border-champagne-gold/45 bg-champagne-gold px-5 py-3 text-sm font-semibold text-background transition hover:border-soft-gold hover:bg-soft-gold"
+      icon={<MessageCircle size={compact ? 16 : 18} />}
+      size={compact ? "sm" : "md"}
     >
-      <MessageCircle aria-hidden="true" size={compact ? 16 : 18} />
-      <span>{compact ? "WhatsApp" : label}</span>
-    </a>
+      {compact ? "WhatsApp" : label}
+    </Button>
   );
 }

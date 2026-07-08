@@ -26,7 +26,7 @@ Stop after Phase 0.
 
 ## Phase 1 - Global Design System
 
-Status: pending
+Status: completed
 
 - Configure color tokens.
 - Configure typography scale.

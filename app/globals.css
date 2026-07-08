@@ -12,6 +12,9 @@
   --warm-cream: #f7efe7;
   --muted-taupe: #b8a49b;
   --max-site-width: 1180px;
+  --section-space-sm: 4rem;
+  --section-space-md: 6rem;
+  --section-space-lg: 8rem;
 }
 
 @theme inline {
@@ -28,6 +31,20 @@
   --font-sans: var(--font-carela-body);
   --font-serif: var(--font-carela-heading);
   --font-script: var(--font-carela-script);
+  --text-eyebrow: 0.78rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-copy: 1rem;
+  --text-copy--line-height: 1.8;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.8;
+  --text-section-title: clamp(2.5rem, 5vw, 4.75rem);
+  --text-section-title--line-height: 0.98;
+  --text-display: clamp(3.5rem, 8vw, 7rem);
+  --text-display--line-height: 0.92;
+  --spacing-section-sm: var(--section-space-sm);
+  --spacing-section-md: var(--section-space-md);
+  --spacing-section-lg: var(--section-space-lg);
+  --shadow-premium: 0 24px 80px rgba(143, 31, 84, 0.18);
 }
 
 * {
@@ -42,6 +59,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-carela-body), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -52,4 +70,8 @@ a {
 ::selection {
   background: color-mix(in srgb, var(--rose-pink) 45%, transparent);
   color: var(--warm-cream);
+}
+
+.text-balance {
+  text-wrap: balance;
 }
