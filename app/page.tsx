@@ -47,13 +47,6 @@ const boutiqueBenefits = [
   "Servicio a domicilio disponible",
 ];
 
-const massageBenefits = [
-  "Ambiente tranquilo y preparado con detalle",
-  "Atención personalizada según cómo te sientas",
-  "Enfoque en zonas de tensión y cansancio",
-  "Modalidad en espacio privado o a domicilio",
-];
-
 const whyUsItems = [
   {
     title: "Trato personal",
@@ -152,7 +145,6 @@ export default function Home() {
       <HowItWorksSection />
       <BoutiqueExperience />
       <TestimonialsSection />
-      <FeaturedMassage />
       <BookingCTASection />
     </>
   );
@@ -522,10 +514,10 @@ function BoutiqueExperience() {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-center brightness-[1.14] saturate-[1.06]"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.9),rgba(5,3,4,0.72)_46%,rgba(5,3,4,0.38))]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(217,75,140,0.18),transparent_34%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.88),rgba(5,3,4,0.55)_46%,rgba(5,3,4,0.08))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(217,75,140,0.08),transparent_34%)]" />
 
       <Container className="relative z-10 flex min-h-[340px] items-center py-12">
         <Reveal>
@@ -628,86 +620,9 @@ function TestimonialsSection() {
   );
 }
 
-function FeaturedMassage() {
-  return (
-    <Section className="border-y border-champagne-gold/12" spacing="lg" tone="black">
-      <Container>
-        <div className="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
-          <Reveal>
-            <div>
-              <DecorativeDivider />
-              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-                Masajes
-              </p>
-              <h2 className="mt-4 max-w-3xl font-serif text-section-title text-champagne-gold text-balance">
-                Masajes para relajar el cuerpo y soltar la tensión
-              </h2>
-              <p className="mt-6 max-w-2xl text-lead text-muted-taupe">
-                Ideal para quienes sienten cansancio, estrés o tensión
-                acumulada. Leidania crea una experiencia tranquila y
-                personalizada para ayudarte a descansar, respirar mejor y salir
-                renovada.
-              </p>
-
-              <div className="mt-8 grid gap-3">
-                {massageBenefits.map((benefit) => (
-                  <span
-                    key={benefit}
-                    className="flex items-start gap-3 border-l border-champagne-gold/35 pl-4 text-sm leading-7 text-warm-cream/82"
-                  >
-                    <CheckCircle2
-                      className="mt-1 shrink-0 text-champagne-gold"
-                      size={17}
-                      aria-hidden
-                    />
-                    {benefit}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-9">
-                <Button href={whatsapp.url} icon={<ArrowRight size={18} />}>
-                  Quiero reservar un masaje
-                </Button>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div className="relative">
-              <div className="absolute -inset-4 bg-[radial-gradient(circle_at_50%_45%,rgba(143,31,84,0.24),transparent_62%)]" />
-              <ImageFrame
-                priority="feature"
-                className="relative aspect-[16/10] min-h-0 border-champagne-gold/35"
-              >
-                <Image
-                  src="/images/service-masajes-v2.png"
-                  alt="Mujer recibiendo masaje relajante en un ambiente cálido"
-                  fill
-                  sizes="(min-width: 1024px) 48vw, 86vw"
-                  className="object-cover object-center"
-                />
-                <div className="absolute inset-x-5 bottom-5 z-20 border border-champagne-gold/20 bg-background/74 p-5 backdrop-blur-md sm:max-w-md">
-                  <p className="font-serif text-3xl text-warm-cream">
-                    Un momento para descansar
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-taupe">
-                    Cuidado personal con ritmo tranquilo, atención directa y un
-                    ambiente preparado para relajarte.
-                  </p>
-                </div>
-              </ImageFrame>
-            </div>
-          </Reveal>
-        </div>
-      </Container>
-    </Section>
-  );
-}
-
 function BookingCTASection() {
   return (
-    <Section spacing="lg" tone="charcoal">
+    <Section spacing="lg" tone="black">
       <Container>
         <Reveal>
           <div className="relative isolate overflow-hidden border border-champagne-gold/28 bg-background shadow-premium">
@@ -716,10 +631,10 @@ function BookingCTASection() {
               alt=""
               fill
               sizes="86vw"
-              className="object-cover object-center opacity-34"
+              className="object-cover object-center brightness-[1.12] saturate-[1.06]"
             />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.96),rgba(5,3,4,0.82)_48%,rgba(5,3,4,0.58))]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(217,75,140,0.22),transparent_34%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.92),rgba(5,3,4,0.62)_48%,rgba(5,3,4,0.1))]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(217,75,140,0.08),transparent_34%)]" />
 
             <div className="relative z-10 grid gap-10 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-14">
               <div className="max-w-3xl">
