@@ -13,6 +13,8 @@ export type Service = {
   description: string;
   benefit: string;
   imageKey: string;
+  imageSrc: string;
+  imageAlt: string;
   icon: LucideIcon;
   includes: string[];
   idealFor: string;
@@ -21,51 +23,57 @@ export type Service = {
 export const services: Service[] = [
   {
     slug: "masajes",
-    title: "Masajes relajantes y terapeuticos",
+    title: "Masajes relajantes y terapéuticos",
     shortTitle: "Masajes",
     description:
-      "Libera tension, descansa el cuerpo y regalate un momento de calma profunda.",
+      "Libera tensión, descansa el cuerpo y regálate un momento de calma profunda.",
     benefit: "Para relajarte, respirar mejor y salir renovada.",
     imageKey: "massage-room",
+    imageSrc: "/images/service-masajes.png",
+    imageAlt: "Toallas, aceite y velas para un masaje relajante",
     icon: HandHeart,
     includes: [
       "Ambiente relajante",
-      "Atencion personalizada",
-      "Enfoque en zonas de tension",
+      "Atención personalizada",
+      "Enfoque en zonas de tensión",
       "Modalidad en espacio privado o a domicilio",
     ],
     idealFor:
-      "Ideal para mujeres con cansancio, estres o tension acumulada que desean un cuidado tranquilo y personal.",
+      "Ideal para mujeres con cansancio, estrés o tensión acumulada que desean un cuidado tranquilo y personal.",
   },
   {
     slug: "cejas",
     title: "Tintado de cejas",
     shortTitle: "Cejas",
     description: "Define tu mirada con un acabado natural, limpio y elegante.",
-    benefit: "Para realzar tu expresion sin perder naturalidad.",
+    benefit: "Para realzar tu expresión sin perder naturalidad.",
     imageKey: "beauty-detail",
+    imageSrc: "/images/service-cejas.png",
+    imageAlt: "Herramientas elegantes para tintado de cejas",
     icon: Eye,
     includes: [
-      "Diseno visual cuidadoso",
+      "Diseño visual cuidadoso",
       "Tintado de acabado natural",
-      "Atencion higienica y detallista",
-      "Orientacion segun tu estilo",
+      "Atención higiénica y detallista",
+      "Orientación según tu estilo",
     ],
     idealFor:
-      "Ideal para quienes desean cejas mas definidas y una mirada mas pulida.",
+      "Ideal para quienes desean cejas más definidas y una mirada más pulida.",
   },
   {
     slug: "pestanas",
-    title: "Postura de pestanas",
-    shortTitle: "Pestanas",
+    title: "Postura de pestañas",
+    shortTitle: "Pestañas",
     description:
-      "Realza tus ojos con un resultado femenino, delicado y favorecedor.",
+    "Realza tus ojos con un resultado femenino, delicado y favorecedor.",
     benefit: "Para sentirte arreglada con un detalle suave y elegante.",
     imageKey: "lashes-detail",
+    imageSrc: "/images/service-pestanas.png",
+    imageAlt: "Pestañas, pinzas y detalles dorados para postura de pestañas",
     icon: Sparkles,
     includes: [
-      "Preparacion cuidadosa",
-      "Aplicacion personalizada",
+      "Preparación cuidadosa",
+      "Aplicación personalizada",
       "Resultado femenino y favorecedor",
       "Recomendaciones de cuidado",
     ],
@@ -74,16 +82,18 @@ export const services: Service[] = [
   },
   {
     slug: "depilacion",
-    title: "Depilacion con cera",
-    shortTitle: "Depilacion",
+    title: "Depilación con cera",
+    shortTitle: "Depilación",
     description:
-      "Piel mas suave con un servicio cuidadoso, higienico y profesional.",
+      "Piel más suave con un servicio cuidadoso, higiénico y profesional.",
     benefit: "Para sentir la piel limpia, suave y bien cuidada.",
     imageKey: "waxing-prep",
+    imageSrc: "/images/service-depilacion.png",
+    imageAlt: "Preparación elegante para depilación con cera",
     icon: Flower2,
     includes: [
-      "Preparacion del area",
-      "Depilacion con cera",
+      "Preparación del área",
+      "Depilación con cera",
       "Cuidado de la piel",
       "Proceso privado y profesional",
     ],

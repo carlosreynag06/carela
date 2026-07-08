@@ -83,7 +83,7 @@ Stop after Phase 4.
 
 ## Phase 5 - Homepage Services Preview
 
-Status: pending
+Status: completed
 
 - Add four service cards.
 - Add images.
