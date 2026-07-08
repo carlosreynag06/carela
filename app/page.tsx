@@ -137,9 +137,9 @@ function Hero() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,3,4,0.62)_0%,rgba(5,3,4,0.12)_42%,rgba(5,3,4,0.8)_100%)]" />
 
       <Container className="relative z-10 flex min-h-svh items-center pt-28">
-        <div className="grid w-full items-center gap-12 py-16 lg:grid-cols-[minmax(0,0.9fr)_minmax(380px,0.62fr)]">
+        <div className="w-full py-16">
           <Reveal>
-            <div className="max-w-3xl">
+            <div className="max-w-4xl">
               <DecorativeDivider />
               <p className="mt-8 text-eyebrow uppercase tracking-[0.32em] text-soft-gold">
                 Beauty / Wellness / Confidence
@@ -170,21 +170,6 @@ function Hero() {
                 <TrustItem>Servicio a domicilio disponible</TrustItem>
                 <TrustItem>Puerto Plata, RD</TrustItem>
               </div>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div className="hidden aspect-square w-full max-w-[500px] flex-col justify-center justify-self-end border border-champagne-gold/20 bg-background/48 p-8 shadow-premium backdrop-blur-md lg:flex xl:p-10">
-              <p className="font-script text-3xl text-rose-pink">
-                CARELA
-              </p>
-              <p className="mt-3 font-serif text-3xl leading-tight text-warm-cream">
-                Una experiencia boutique, íntima y pensada solo para ti.
-              </p>
-              <p className="mt-4 text-sm leading-7 text-muted-taupe">
-                Cuidado personal con calma, detalle y una presencia cálida en
-                cada cita.
-              </p>
             </div>
           </Reveal>
         </div>
