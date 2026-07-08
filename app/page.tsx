@@ -64,7 +64,7 @@ function Hero() {
                 Tu momento de cuidado
               </p>
               <h1 className="mt-4 max-w-4xl font-serif text-display text-champagne-gold text-balance">
-                Tu momento de belleza, cuidado y bienestar en Puerto Plata
+                Eleva tu Belleza y tu Bienestar
               </h1>
               <p className="mt-7 max-w-2xl text-lead text-warm-cream/88">
                 Disfruta una experiencia personalizada con Leidania Carela:

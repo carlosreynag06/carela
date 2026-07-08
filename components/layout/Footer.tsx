@@ -100,7 +100,10 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h2 className="font-serif text-2xl text-warm-cream">{title}</h2>
+      <h2 className="text-eyebrow font-semibold uppercase tracking-[0.28em] text-champagne-gold">
+        {title}
+      </h2>
+      <div className="mt-5 h-px w-10 bg-rose-pink/70" />
       <div className="mt-5 grid gap-3">{children}</div>
     </div>
   );
@@ -116,7 +119,7 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="text-sm leading-6 text-muted-taupe transition hover:text-warm-cream"
+      className="text-sm leading-6 text-warm-cream/72 transition hover:text-soft-gold"
     >
       {children}
     </Link>
