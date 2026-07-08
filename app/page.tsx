@@ -10,7 +10,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Sparkles,
-  Star,
   Stars,
 } from "lucide-react";
 import { Button } from "@/components/Button";
@@ -20,6 +19,7 @@ import { ImageFrame } from "@/components/ImageFrame";
 import { PremiumCard } from "@/components/PremiumCard";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { services } from "@/data/services";
 import { whatsapp } from "@/lib/site";
 
@@ -599,60 +599,7 @@ function TestimonialsSection() {
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {testimonials.map((testimonial, index) => (
-            <Reveal key={testimonial.name} delay={(index % 2) * 0.08}>
-              <article className="group flex h-full flex-col overflow-hidden border border-champagne-gold/16 bg-background/72 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/42">
-                <div className="flex items-center gap-4 p-5 sm:p-6">
-                  <span
-                    className="flex size-12 shrink-0 items-center justify-center border border-champagne-gold/38 bg-champagne-gold/10 font-serif text-lg text-champagne-gold"
-                    aria-hidden="true"
-                  >
-                    {testimonial.initials}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="font-serif text-2xl text-warm-cream">
-                      {testimonial.name}
-                    </h3>
-                    <p className="mt-1 text-xs uppercase tracking-[0.2em] text-rose-pink">
-                      {testimonial.service}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="relative aspect-[16/10] overflow-hidden border-y border-champagne-gold/12">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.imageAlt}
-                    fill
-                    sizes="(min-width: 768px) 43vw, 86vw"
-                    className="object-cover object-center transition duration-700 group-hover:scale-[1.025]"
-                  />
-                </div>
-
-                <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <div
-                    className="flex gap-1 text-champagne-gold"
-                    aria-label="5 de 5 estrellas"
-                  >
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <Star
-                        key={starIndex}
-                        size={16}
-                        fill="currentColor"
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                      />
-                    ))}
-                  </div>
-                  <blockquote className="mt-5 font-serif text-xl leading-8 text-warm-cream/92 sm:text-2xl sm:leading-9">
-                    “{testimonial.quote}”
-                  </blockquote>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+        <TestimonialsCarousel testimonials={testimonials} />
 
         <Reveal delay={0.12}>
           <div className="mt-10 flex flex-col gap-5 border-t border-champagne-gold/14 pt-8 sm:flex-row sm:items-center sm:justify-between">
