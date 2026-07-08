@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
@@ -10,7 +9,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Sparkles,
-  Stars,
 } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
@@ -23,24 +21,6 @@ import { Section } from "@/components/Section";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { services } from "@/data/services";
 import { whatsapp } from "@/lib/site";
-
-const essenceItems = [
-  {
-    title: "Relájate",
-    description: "Regálate una pausa tranquila para soltar tensión.",
-    icon: Heart,
-  },
-  {
-    title: "Eleva tu belleza",
-    description: "Detalles cuidados para verte más pulida y natural.",
-    icon: Sparkles,
-  },
-  {
-    title: "Brilla diferente",
-    description: "Sal renovada, segura y lista para sentirte mejor.",
-    icon: Stars,
-  },
-];
 
 const boutiqueBenefits = [
   "Atención directa de Leidania",
@@ -173,7 +153,6 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <BrandEssenceStrip />
       <ServicesPreview />
       <WhyUsSection />
       <HowItWorksSection />
@@ -265,69 +244,6 @@ function TrustItem({ children }: { children: ReactNode }) {
   );
 }
 
-function BrandEssenceStrip() {
-  return (
-    <Section className="border-y border-champagne-gold/12" spacing="sm" tone="charcoal">
-      <Container>
-        <Reveal>
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-            <div>
-              <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-                CARELA Beauty & Wellness
-              </p>
-              <h2 className="mt-4 font-serif text-4xl leading-tight text-warm-cream sm:text-5xl">
-                Cada servicio está pensado para que te sientas cuidada desde el
-                primer momento.
-              </h2>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              {essenceItems.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <div
-                    key={item.title}
-                    className="group border border-champagne-gold/14 bg-background/38 p-5 transition duration-300 hover:border-champagne-gold/45 hover:bg-background/58"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <Icon
-                        className="text-champagne-gold transition group-hover:text-soft-gold"
-                        size={22}
-                        aria-hidden
-                      />
-                      <span className="h-px flex-1 bg-champagne-gold/24" />
-                    </div>
-                    <h3 className="mt-5 font-serif text-3xl text-champagne-gold">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-muted-taupe">
-                      {item.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mt-9 flex flex-col gap-4 border-t border-champagne-gold/12 pt-6 text-sm leading-7 text-muted-taupe sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              Relájate. Eleva tu belleza. Brilla diferente.
-            </p>
-            <Link
-              href="/reservar"
-              className="inline-flex items-center gap-2 font-semibold text-champagne-gold transition hover:text-soft-gold"
-            >
-              Coordinar tu cita
-              <ArrowRight size={16} aria-hidden />
-            </Link>
-          </div>
-        </Reveal>
-      </Container>
-    </Section>
-  );
-}
-
 function ServicesPreview() {
   return (
     <Section spacing="lg" tone="black">
@@ -381,13 +297,16 @@ function ServicesPreview() {
                     <p className="mt-4 flex-1 text-sm leading-7 text-muted-taupe">
                       {service.description}
                     </p>
-                    <Link
+                    <Button
                       href="/servicios"
-                      className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-champagne-gold transition hover:text-soft-gold"
+                      className="mt-6 self-start"
+                      icon={<ArrowRight size={16} />}
+                      iconPosition="right"
+                      size="sm"
+                      variant="ghost"
                     >
                       Ver detalle
-                      <ArrowRight size={16} aria-hidden />
-                    </Link>
+                    </Button>
                   </div>
                 </article>
               </Reveal>
@@ -682,7 +601,7 @@ function FAQSection() {
                 <Button
                   href={whatsapp.url}
                   icon={<MessageCircle size={18} />}
-                  variant="secondary"
+                  variant="ghost"
                 >
                   Hacer otra pregunta
                 </Button>

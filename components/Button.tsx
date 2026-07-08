@@ -22,7 +22,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   secondary:
     "border-champagne-gold/35 bg-transparent text-warm-cream hover:border-champagne-gold hover:bg-champagne-gold/10",
   ghost:
-    "border-transparent bg-transparent text-muted-taupe hover:text-warm-cream",
+    "border-champagne-gold/30 bg-transparent text-champagne-gold hover:border-champagne-gold hover:bg-champagne-gold/10 hover:text-soft-gold",
   rose: "border-rose-pink/45 bg-rose-pink text-warm-cream hover:border-soft-gold hover:bg-deep-magenta",
 };
 
