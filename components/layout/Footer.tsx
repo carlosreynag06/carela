@@ -51,7 +51,7 @@ export function Footer() {
 
         <FooterColumn title="Servicios">
           {services.map((service) => (
-            <FooterLink key={service.slug} href="/servicios">
+            <FooterLink key={service.slug} href={`/servicios#${service.slug}`}>
               {service.title}
             </FooterLink>
           ))}

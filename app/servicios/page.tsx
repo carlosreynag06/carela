@@ -1,21 +1,245 @@
-import { ImagePlaceholder } from "@/components/brand/ImagePlaceholder";
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, Check, Clock3, MessageCircle } from "lucide-react";
+import { Button } from "@/components/Button";
+import { Container } from "@/components/Container";
+import { DecorativeDivider } from "@/components/DecorativeDivider";
+import { Reveal } from "@/components/Reveal";
+import { services } from "@/data/services";
+import { whatsapp } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Servicios | CARELA Beauty & Wellness",
+  description:
+    "Conoce los servicios de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata.",
+};
+
+const serviceDetails = {
+  masajes: {
+    number: "01",
+    image: "/images/service-page-masajes.png",
+    duration: "Sesión personalizada",
+    accent: "Pausa, alivio y bienestar",
+    detail:
+      "Un momento diseñado para bajar el ritmo y atender las zonas donde tu cuerpo guarda el cansancio. La presión y el enfoque se adaptan a cómo llegas ese día.",
+  },
+  cejas: {
+    number: "02",
+    image: "/images/service-page-cejas.png",
+    duration: "Diseño y tintado",
+    accent: "Definición que se siente natural",
+    detail:
+      "Trabajamos el tono y la forma con precisión para enmarcar tu mirada sin endurecer tus facciones. El resultado es limpio, equilibrado y pensado para ti.",
+  },
+  pestanas: {
+    number: "03",
+    image: "/images/service-page-pestanas.png",
+    duration: "Aplicación personalizada",
+    accent: "Una mirada suave y expresiva",
+    detail:
+      "La postura se adapta a la forma de tus ojos y al efecto que prefieras. Cada aplicación busca comodidad, armonía y un acabado delicado.",
+  },
+  depilacion: {
+    number: "04",
+    image: "/images/service-page-depilacion.png",
+    duration: "Zonas a elección",
+    accent: "Suavidad con atención cuidadosa",
+    detail:
+      "Un proceso privado e higiénico que cuida la piel antes, durante y después de la cera. Puedes elegir las zonas y combinarlas según lo que necesites.",
+  },
+} as const;
 
 export default function ServiciosPage() {
   return (
-    <section className="mx-auto grid min-h-[68vh] w-[var(--site-shell-width)] max-w-[var(--max-site-width)] content-center gap-8 py-24 lg:grid-cols-[1fr_380px]">
-      <div>
-        <p className="text-sm uppercase tracking-[0.28em] text-rose-pink">
-          Fase 13
-        </p>
-        <h1 className="mt-4 font-serif text-5xl text-champagne-gold">
-          Servicios
-        </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-muted-taupe">
-          Ruta preparada para la pagina completa de servicios. Se construira
-          cuando el flujo por fases llegue a este punto.
-        </p>
+    <>
+      <section className="relative flex min-h-[58svh] items-end overflow-hidden border-b border-champagne-gold/15 bg-warm-charcoal pb-16 pt-36 lg:pb-20 lg:pt-44">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_28%,rgba(143,31,84,0.25),transparent_30%),radial-gradient(circle_at_18%_78%,rgba(217,168,78,0.1),transparent_28%)]" />
+        <Container className="relative">
+          <Reveal>
+            <div className="grid gap-10 lg:grid-cols-[1.15fr_0.7fr] lg:items-end">
+              <div>
+                <DecorativeDivider />
+                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                  Servicios CARELA
+                </p>
+                <h1 className="mt-5 max-w-5xl font-serif text-display text-champagne-gold text-balance">
+                  El cuidado que necesitas, pensado para ti
+                </h1>
+              </div>
+              <div className="border-l border-champagne-gold/30 pl-6 lg:pb-2">
+                <p className="max-w-xl text-lead text-warm-cream/78">
+                  Cuatro experiencias de belleza y bienestar realizadas con
+                  calma, detalle y atención personal en un ambiente privado.
+                </p>
+                <Link
+                  href="#explorar-servicios"
+                  className="mt-7 inline-flex items-center gap-3 text-sm font-semibold text-soft-gold transition hover:text-rose-pink"
+                >
+                  Explorar servicios
+                  <ArrowDown size={17} aria-hidden />
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+
+      <nav
+        id="explorar-servicios"
+        aria-label="Índice de servicios"
+        className="sticky top-20 z-30 border-b border-champagne-gold/15 bg-background/92 backdrop-blur-xl"
+      >
+        <Container className="overflow-x-auto">
+          <div className="flex min-w-max items-center justify-start gap-1 py-3 lg:justify-center">
+            {services.map((service, index) => (
+              <Link
+                key={service.slug}
+                href={`#${service.slug}`}
+                className="group inline-flex min-h-11 items-center gap-3 px-5 text-sm text-muted-taupe transition hover:bg-champagne-gold/8 hover:text-warm-cream"
+              >
+                <span className="font-serif text-lg text-champagne-gold/70 transition group-hover:text-champagne-gold">
+                  0{index + 1}
+                </span>
+                {service.shortTitle}
+              </Link>
+            ))}
+          </div>
+        </Container>
+      </nav>
+
+      <div className="bg-background">
+        {services.map((service, index) => {
+          const details = serviceDetails[service.slug];
+          const Icon = service.icon;
+          const imageFirst = index % 2 === 1;
+
+          return (
+            <section
+              key={service.slug}
+              id={service.slug}
+              className="scroll-mt-36 border-b border-champagne-gold/12 py-20 lg:py-28"
+            >
+              <Container>
+                <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-16 xl:gap-24">
+                  <Reveal
+                    className={
+                      imageFirst
+                        ? "flex self-end justify-center lg:order-2 lg:justify-end"
+                        : "flex self-end justify-center lg:justify-start"
+                    }
+                  >
+                    <div className="group relative aspect-[8/9] w-full max-w-[38rem] overflow-hidden border border-champagne-gold/20 bg-warm-charcoal shadow-premium">
+                      <Image
+                        src={details.image}
+                        alt={service.imageAlt}
+                        fill
+                        sizes="(min-width: 1280px) 38rem, (min-width: 1024px) 46vw, 86vw"
+                        className="object-cover transition duration-700 group-hover:scale-[1.025]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/38 via-transparent to-transparent" />
+                      <div className="absolute bottom-5 left-5 flex items-center gap-3 border border-champagne-gold/30 bg-background/78 px-4 py-3 backdrop-blur-md">
+                        <Clock3 size={16} className="text-champagne-gold" aria-hidden />
+                        <span className="text-xs uppercase tracking-[0.18em] text-warm-cream">
+                          {details.duration}
+                        </span>
+                      </div>
+                    </div>
+                  </Reveal>
+
+                  <Reveal
+                    delay={0.08}
+                    className={imageFirst ? "lg:order-1" : undefined}
+                  >
+                    <div className="max-w-2xl">
+                      <div className="flex items-center gap-4">
+                        <span className="font-serif text-2xl text-champagne-gold/55">
+                          {details.number}
+                        </span>
+                        <span className="h-px w-12 bg-rose-pink" />
+                        <Icon size={20} className="text-rose-pink" aria-hidden />
+                      </div>
+                      <p className="mt-7 text-eyebrow uppercase tracking-[0.26em] text-rose-pink">
+                        {details.accent}
+                      </p>
+                      <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
+                        {service.title}
+                      </h2>
+                      <p className="mt-6 text-lg leading-8 text-warm-cream/82">
+                        {details.detail}
+                      </p>
+                      <p className="mt-5 border-l border-champagne-gold/45 pl-5 text-sm leading-7 text-muted-taupe">
+                        {service.idealFor}
+                      </p>
+
+                      <div className="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                        {service.includes.map((item) => (
+                          <div
+                            key={item}
+                            className="flex items-start gap-3 text-sm leading-6 text-warm-cream/78"
+                          >
+                            <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center border border-champagne-gold/40 text-champagne-gold">
+                              <Check size={12} strokeWidth={2.5} aria-hidden />
+                            </span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-9 flex flex-wrap gap-3">
+                        <Button
+                          href={`${whatsapp.url}?text=${encodeURIComponent(`Hola Leidania, me interesa el servicio de ${service.title}.`)}`}
+                          icon={<MessageCircle size={17} />}
+                        >
+                          Consultar por WhatsApp
+                        </Button>
+                        <Button
+                          href={`/precios#${service.slug}`}
+                          variant="ghost"
+                          icon={<ArrowRight size={16} />}
+                          iconPosition="right"
+                        >
+                          Ver precios
+                        </Button>
+                      </div>
+                    </div>
+                  </Reveal>
+                </div>
+              </Container>
+            </section>
+          );
+        })}
       </div>
-      <ImagePlaceholder label="Servicios" description="Imagen pendiente" />
-    </section>
+
+      <section className="relative overflow-hidden bg-warm-charcoal py-20 lg:py-24">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(143,31,84,0.24),transparent_30%)]" />
+        <Container className="relative">
+          <Reveal>
+            <div className="flex flex-col gap-8 border border-champagne-gold/25 bg-background/45 p-7 sm:p-10 lg:flex-row lg:items-center lg:justify-between lg:p-12">
+              <div>
+                <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+                  Tu próxima cita
+                </p>
+                <h2 className="mt-4 max-w-3xl font-serif text-4xl leading-tight text-champagne-gold sm:text-5xl">
+                  Elige cómo quieres sentirte hoy
+                </h2>
+                <p className="mt-4 max-w-2xl leading-7 text-muted-taupe">
+                  Escríbele directamente a Leidania para coordinar el servicio,
+                  el horario y la modalidad que prefieras.
+                </p>
+              </div>
+              <Button
+                href={whatsapp.url}
+                size="lg"
+                icon={<MessageCircle size={19} />}
+                className="shrink-0"
+              >
+                Reservar por WhatsApp
+              </Button>
+            </div>
+          </Reveal>
+        </Container>
+      </section>
+    </>
   );
 }

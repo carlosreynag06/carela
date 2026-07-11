@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   ArrowRight,
@@ -215,7 +216,11 @@ function ServicesPreview() {
 
             return (
               <Reveal key={service.slug} delay={index * 0.08}>
-                <article className="group flex h-full flex-col overflow-hidden border border-champagne-gold/15 bg-warm-charcoal/70 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/45 hover:bg-warm-charcoal">
+                <Link
+                  href={`/servicios#${service.slug}`}
+                  aria-label={`Ver detalles de ${service.title}`}
+                  className="group flex h-full flex-col overflow-hidden border border-champagne-gold/15 bg-warm-charcoal/70 shadow-premium transition duration-300 hover:-translate-y-1 hover:border-champagne-gold/45 hover:bg-warm-charcoal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soft-gold"
+                >
                   <div className="relative aspect-[16/11] overflow-hidden bg-background">
                     <Image
                       src={service.imageSrc}
@@ -240,18 +245,12 @@ function ServicesPreview() {
                     <p className="mt-4 flex-1 text-sm leading-7 text-muted-taupe">
                       {service.description}
                     </p>
-                    <Button
-                      href="/servicios"
-                      className="mt-6 self-start"
-                      icon={<ArrowRight size={16} />}
-                      iconPosition="right"
-                      size="sm"
-                      variant="ghost"
-                    >
+                    <span className="mt-6 inline-flex min-h-10 self-start items-center gap-2 border border-champagne-gold/30 px-4 py-2 text-xs font-semibold text-champagne-gold transition group-hover:border-champagne-gold group-hover:bg-champagne-gold/10 group-hover:text-soft-gold">
                       Ver detalle
-                    </Button>
+                      <ArrowRight size={16} aria-hidden />
+                    </span>
                   </div>
-                </article>
+                </Link>
               </Reveal>
             );
           })}

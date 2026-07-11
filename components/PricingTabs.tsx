@@ -11,7 +11,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { FAQAccordion, type FAQItem } from "@/components/FAQAccordion";
@@ -381,6 +381,24 @@ function renderFeatureValue(value: FeatureValue) {
 export function PricingTabs() {
   const [activeSlug, setActiveSlug] = useState<Service["slug"]>("masajes");
 
+  useEffect(() => {
+    const slug = window.location.hash.slice(1);
+    const linkedService = services.find((service) => service.slug === slug);
+    let frameId: number | undefined;
+
+    if (linkedService) {
+      frameId = window.requestAnimationFrame(() => {
+        setActiveSlug(linkedService.slug);
+      });
+    }
+
+    return () => {
+      if (frameId !== undefined) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+
   const activeService = useMemo(
     () => services.find((service) => service.slug === activeSlug) ?? services[0],
     [activeSlug],
@@ -423,6 +441,7 @@ export function PricingTabs() {
             return (
               <button
                 key={service.slug}
+                id={service.slug}
                 className={cn(
                   "relative isolate flex min-h-14 items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soft-gold",
                   active
@@ -430,7 +449,10 @@ export function PricingTabs() {
                     : "text-warm-cream/76 hover:text-warm-cream",
                 )}
                 type="button"
-                onClick={() => setActiveSlug(service.slug)}
+                onClick={() => {
+                  setActiveSlug(service.slug);
+                  window.history.replaceState(null, "", `#${service.slug}`);
+                }}
                 aria-pressed={active}
               >
                 {active ? (
