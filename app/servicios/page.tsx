@@ -72,13 +72,14 @@ export default function ServiciosPage() {
                   Cuatro experiencias de belleza y bienestar realizadas con
                   calma, detalle y atención personal en un ambiente privado.
                 </p>
-                <Link
+                <Button
                   href="#explorar-servicios"
-                  className="mt-7 inline-flex items-center gap-3 text-sm font-semibold text-soft-gold transition hover:text-rose-pink"
+                  className="mt-7"
+                  icon={<ArrowDown size={17} />}
+                  iconPosition="right"
                 >
                   Explorar servicios
-                  <ArrowDown size={17} aria-hidden />
-                </Link>
+                </Button>
               </div>
             </div>
           </Reveal>
