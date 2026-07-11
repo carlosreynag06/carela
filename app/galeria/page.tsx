@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default function GaleriaPage() {
   return (
     <>
-      <section className="relative isolate mt-20 min-h-[72svh] overflow-hidden border-b border-champagne-gold/12 bg-background">
+      <section className="relative isolate mt-20 min-h-[calc(100svh-5rem)] overflow-hidden border-b border-champagne-gold/12 bg-background">
         <Image
           src="/images/service-page-pestanas.png"
           alt="Aplicación profesional de pestañas en CARELA Beauty & Wellness"
@@ -39,7 +39,7 @@ export default function GaleriaPage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98),rgba(5,3,4,0.83)_47%,rgba(5,3,4,0.16))]" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/72 via-transparent to-background/12" />
-        <Container className="relative z-10 flex min-h-[72svh] items-end pb-14 pt-14 lg:pb-16 lg:pt-16">
+        <Container className="relative z-10 flex min-h-[calc(100svh-5rem)] items-end pb-14 pt-14 lg:pb-16 lg:pt-16">
           <Reveal>
             <div className="max-w-5xl">
               <DecorativeDivider />
