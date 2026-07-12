@@ -24,7 +24,7 @@ const greatVibes = Great_Vibes({
 });
 
 const siteUrl = "https://www.carelaspa.com";
-const socialImageUrl = `${siteUrl}/og-carela-v2.jpg`;
+const socialImageUrl = `${siteUrl}/og-carela-v3.jpg`;
 const fallbackSocialImageUrl = `${siteUrl}/og-carela.png`;
 
 export const metadata: Metadata = {
