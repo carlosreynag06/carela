@@ -13,7 +13,7 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/60 to-transparent" />
       <div className="absolute bottom-0 right-0 size-80 bg-[radial-gradient(circle,rgba(143,31,84,0.2),transparent_66%)]" />
 
-      <div className="relative mx-auto grid w-[var(--site-shell-width)] max-w-[var(--max-site-width)] gap-10 py-14 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr]">
+      <div className="relative mx-auto grid w-[var(--site-shell-width)] max-w-[var(--max-site-width)] gap-10 py-14 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr_0.85fr]">
         <div>
           <DecorativeDivider />
           <Link href="/" className="mt-6 block leading-none" aria-label="CARELA Inicio">
@@ -78,6 +78,12 @@ export function Footer() {
             />
             Puerto Plata, RD
           </p>
+        </FooterColumn>
+
+        <FooterColumn title="Ayuda y legal">
+          <FooterLink href="/preguntas">Preguntas frecuentes</FooterLink>
+          <FooterLink href="/terminos">Términos y condiciones</FooterLink>
+          <FooterLink href="/politica">Política de privacidad</FooterLink>
         </FooterColumn>
       </div>
 

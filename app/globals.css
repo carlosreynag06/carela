@@ -78,3 +78,37 @@ a {
 .text-balance {
   text-wrap: balance;
 }
+
+@keyframes carela-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.carela-fade-rise,
+.carela-fade-rise-delay,
+.carela-fade-rise-delay-2 {
+  animation: carela-fade-rise 0.8s ease-out both;
+}
+
+.carela-fade-rise-delay {
+  animation-delay: 0.2s;
+}
+
+.carela-fade-rise-delay-2 {
+  animation-delay: 0.4s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carela-fade-rise,
+  .carela-fade-rise-delay,
+  .carela-fade-rise-delay-2 {
+    animation: none;
+  }
+}

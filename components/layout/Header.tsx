@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 export function Header() {
   const pathname = usePathname();
+  const hasCinematicHero = pathname === "/servicios";
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -35,7 +36,9 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 border-b transition duration-300",
-        scrolled || menuOpen
+        hasCinematicHero
+          ? "border-champagne-gold/18 bg-background shadow-[0_18px_60px_rgba(5,3,4,0.42)]"
+          : scrolled || menuOpen
           ? "border-champagne-gold/18 bg-background/92 shadow-[0_18px_60px_rgba(5,3,4,0.42)] backdrop-blur-xl"
           : "border-champagne-gold/10 bg-background/62 backdrop-blur-md",
       )}

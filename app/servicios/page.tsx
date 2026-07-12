@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowDown, ArrowRight, Check, Clock3, MessageCircle } from "lucide-react";
+import { ArrowRight, Check, Clock3, MessageCircle } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
-import { DecorativeDivider } from "@/components/DecorativeDivider";
 import { Reveal } from "@/components/Reveal";
+import { ServiceImageHero } from "@/components/ServiceImageHero";
+import { ServiceSectionTabs } from "@/components/ServiceSectionTabs";
 import { services } from "@/data/services";
 import { whatsapp } from "@/lib/site";
 
@@ -53,61 +53,30 @@ const serviceDetails = {
 export default function ServiciosPage() {
   return (
     <>
-      <section className="relative flex min-h-[58svh] items-end overflow-hidden border-b border-champagne-gold/15 bg-warm-charcoal pb-16 pt-36 lg:pb-20 lg:pt-44">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_28%,rgba(143,31,84,0.25),transparent_30%),radial-gradient(circle_at_18%_78%,rgba(217,168,78,0.1),transparent_28%)]" />
-        <Container className="relative">
-          <Reveal>
-            <div className="grid gap-10 lg:grid-cols-[1.15fr_0.7fr] lg:items-end">
-              <div>
-                <DecorativeDivider />
-                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-                  Servicios CARELA
-                </p>
-                <h1 className="mt-5 max-w-5xl font-serif text-display text-champagne-gold text-balance">
-                  El cuidado que necesitas, pensado para ti
-                </h1>
-              </div>
-              <div className="border-l border-champagne-gold/30 pl-6 lg:pb-2">
-                <p className="max-w-xl text-lead text-warm-cream/78">
-                  Cuatro experiencias de belleza y bienestar realizadas con
-                  calma, detalle y atención personal en un ambiente privado.
-                </p>
-                <Button
-                  href="#explorar-servicios"
-                  className="mt-7"
-                  icon={<ArrowDown size={17} />}
-                  iconPosition="right"
-                >
-                  Explorar servicios
-                </Button>
-              </div>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
+      <ServiceImageHero />
 
-      <nav
+      <section
         id="explorar-servicios"
-        aria-label="Índice de servicios"
-        className="sticky top-20 z-30 border-b border-champagne-gold/15 bg-background/92 backdrop-blur-xl"
+        className="scroll-mt-20 border-b border-champagne-gold/15 bg-warm-charcoal py-14 lg:py-16"
       >
-        <Container className="overflow-x-auto">
-          <div className="flex min-w-max items-center justify-start gap-1 py-3 lg:justify-center">
-            {services.map((service, index) => (
-              <Link
-                key={service.slug}
-                href={`#${service.slug}`}
-                className="group inline-flex min-h-11 items-center gap-3 px-5 text-sm text-muted-taupe transition hover:bg-champagne-gold/8 hover:text-warm-cream"
-              >
-                <span className="font-serif text-lg text-champagne-gold/70 transition group-hover:text-champagne-gold">
-                  0{index + 1}
-                </span>
-                {service.shortTitle}
-              </Link>
-            ))}
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+              Elige tu experiencia
+            </p>
+            <h2 className="mt-3 font-serif text-4xl text-champagne-gold sm:text-5xl">
+              Encuentra el cuidado ideal para ti
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-muted-taupe sm:text-base">
+              Explora cada servicio y descubre qué incluye, para quién está
+              pensado y cómo reservar tu momento CARELA.
+            </p>
+          </div>
+          <div className="mt-9">
+            <ServiceSectionTabs />
           </div>
         </Container>
-      </nav>
+      </section>
 
       <div className="bg-background">
         {services.map((service, index) => {
@@ -119,7 +88,7 @@ export default function ServiciosPage() {
             <section
               key={service.slug}
               id={service.slug}
-              className="scroll-mt-36 border-b border-champagne-gold/12 py-20 lg:py-28"
+              className="scroll-mt-24 border-b border-champagne-gold/12 py-20 lg:py-28"
             >
               <Container>
                 <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-16 xl:gap-24">
