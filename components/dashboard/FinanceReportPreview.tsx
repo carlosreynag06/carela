@@ -57,7 +57,7 @@ export function FinanceReportPreview({
         aria-label="Cerrar vista previa"
       />
       <section className="relative z-10 flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden border border-[#d9a84e]/20 bg-[#100a0c] shadow-[0_35px_100px_rgba(0,0,0,0.7)]">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#d9a84e]/14 px-5 py-4 sm:px-7">
+        <header className="relative flex items-center border-b border-[#d9a84e]/14 px-5 py-4 pr-16 sm:px-7 sm:pr-20">
           <div className="flex items-center gap-3">
             <span className="flex size-10 items-center justify-center border border-[#d9a84e]/25 bg-[#d9a84e]/8 text-[#d9a84e]">
               <FileText size={18} />
@@ -74,7 +74,7 @@ export function FinanceReportPreview({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-10 items-center justify-center border border-white/10 text-[#b8a49b] transition hover:border-[#d9a84e]/30 hover:text-white"
+            className="absolute right-5 top-4 flex size-10 items-center justify-center border border-white/10 text-[#b8a49b] transition hover:border-[#d9a84e]/30 hover:text-white sm:right-7"
             aria-label="Cerrar vista previa"
           >
             <X size={18} />
@@ -190,7 +190,34 @@ export function FinanceReportPreview({
                   report.incomeRows.length === 1 ? "registro" : "registros"
                 }`}
               >
-                <div className="overflow-x-auto">
+                <div>
+                  <div className="space-y-2 sm:hidden">
+                    {report.incomeRows.map((item) => (
+                      <article
+                        key={`${item.date}-${item.client}-${item.packageName}-mobile`}
+                        className="border border-[#eadfd4] bg-white p-3 text-xs"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <strong className="block">{item.client}</strong>
+                            <span className="mt-1 block text-[#7f6f69]">
+                              {formatReportDate(item.date)} · {item.location}
+                            </span>
+                          </div>
+                          <strong className="shrink-0 text-[#8a651f]">
+                            {formatReportMoney(item.amount)}
+                          </strong>
+                        </div>
+                        <p className="mt-3 border-t border-[#eadfd4] pt-3">
+                          {item.service}
+                          <span className="ml-1 text-[#7f6f69]">
+                            · {item.packageName}
+                          </span>
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full min-w-[650px] text-left text-xs">
                     <thead className="bg-[#120c0d] text-[0.58rem] uppercase tracking-[0.15em] text-[#d9a84e]">
                       <tr>
@@ -224,6 +251,7 @@ export function FinanceReportPreview({
                       ))}
                     </tbody>
                   </table>
+                  </div>
                   {!report.incomeRows.length && (
                     <ReportEmpty label="No hay servicios completados en este período." />
                   )}
@@ -237,7 +265,31 @@ export function FinanceReportPreview({
                   report.expenseRows.length === 1 ? "registro" : "registros"
                 }`}
               >
-                <div className="overflow-x-auto">
+                <div>
+                  <div className="space-y-2 sm:hidden">
+                    {report.expenseRows.map((item) => (
+                      <article
+                        key={`${item.date}-${item.description}-${item.amount}-mobile`}
+                        className="border border-[#eadfd4] bg-white p-3 text-xs"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <strong className="block">{item.description}</strong>
+                            <span className="mt-1 block text-[#7f6f69]">
+                              {formatReportDate(item.date)} · {item.category}
+                            </span>
+                          </div>
+                          <strong className="shrink-0 text-[#a22b63]">
+                            -{formatReportMoney(item.amount)}
+                          </strong>
+                        </div>
+                        <p className="mt-3 border-t border-[#eadfd4] pt-3 text-[#58494b]">
+                          {item.service}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="hidden overflow-x-auto sm:block">
                   <table className="w-full min-w-[650px] text-left text-xs">
                     <thead className="bg-[#120c0d] text-[0.58rem] uppercase tracking-[0.15em] text-[#d9a84e]">
                       <tr>
@@ -268,6 +320,7 @@ export function FinanceReportPreview({
                       ))}
                     </tbody>
                   </table>
+                  </div>
                   {!report.expenseRows.length && (
                     <ReportEmpty label="No hay gastos registrados en este período." />
                   )}

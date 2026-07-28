@@ -401,7 +401,11 @@ export function CarelaDashboard() {
               Beauty & Wellness
             </span>
           </Link>
-          <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
+          <button
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Cerrar menú"
+          >
             <X size={20} />
           </button>
         </div>
@@ -470,7 +474,11 @@ export function CarelaDashboard() {
       <div className="lg:pl-[272px]">
         <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-[#d9a84e]/10 bg-[#080506]/90 px-4 backdrop-blur-xl sm:px-7 lg:px-10">
           <div className="flex items-center gap-4">
-            <button className="lg:hidden" onClick={() => setSidebarOpen(true)}>
+            <button
+              className="lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Abrir menú"
+            >
               <Menu size={22} />
             </button>
             <div>
@@ -946,7 +954,78 @@ function AppointmentsView({ appointments, clients, search, setSearch, onAdd, onE
   return (
     <>
       <Toolbar search={search} setSearch={setSearch} buttonLabel="Reservar cita" onAdd={onAdd} />
-      <div className="mt-4 overflow-x-auto border border-[#d9a84e]/12 bg-[#100a0c]">
+      <div className="mt-4 space-y-3 md:hidden">
+        {appointments.map((item) => {
+          const client = clients.find((entry) => entry.id === item.clientId);
+          return (
+            <article
+              key={item.id}
+              className="border border-[#d9a84e]/14 bg-[#100a0c] p-4"
+            >
+              <div className="flex items-start justify-between gap-3 border-b border-[#d9a84e]/10 pb-4">
+                <div>
+                  <strong className="block font-serif text-xl text-[#f7efe7]">
+                    {formatDate(item.date, { year: "numeric" })}
+                  </strong>
+                  <span className="mt-1 flex items-center gap-1.5 text-xs text-[#b8a49b]">
+                    <Clock3 size={13} /> {item.time}
+                  </span>
+                </div>
+                <select
+                  value={item.status}
+                  onChange={(event) =>
+                    onStatus(item.id, event.target.value as Status)
+                  }
+                  aria-label={`Estado de la cita de ${client?.name ?? "clienta"}`}
+                  className="h-10 border border-[#d9a84e]/16 bg-[#0d090a] px-3 text-xs text-[#f3d48a] outline-none"
+                >
+                  <option value="confirmada">Confirmada</option>
+                  <option value="completada">Completada</option>
+                  <option value="pendiente">Pendiente</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </div>
+
+              <div className="py-4">
+                <p className="font-bold">{client?.name ?? "Clienta eliminada"}</p>
+                <p className="mt-1 text-xs text-[#7f6f69]">{client?.phone}</p>
+                <div className="mt-4 flex items-start justify-between gap-4">
+                  <div>
+                    <span className="text-xs font-bold text-[#d9a84e]">
+                      {SERVICES[item.service].label}
+                    </span>
+                    <p className="mt-1 text-xs text-[#7f6f69]">{item.package}</p>
+                  </div>
+                  <strong className="shrink-0 text-right">
+                    {formatMoney(item.amount)}
+                  </strong>
+                </div>
+                <p className="mt-3 text-xs text-[#b8a49b]">
+                  Modalidad: {item.location}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 border-t border-[#d9a84e]/10 pt-3">
+                <MobileActionButton
+                  label="Editar"
+                  icon={Edit3}
+                  onClick={() => onEdit(item)}
+                />
+                <MobileActionButton
+                  label="Eliminar"
+                  icon={Trash2}
+                  danger
+                  onClick={() => onDelete(item.id)}
+                />
+              </div>
+            </article>
+          );
+        })}
+        {!appointments.length && (
+          <EmptyState label="No hay citas para estos filtros." />
+        )}
+      </div>
+      <div className="mt-4 hidden overflow-x-auto border border-[#d9a84e]/12 bg-[#100a0c] md:block">
         <table className="w-full min-w-[940px] text-left">
           <thead className="border-b border-[#d9a84e]/12 bg-black/20 text-[0.62rem] uppercase tracking-[0.18em] text-[#7f6f69]">
             <tr><th className="px-5 py-4">Fecha y hora</th><th className="px-5 py-4">Clienta</th><th className="px-5 py-4">Servicio</th><th className="px-5 py-4">Modalidad</th><th className="px-5 py-4">Monto</th><th className="px-5 py-4">Estado</th><th className="px-5 py-4 text-right">Acciones</th></tr>
@@ -998,7 +1077,96 @@ function ClientsView({
   return (
     <>
       <Toolbar search={search} setSearch={setSearch} buttonLabel="Nueva clienta" onAdd={onAdd} />
-      <div className="mt-4 overflow-x-auto border border-[#d9a84e]/12 bg-[#100a0c]">
+      <div className="mt-4 space-y-3 md:hidden">
+        {clients.map((client) => (
+          <article
+            key={client.id}
+            className="border border-[#d9a84e]/14 bg-[#100a0c] p-4"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#8f1f54]/30 font-serif text-lg text-[#f3d48a]">
+                {client.name
+                  .split(" ")
+                  .map((part) => part[0])
+                  .slice(0, 2)
+                  .join("")}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h2 className="truncate font-serif text-xl">{client.name}</h2>
+                    <p className="mt-1 text-[0.65rem] text-[#7f6f69]">
+                      CL-{String(client.id).padStart(3, "0")}
+                    </p>
+                  </div>
+                  <ServicePill service={client.service} />
+                </div>
+                <a
+                  href={`tel:${client.phone.replaceAll("-", "")}`}
+                  className="mt-3 block text-sm text-[#b8a49b]"
+                >
+                  {client.phone}
+                </a>
+                {client.email && (
+                  <a
+                    href={`mailto:${client.email}`}
+                    className="mt-1 block truncate text-xs text-[#7f6f69]"
+                  >
+                    {client.email}
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3 border-y border-[#d9a84e]/10 py-3 text-xs">
+              <div>
+                <span className="block text-[#7f6f69]">Clienta desde</span>
+                <strong className="mt-1 block text-[#b8a49b]">
+                  {formatDate(client.joined, { year: "numeric" })}
+                </strong>
+              </div>
+              <div>
+                <span className="block text-[#7f6f69]">Historial</span>
+                <strong className="mt-1 block text-[#f3d48a]">
+                  {client.visits} {client.visits === 1 ? "visita" : "visitas"}
+                </strong>
+              </div>
+            </div>
+
+            {client.notes && (
+              <p className="mt-3 line-clamp-2 text-xs leading-5 text-[#7f6f69]">
+                {client.notes}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={() => onBook(client)}
+              className="mt-4 flex h-11 w-full items-center justify-center gap-2 bg-[#d9a84e] px-4 text-xs font-extrabold text-[#080506]"
+            >
+              <CalendarDays size={15} />
+              Reservar cita
+            </button>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <MobileActionButton
+                label="Editar"
+                icon={Edit3}
+                onClick={() => onEdit(client)}
+              />
+              <MobileActionButton
+                label="Eliminar"
+                icon={Trash2}
+                danger
+                onClick={() => onDelete(client.id)}
+              />
+            </div>
+          </article>
+        ))}
+        {!clients.length && (
+          <EmptyState label="No encontramos clientas con esos filtros." />
+        )}
+      </div>
+      <div className="mt-4 hidden overflow-x-auto border border-[#d9a84e]/12 bg-[#100a0c] md:block">
         <table className="w-full min-w-[1040px] text-left">
           <thead className="border-b border-[#d9a84e]/12 bg-black/20 text-[0.62rem] uppercase tracking-[0.18em] text-[#7f6f69]">
             <tr>
@@ -1214,7 +1382,53 @@ function FinancesView({
             <button onClick={onAdd} className="flex h-10 items-center gap-2 bg-[#d9a84e] px-4 text-xs font-extrabold text-[#080506]"><Plus size={15} /> Registrar gasto</button>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="space-y-3 p-3 md:hidden">
+          {expenseRows.map((item) => (
+            <article
+              key={item.id}
+              className="border border-[#d9a84e]/12 bg-black/15 p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs text-[#7f6f69]">
+                    {formatDate(item.date, { year: "numeric" })}
+                  </p>
+                  <h3 className="mt-2 font-bold">{item.description}</h3>
+                  <p className="mt-1 text-xs text-[#7f6f69]">{item.category}</p>
+                </div>
+                <strong className="shrink-0 text-[#d94b8c]">
+                  -{formatMoney(item.amount)}
+                </strong>
+              </div>
+              <div className="mt-4 border-y border-[#d9a84e]/10 py-3">
+                {item.service === "general" ? (
+                  <span className="text-xs text-[#7f6f69]">
+                    General / Todo el negocio
+                  </span>
+                ) : (
+                  <ServicePill service={item.service} />
+                )}
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <MobileActionButton
+                  label="Editar"
+                  icon={Edit3}
+                  onClick={() => onEdit(item)}
+                />
+                <MobileActionButton
+                  label="Eliminar"
+                  icon={Trash2}
+                  danger
+                  onClick={() => onDelete(item.id)}
+                />
+              </div>
+            </article>
+          ))}
+          {!expenseRows.length && (
+            <EmptyState label="No hay gastos en este período." />
+          )}
+        </div>
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[760px] text-left">
             <thead className="border-b border-[#d9a84e]/10 bg-black/15 text-[0.62rem] uppercase tracking-[0.18em] text-[#7f6f69]"><tr><th className="px-5 py-4">Fecha</th><th className="px-5 py-4">Descripción</th><th className="px-5 py-4">Categoría</th><th className="px-5 py-4">Servicio</th><th className="px-5 py-4">Monto</th><th className="px-5 py-4 text-right">Acciones</th></tr></thead>
             <tbody className="divide-y divide-[#d9a84e]/8">
@@ -1254,6 +1468,33 @@ function ServicePill({ service }: { service: ServiceKey }) {
 
 function IconButton({ label, icon: Icon, onClick, danger }: { label: string; icon: typeof Edit3; onClick: () => void; danger?: boolean }) {
   return <button aria-label={label} title={label} onClick={onClick} className={`flex size-9 items-center justify-center transition ${danger ? "text-[#7f6f69] hover:bg-[#d94b8c]/10 hover:text-[#d94b8c]" : "text-[#7f6f69] hover:bg-[#d9a84e]/10 hover:text-[#d9a84e]"}`}><Icon size={15} /></button>;
+}
+
+function MobileActionButton({
+  label,
+  icon: Icon,
+  onClick,
+  danger,
+}: {
+  label: string;
+  icon: typeof Edit3;
+  onClick: () => void;
+  danger?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex h-11 items-center justify-center gap-2 border text-xs font-bold transition ${
+        danger
+          ? "border-[#d94b8c]/18 text-[#b8a49b] hover:bg-[#d94b8c]/10 hover:text-[#d94b8c]"
+          : "border-[#d9a84e]/16 text-[#b8a49b] hover:bg-[#d9a84e]/10 hover:text-[#f3d48a]"
+      }`}
+    >
+      <Icon size={15} />
+      {label}
+    </button>
+  );
 }
 
 function EmptyState({ label }: { label: string }) {
