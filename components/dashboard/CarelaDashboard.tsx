@@ -46,6 +46,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
+import { FinanceReportPreview } from "@/components/dashboard/FinanceReportPreview";
+import type { FinanceReportData } from "@/lib/financeReport";
 
 type ServiceKey = "masajes" | "cejas" | "pestanas" | "depilacion";
 type Status = "confirmada" | "completada" | "pendiente" | "cancelada";
@@ -270,25 +272,23 @@ export function CarelaDashboard() {
     [appointments, startDate, endDate, serviceFilter],
   );
 
-  const paidAppointments = dateAndServiceAppointments.filter(
+  const completedAppointments = dateAndServiceAppointments.filter(
     (item) => item.status === "completada",
   );
   const filteredExpenses = expenses.filter(
     (item) =>
       item.date >= startDate &&
       item.date <= endDate &&
-      (serviceFilter === "todos" ||
-        item.service === serviceFilter ||
-        item.service === "general"),
+      (serviceFilter === "todos" || item.service === serviceFilter),
   );
-  const income = paidAppointments.reduce((sum, item) => sum + item.amount, 0);
+  const income = completedAppointments.reduce((sum, item) => sum + item.amount, 0);
   const expenseTotal = filteredExpenses.reduce((sum, item) => sum + item.amount, 0);
   const profit = income - expenseTotal;
 
   const serviceIncome = serviceKeys.map((key) => ({
     key,
     name: SERVICES[key].label,
-    value: paidAppointments
+    value: completedAppointments
       .filter((item) => item.service === key)
       .reduce((sum, item) => sum + item.amount, 0),
     color: SERVICES[key].color,
@@ -633,6 +633,11 @@ export function CarelaDashboard() {
                 serviceIncome={serviceIncome}
                 dailyData={dailyData}
                 expenseRows={filteredExpenses}
+                completedAppointments={completedAppointments}
+                clients={clients}
+                startDate={startDate}
+                endDate={endDate}
+                serviceFilter={serviceFilter}
                 onAdd={() => setModal({ type: "expense" })}
                 onEdit={(item) => setModal({ type: "expense", item })}
                 onDelete={(id) =>
@@ -1074,14 +1079,99 @@ function ClientsView({
   );
 }
 
-function FinancesView({ income, expenses, profit, serviceIncome, dailyData, expenseRows, onAdd, onEdit, onDelete }: {
-  income: number; expenses: number; profit: number; serviceIncome: { key: ServiceKey; name: string; value: number; color: string }[]; dailyData: { label: string; ingresos: number; gastos: number }[]; expenseRows: Expense[]; onAdd: () => void; onEdit: (item: Expense) => void; onDelete: (id: number) => void;
+function FinancesView({
+  income,
+  expenses,
+  profit,
+  serviceIncome,
+  dailyData,
+  expenseRows,
+  completedAppointments,
+  clients,
+  startDate,
+  endDate,
+  serviceFilter,
+  onAdd,
+  onEdit,
+  onDelete,
+}: {
+  income: number;
+  expenses: number;
+  profit: number;
+  serviceIncome: { key: ServiceKey; name: string; value: number; color: string }[];
+  dailyData: { label: string; ingresos: number; gastos: number }[];
+  expenseRows: Expense[];
+  completedAppointments: Appointment[];
+  clients: Client[];
+  startDate: string;
+  endDate: string;
+  serviceFilter: ServiceKey | "todos";
+  onAdd: () => void;
+  onEdit: (item: Expense) => void;
+  onDelete: (id: number) => void;
 }) {
+  const [reportPreview, setReportPreview] = useState<FinanceReportData | null>(
+    null,
+  );
+
+  function previewFinanceReport() {
+    const reportServiceIncome =
+      serviceFilter === "todos"
+        ? serviceIncome
+        : serviceIncome.filter((item) => item.key === serviceFilter);
+
+    setReportPreview({
+      startDate,
+      endDate,
+      serviceLabel:
+        serviceFilter === "todos"
+          ? "Todos los servicios"
+          : SERVICES[serviceFilter].label,
+      generatedAt: new Intl.DateTimeFormat("es-DO", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(new Date()),
+      income,
+      expenses,
+      profit,
+      margin: income ? Math.round((profit / income) * 100) : 0,
+      serviceIncome: reportServiceIncome.map(({ name, value, color }) => ({
+        name,
+        value,
+        color,
+      })),
+      incomeRows: [...completedAppointments]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((item) => ({
+          date: item.date,
+          client:
+            clients.find((client) => client.id === item.clientId)?.name ??
+            "Clienta eliminada",
+          service: SERVICES[item.service].label,
+          packageName: item.package,
+          location: item.location,
+          amount: item.amount,
+        })),
+      expenseRows: [...expenseRows]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map((item) => ({
+          date: item.date,
+          description: item.description,
+          category: item.category,
+          service:
+            item.service === "general"
+              ? "General"
+              : SERVICES[item.service].label,
+          amount: item.amount,
+        })),
+    });
+  }
+
   return (
     <>
       <section className="mt-8 grid gap-4 md:grid-cols-3">
-        <MetricCard label="Ingresos cobrados" value={formatMoney(income)} detail="Citas completadas" icon={CircleDollarSign} positive />
-        <MetricCard label="Gastos registrados" value={formatMoney(expenses)} detail={`${expenseRows.length} movimientos`} icon={ReceiptText} />
+        <MetricCard label="Ingresos realizados" value={formatMoney(income)} detail="Solo citas completadas" icon={CircleDollarSign} positive />
+        <MetricCard label="Gastos registrados" value={formatMoney(expenses)} detail={`${expenseRows.length} ${expenseRows.length === 1 ? "movimiento" : "movimientos"}`} icon={ReceiptText} />
         <MetricCard label="Resultado neto" value={formatMoney(profit)} detail={`${income ? Math.round((profit / income) * 100) : 0}% de margen`} icon={TrendingUp} positive />
       </section>
       <section className="mt-5 grid gap-5 xl:grid-cols-2">
@@ -1116,36 +1206,10 @@ function FinancesView({ income, expenses, profit, serviceIncome, dailyData, expe
           <div><p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#d94b8c]">Control</p><h2 className="mt-1 font-serif text-2xl">Registro de gastos</h2></div>
           <div className="flex gap-2">
             <button
-              onClick={() => {
-                const rows = [
-                  ["Fecha", "Descripción", "Categoría", "Servicio", "Monto"],
-                  ...expenseRows.map((item) => [
-                    item.date,
-                    item.description,
-                    item.category,
-                    item.service === "general"
-                      ? "General"
-                      : SERVICES[item.service].label,
-                    String(item.amount),
-                  ]),
-                ];
-                const csv = rows
-                  .map((row) =>
-                    row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(","),
-                  )
-                  .join("\n");
-                const url = URL.createObjectURL(
-                  new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" }),
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = "carela-gastos.csv";
-                link.click();
-                URL.revokeObjectURL(url);
-              }}
+              onClick={previewFinanceReport}
               className="flex h-10 items-center gap-2 border border-[#d9a84e]/18 px-4 text-xs font-bold text-[#b8a49b] hover:text-white"
             >
-              <Download size={15} /> Exportar
+              <Download size={15} /> Descargar PDF
             </button>
             <button onClick={onAdd} className="flex h-10 items-center gap-2 bg-[#d9a84e] px-4 text-xs font-extrabold text-[#080506]"><Plus size={15} /> Registrar gasto</button>
           </div>
@@ -1169,6 +1233,12 @@ function FinancesView({ income, expenses, profit, serviceIncome, dailyData, expe
           {!expenseRows.length && <EmptyState label="No hay gastos en este período." />}
         </div>
       </div>
+      {reportPreview && (
+        <FinanceReportPreview
+          report={reportPreview}
+          onClose={() => setReportPreview(null)}
+        />
+      )}
     </>
   );
 }
