@@ -23,8 +23,8 @@ const greatVibes = Great_Vibes({
 });
 
 const siteUrl = "https://www.carelaspa.com";
-const socialImageUrl = `${siteUrl}/og-carela-v4.jpg`;
-const fallbackSocialImageUrl = `${siteUrl}/og-carela.png`;
+const socialImageUrl = `${siteUrl}/og-carela-v5.jpg`;
+const fallbackSocialImageUrl = `${siteUrl}/og-carela-v5.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -52,10 +52,10 @@ export const metadata: Metadata = {
       },
       {
         url: fallbackSocialImageUrl,
-        width: 1731,
-        height: 909,
+        width: 1200,
+        height: 630,
         type: "image/png",
-        alt: "CARELA Beauty & Wellness - Eleva tu belleza y tu bienestar",
+        alt: "CARELA Beauty & Wellness en Puerto Plata",
       },
     ],
   },
