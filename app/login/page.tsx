@@ -41,7 +41,7 @@ export default function LoginPage() {
               Estudio de gestión
             </p>
             <h1 className="mt-5 font-serif text-6xl leading-[0.96] text-champagne-gold xl:text-7xl">
-              Tu negocio, tan cuidado como cada experiencia.
+              Gestiona CARELA desde un solo lugar.
             </h1>
             <p className="mt-7 max-w-lg text-base leading-8 text-muted-taupe">
               Organiza citas, clientes e ingresos desde un espacio privado
