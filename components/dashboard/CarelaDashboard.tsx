@@ -249,7 +249,12 @@ export function CarelaDashboard() {
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [modal, setModal] = useState<
     | { type: "client"; item?: Client }
-    | { type: "appointment"; item?: Appointment }
+    | {
+        type: "appointment";
+        item?: Appointment;
+        clientId?: number;
+        service?: ServiceKey;
+      }
     | { type: "expense"; item?: Expense }
     | null
   >(null);
@@ -606,6 +611,13 @@ export function CarelaDashboard() {
                 setSearch={setSearch}
                 onAdd={() => setModal({ type: "client" })}
                 onEdit={(item) => setModal({ type: "client", item })}
+                onBook={(client) =>
+                  setModal({
+                    type: "appointment",
+                    clientId: client.id,
+                    service: client.service,
+                  })
+                }
                 onDelete={(id) =>
                   window.confirm("¿Eliminar esta clienta y su ficha?") &&
                   setClients((items) => items.filter((item) => item.id !== id))
@@ -644,6 +656,8 @@ export function CarelaDashboard() {
         <AppointmentModal
           item={modal.item}
           clients={clients}
+          initialClientId={modal.clientId}
+          initialService={modal.service}
           onClose={() => setModal(null)}
           onSave={saveAppointment}
         />
@@ -959,32 +973,103 @@ function AppointmentsView({ appointments, clients, search, setSearch, onAdd, onE
   );
 }
 
-function ClientsView({ clients, search, setSearch, onAdd, onEdit, onDelete }: { clients: Client[]; search: string; setSearch: (value: string) => void; onAdd: () => void; onEdit: (item: Client) => void; onDelete: (id: number) => void }) {
+function ClientsView({
+  clients,
+  search,
+  setSearch,
+  onAdd,
+  onEdit,
+  onBook,
+  onDelete,
+}: {
+  clients: Client[];
+  search: string;
+  setSearch: (value: string) => void;
+  onAdd: () => void;
+  onEdit: (item: Client) => void;
+  onBook: (item: Client) => void;
+  onDelete: (id: number) => void;
+}) {
   return (
     <>
       <Toolbar search={search} setSearch={setSearch} buttonLabel="Nueva clienta" onAdd={onAdd} />
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {clients.map((client) => (
-          <article key={client.id} className="group border border-[#d9a84e]/12 bg-[#100a0c] p-5 transition hover:border-[#d9a84e]/30">
-            <div className="flex items-start justify-between">
-              <div className="flex size-11 items-center justify-center rounded-full bg-[#8f1f54]/30 font-serif text-lg text-[#f3d48a]">{client.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</div>
-              <div className="flex gap-1 opacity-70 transition group-hover:opacity-100">
-                <IconButton label="Editar clienta" icon={Edit3} onClick={() => onEdit(client)} />
-                <IconButton label="Eliminar clienta" icon={Trash2} danger onClick={() => onDelete(client.id)} />
-              </div>
-            </div>
-            <h2 className="mt-4 font-serif text-2xl">{client.name}</h2>
-            <p className="mt-2 text-xs text-[#b8a49b]">{client.phone}</p>
-            <p className="mt-1 truncate text-xs text-[#7f6f69]">{client.email}</p>
-            <div className="mt-5 flex items-center justify-between border-t border-[#d9a84e]/10 pt-4">
-              <ServicePill service={client.service} />
-              <span className="text-xs text-[#7f6f69]">{client.visits} visitas</span>
-            </div>
-            {client.notes && <p className="mt-4 line-clamp-2 text-xs leading-5 text-[#7f6f69]">{client.notes}</p>}
-          </article>
-        ))}
+      <div className="mt-4 overflow-x-auto border border-[#d9a84e]/12 bg-[#100a0c]">
+        <table className="w-full min-w-[1040px] text-left">
+          <thead className="border-b border-[#d9a84e]/12 bg-black/20 text-[0.62rem] uppercase tracking-[0.18em] text-[#7f6f69]">
+            <tr>
+              <th className="px-5 py-4">Clienta</th>
+              <th className="px-5 py-4">Contacto</th>
+              <th className="px-5 py-4">Servicio de interés</th>
+              <th className="px-5 py-4">Desde</th>
+              <th className="px-5 py-4">Visitas</th>
+              <th className="px-5 py-4">Notas</th>
+              <th className="px-5 py-4 text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#d9a84e]/8">
+            {clients.map((client) => (
+              <tr key={client.id} className="group text-sm transition hover:bg-white/[0.02]">
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#8f1f54]/30 font-serif text-base text-[#f3d48a]">
+                      {client.name
+                        .split(" ")
+                        .map((part) => part[0])
+                        .slice(0, 2)
+                        .join("")}
+                    </div>
+                    <div>
+                      <strong className="block text-[#f7efe7]">{client.name}</strong>
+                      <span className="mt-1 block text-[0.68rem] text-[#7f6f69]">
+                        CL-{String(client.id).padStart(3, "0")}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-5 py-4">
+                  <span className="block text-[#b8a49b]">{client.phone}</span>
+                  <span className="mt-1 block max-w-[190px] truncate text-xs text-[#7f6f69]">
+                    {client.email || "Sin correo registrado"}
+                  </span>
+                </td>
+                <td className="px-5 py-4">
+                  <ServicePill service={client.service} />
+                </td>
+                <td className="px-5 py-4 text-[#b8a49b]">
+                  {formatDate(client.joined, { year: "numeric" })}
+                </td>
+                <td className="px-5 py-4">
+                  <strong className="font-serif text-xl text-[#f3d48a]">{client.visits}</strong>
+                  <span className="ml-1.5 text-xs text-[#7f6f69]">
+                    {client.visits === 1 ? "visita" : "visitas"}
+                  </span>
+                </td>
+                <td className="px-5 py-4">
+                  <p className="max-w-[220px] truncate text-xs text-[#7f6f69]" title={client.notes}>
+                    {client.notes || "Sin notas"}
+                  </p>
+                </td>
+                <td className="px-5 py-4">
+                  <div className="flex items-center justify-end gap-1">
+                    <button
+                      type="button"
+                      onClick={() => onBook(client)}
+                      className="mr-2 inline-flex h-9 items-center gap-2 border border-[#d9a84e]/25 px-3 text-[0.68rem] font-extrabold text-[#f3d48a] transition hover:border-[#d9a84e]/60 hover:bg-[#d9a84e]/8"
+                      aria-label={`Reservar una cita para ${client.name}`}
+                    >
+                      <CalendarDays size={14} />
+                      Reservar
+                    </button>
+                    <IconButton label="Editar clienta" icon={Edit3} onClick={() => onEdit(client)} />
+                    <IconButton label="Eliminar clienta" icon={Trash2} danger onClick={() => onDelete(client.id)} />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!clients.length && <EmptyState label="No encontramos clientas con esos filtros." />}
       </div>
-      {!clients.length && <EmptyState label="No encontramos clientas con esos filtros." />}
     </>
   );
 }
@@ -1148,8 +1233,24 @@ function ClientModal({ item, onClose, onSave }: { item?: Client; onClose: () => 
   );
 }
 
-function AppointmentModal({ item, clients, onClose, onSave }: { item?: Appointment; clients: Client[]; onClose: () => void; onSave: (data: Omit<Appointment, "id"> & { id?: number }) => void }) {
-  const [service, setService] = useState<ServiceKey>(item?.service ?? "masajes");
+function AppointmentModal({
+  item,
+  clients,
+  initialClientId,
+  initialService,
+  onClose,
+  onSave,
+}: {
+  item?: Appointment;
+  clients: Client[];
+  initialClientId?: number;
+  initialService?: ServiceKey;
+  onClose: () => void;
+  onSave: (data: Omit<Appointment, "id"> & { id?: number }) => void;
+}) {
+  const [service, setService] = useState<ServiceKey>(
+    item?.service ?? initialService ?? "masajes",
+  );
   const defaultPackage = item?.package ?? SERVICES[service].packages[0].name;
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -1161,7 +1262,7 @@ function AppointmentModal({ item, clients, onClose, onSave }: { item?: Appointme
   return (
     <ModalShell eyebrow="Agenda CARELA" title={item ? "Editar cita" : "Reservar una cita"} onClose={onClose}>
       <form onSubmit={submit} className="grid gap-5 p-6 sm:grid-cols-2">
-        <Field label="Clienta" className="sm:col-span-2"><select name="clientId" defaultValue={item?.clientId ?? clients[0]?.id} required className={fieldClass}>{clients.map((client) => <option key={client.id} value={client.id}>{client.name} · {client.phone}</option>)}</select></Field>
+        <Field label="Clienta" className="sm:col-span-2"><select name="clientId" defaultValue={item?.clientId ?? initialClientId ?? clients[0]?.id} required className={fieldClass}>{clients.map((client) => <option key={client.id} value={client.id}>{client.name} · {client.phone}</option>)}</select></Field>
         <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? "2026-07-28"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Hora"><input name="time" type="time" required defaultValue={item?.time ?? "10:00"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Servicio"><select name="service" value={service} onChange={(event) => setService(event.target.value as ServiceKey)} className={fieldClass}>{serviceKeys.map((key) => <option key={key} value={key}>{SERVICES[key].label}</option>)}</select></Field>
