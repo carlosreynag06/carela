@@ -122,11 +122,11 @@ export default function SobreLeidaniaPage() {
             <Reveal>
               <div className="relative mx-auto aspect-[4/5] w-full max-w-[34rem] overflow-hidden border border-champagne-gold/20 shadow-premium lg:mx-0">
                 <Image
-                  src="/images/service-page-masajes.png"
-                  alt="Experiencia de cuidado personal durante un masaje de hombros"
+                  src="/images/sobre-intencion-carela.png"
+                  alt="Profesional de bienestar preparando con calma un espacio de atención personalizado"
                   fill
                   sizes="(min-width: 1024px) 34rem, 86vw"
-                  className="object-cover object-[56%_center]"
+                  className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
                 <div className="absolute inset-x-5 bottom-5 border border-champagne-gold/25 bg-background/80 p-5 backdrop-blur-md">
@@ -296,13 +296,13 @@ export default function SobreLeidaniaPage() {
             </Reveal>
 
             <Reveal className="h-full" delay={0.1}>
-              <div className="relative aspect-[4/3] overflow-hidden border border-champagne-gold/20 shadow-premium lg:h-full lg:min-h-[30rem] lg:aspect-auto">
+              <div className="relative aspect-[4/5] overflow-hidden border border-champagne-gold/20 shadow-premium lg:h-full lg:min-h-[34rem] lg:aspect-auto">
                 <Image
-                  src="/images/testimonial-depilacion.png"
-                  alt="Productos de cuidado para una experiencia de depilación con cera en CARELA"
+                  src="/images/sobre-experiencia-boutique.png"
+                  alt="Espacio boutique de CARELA preparado con camilla, toallas y detalles cálidos"
                   fill
                   sizes="(min-width: 1024px) 40vw, 86vw"
-                  className="object-cover object-center brightness-[1.14]"
+                  className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/45 via-transparent to-transparent" />
               </div>
