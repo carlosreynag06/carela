@@ -18,11 +18,11 @@ export const metadata = createPageMetadata({
 export default function PreciosPage() {
   return (
     <>
-      <section className="relative isolate min-h-[46svh] overflow-hidden border-b border-champagne-gold/12 bg-background pt-28">
+      <section className="relative isolate overflow-hidden border-b border-champagne-gold/12 bg-background pt-20 sm:pt-24 lg:min-h-[46svh] lg:pt-28">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(217,75,140,0.17),transparent_34%),radial-gradient(circle_at_18%_78%,rgba(217,168,78,0.12),transparent_32%)]" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/40 to-transparent" />
 
-        <Container className="relative z-10 grid min-h-[calc(46svh-7rem)] gap-10 py-14 lg:grid-cols-[0.96fr_1.04fr] lg:items-center lg:py-16">
+        <Container className="relative z-10 grid gap-8 py-12 sm:py-14 lg:min-h-[calc(46svh-7rem)] lg:grid-cols-[0.96fr_1.04fr] lg:items-center lg:gap-10 lg:py-16">
           <Reveal>
             <div>
               <DecorativeDivider />
@@ -42,11 +42,19 @@ export default function PreciosPage() {
                 Los paquetes son una guía inicial; Leidania confirma el precio
                 final según modalidad, disponibilidad y detalles de tu cita.
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button href="#comparar-precios" icon={<ArrowRight size={18} />}>
+              <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+                <Button
+                  className="w-full sm:w-auto"
+                  href="#comparar-precios"
+                  icon={<ArrowRight size={18} />}
+                >
                   Ver paquetes
                 </Button>
-                <Button href={whatsapp.url} variant="ghost">
+                <Button
+                  className="w-full sm:w-auto"
+                  href={whatsapp.url}
+                  variant="ghost"
+                >
                   Consultar por WhatsApp
                 </Button>
               </div>
@@ -56,9 +64,9 @@ export default function PreciosPage() {
       </section>
 
       <Section
-        className="border-b border-champagne-gold/12"
+        className="scroll-mt-20 border-b border-champagne-gold/12 py-16 sm:py-20 lg:py-32"
         id="comparar-precios"
-        spacing="lg"
+        spacing="none"
         tone="black"
       >
         <PricingTabs />

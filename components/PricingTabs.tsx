@@ -378,6 +378,32 @@ function renderFeatureValue(value: FeatureValue) {
   );
 }
 
+function renderMobileFeatureValue(value: FeatureValue) {
+  if (value === true) {
+    return (
+      <span className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-soft-gold">
+        <Check size={14} strokeWidth={2.6} aria-hidden="true" />
+        Incluido
+      </span>
+    );
+  }
+
+  if (value === false) {
+    return (
+      <span className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-muted-taupe/62">
+        <X size={14} aria-hidden="true" />
+        No incluido
+      </span>
+    );
+  }
+
+  return (
+    <span className="shrink-0 text-right text-xs font-bold text-soft-gold">
+      {value}
+    </span>
+  );
+}
+
 export function PricingTabs() {
   const [activeSlug, setActiveSlug] = useState<Service["slug"]>("masajes");
 
@@ -415,7 +441,7 @@ export function PricingTabs() {
   return (
     <Container>
       <Reveal>
-        <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
           <div>
             <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
               Elige un servicio
@@ -433,7 +459,11 @@ export function PricingTabs() {
       </Reveal>
 
       <Reveal delay={0.08}>
-        <div className="mt-10 grid gap-3 rounded-full border border-champagne-gold/18 bg-warm-charcoal/70 p-2 shadow-premium backdrop-blur md:grid-cols-4">
+        <div
+          className="mt-8 grid grid-cols-2 gap-1.5 rounded-[1.5rem] border border-champagne-gold/18 bg-warm-charcoal/70 p-1.5 shadow-premium backdrop-blur sm:mt-10 sm:gap-2 sm:p-2 md:grid-cols-4 md:rounded-full"
+          role="group"
+          aria-label="Servicios disponibles"
+        >
           {services.map((service) => {
             const Icon = service.icon;
             const active = service.slug === activeSlug;
@@ -443,7 +473,7 @@ export function PricingTabs() {
                 key={service.slug}
                 id={service.slug}
                 className={cn(
-                  "relative isolate flex min-h-14 items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soft-gold",
+                  "relative isolate flex min-h-13 items-center justify-center gap-2 rounded-full px-3 py-3 text-xs font-semibold transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-soft-gold sm:min-h-14 sm:px-4 sm:text-sm",
                   active
                     ? "text-background"
                     : "text-warm-cream/76 hover:text-warm-cream",
@@ -477,14 +507,14 @@ export function PricingTabs() {
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, y: -12, filter: "blur(8px)" }}
           transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-12"
+          className="mt-9 sm:mt-12"
         >
-          <div className="mb-8 grid gap-5 border border-champagne-gold/16 bg-warm-charcoal/45 px-5 py-5 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-7">
+          <div className="mb-6 grid gap-4 border border-champagne-gold/16 bg-warm-charcoal/45 px-4 py-5 sm:mb-8 sm:gap-5 sm:px-5 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-7">
             <div>
               <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
                 {activePricing.eyebrow}
               </p>
-              <h3 className="mt-2 max-w-3xl font-serif text-3xl leading-tight text-warm-cream text-balance sm:text-4xl">
+              <h3 className="mt-2 max-w-3xl font-serif text-[1.75rem] leading-tight text-warm-cream text-balance sm:text-4xl">
                 {activePricing.headline}
               </h3>
             </div>
@@ -493,7 +523,79 @@ export function PricingTabs() {
             </p>
           </div>
 
-          <div className="overflow-hidden border border-champagne-gold/18 bg-warm-charcoal/72 shadow-premium">
+          <div className="grid gap-4 md:grid-cols-2 xl:hidden">
+            {activePricing.plans.map((plan, planIndex) => (
+              <article
+                key={plan.key}
+                className={cn(
+                  "relative flex h-full flex-col overflow-hidden border p-5 shadow-premium sm:p-6",
+                  planIndex === 2 &&
+                    "md:col-span-2 md:mx-auto md:w-[calc(50%-0.5rem)]",
+                  plan.featured
+                    ? "border-champagne-gold/45 bg-[linear-gradient(145deg,rgba(217,168,78,0.2),rgba(143,31,84,0.18),rgba(10,7,8,0.96))]"
+                    : "border-champagne-gold/18 bg-warm-charcoal/72",
+                )}
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/80 to-transparent" />
+
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-rose-pink">
+                      Paquete {String(planIndex + 1).padStart(2, "0")}
+                    </p>
+                    <h4 className="mt-2 font-serif text-2xl leading-tight text-warm-cream">
+                      {plan.name}
+                    </h4>
+                  </div>
+                  {plan.featured ? (
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-rose-pink px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-warm-cream">
+                      <Sparkles size={11} aria-hidden="true" />
+                      Popular
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="mt-6 flex flex-wrap items-end justify-between gap-3 border-b border-champagne-gold/14 pb-5">
+                  <p className="font-serif text-[2.65rem] leading-none text-champagne-gold sm:text-5xl">
+                    {plan.price}
+                  </p>
+                  <span className="inline-flex min-h-9 items-center gap-2 border border-champagne-gold/22 bg-background/40 px-3 py-2 text-xs font-semibold text-muted-taupe">
+                    <Clock3 size={14} className="text-champagne-gold" aria-hidden="true" />
+                    {plan.cadence}
+                  </span>
+                </div>
+
+                <p className="mt-5 text-sm leading-7 text-muted-taupe">
+                  {plan.description}
+                </p>
+
+                <div className="mt-6 divide-y divide-champagne-gold/12 border-y border-champagne-gold/12">
+                  {activePricing.features.map((feature) => (
+                    <div
+                      key={feature.label}
+                      className="flex min-h-14 items-center justify-between gap-4 py-3"
+                    >
+                      <span className="max-w-[62%] text-xs font-semibold leading-5 text-warm-cream/82">
+                        {feature.label}
+                      </span>
+                      {renderMobileFeatureValue(feature.values[plan.key])}
+                    </div>
+                  ))}
+                </div>
+
+                <Button
+                  className="mt-6 w-full"
+                  href={getWhatsAppUrl(activeService.title, plan.name)}
+                  icon={<MessageCircle size={17} />}
+                  variant={plan.featured ? "primary" : "ghost"}
+                >
+                  Consultar este paquete
+                </Button>
+              </article>
+            ))}
+          </div>
+
+          <div className="hidden overflow-hidden border border-champagne-gold/18 bg-warm-charcoal/72 shadow-premium xl:block">
             <div className="overflow-x-auto">
               <div className="grid min-w-[960px] grid-cols-[minmax(17rem,0.95fr)_repeat(3,minmax(13.5rem,1fr))]">
                 <div className="flex min-h-60 flex-col justify-between border-b border-r border-champagne-gold/16 bg-background/40 p-6">
@@ -609,7 +711,7 @@ export function PricingTabs() {
             </div>
           </div>
 
-          <div className="mt-16 grid gap-10 lg:mt-20 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
+          <div className="mt-14 grid gap-8 sm:mt-16 sm:gap-10 lg:mt-20 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
             <div className="lg:sticky lg:top-28">
               <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
                 Preguntas frecuentes
@@ -622,7 +724,7 @@ export function PricingTabs() {
                 la modalidad que prefieres.
               </p>
               <Button
-                className="mt-7"
+                className="mt-7 w-full sm:w-auto"
                 href={getWhatsAppUrl(activeService.title, "consulta personalizada")}
                 icon={<CircleDollarSign size={18} />}
                 variant="ghost"
