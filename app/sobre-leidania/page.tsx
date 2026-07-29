@@ -85,7 +85,7 @@ export default function SobreLeidaniaPage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[72%_center] brightness-[1.08] lg:object-center"
+          className="object-cover object-[72%_25%] brightness-[1.08] lg:object-[center_25%]"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.86)_46%,rgba(5,3,4,0.28)_78%,rgba(5,3,4,0.12)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.72),transparent_45%)]" />
