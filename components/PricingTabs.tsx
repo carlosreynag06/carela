@@ -473,7 +473,7 @@ export function PricingTabs() {
                 key={service.slug}
                 id={service.slug}
                 className={cn(
-                  "relative isolate flex min-h-13 items-center justify-center gap-2 rounded-full px-3 py-3 text-xs font-semibold transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-soft-gold sm:min-h-14 sm:px-4 sm:text-sm",
+                  "relative isolate flex min-h-13 items-center justify-center gap-2 rounded-full px-3 py-3 text-sm font-semibold transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-soft-gold sm:min-h-14 sm:px-4",
                   active
                     ? "text-background"
                     : "text-warm-cream/76 hover:text-warm-cream",
