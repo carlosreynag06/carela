@@ -7,18 +7,19 @@ export type Testimonial = {
   name: string;
   initials: string;
   service: string;
-  image: string;
-  imageAlt: string;
   quote: string;
 };
 
 type TestimonialsCarouselProps = {
   testimonials: Testimonial[];
+  layout?: "carousel" | "grid";
 };
 
 export function TestimonialsCarousel({
   testimonials,
+  layout = "carousel",
 }: TestimonialsCarouselProps) {
+  const isGrid = layout === "grid";
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollBack, setCanScrollBack] = useState(false);
   const [canScrollForward, setCanScrollForward] = useState(true);
@@ -35,11 +36,13 @@ export function TestimonialsCarousel({
   }, []);
 
   useEffect(() => {
+    if (isGrid) return;
+
     updateControls();
     window.addEventListener("resize", updateControls);
 
     return () => window.removeEventListener("resize", updateControls);
-  }, [updateControls]);
+  }, [isGrid, updateControls]);
 
   function scroll(direction: -1 | 1) {
     const track = trackRef.current;
@@ -54,15 +57,23 @@ export function TestimonialsCarousel({
   return (
     <div className="relative mt-10">
       <div
-        ref={trackRef}
-        onScroll={updateControls}
-        className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        ref={isGrid ? undefined : trackRef}
+        onScroll={isGrid ? undefined : updateControls}
+        className={
+          isGrid
+            ? "grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            : "flex snap-x snap-mandatory gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        }
       >
         {testimonials.map((testimonial, index) => (
           <article
             key={testimonial.name}
             data-testimonial
-            className="group relative flex min-h-[32rem] min-w-0 shrink-0 basis-[86%] snap-start flex-col overflow-hidden border border-champagne-gold/18 bg-[linear-gradient(145deg,rgba(28,17,19,0.98),rgba(10,7,8,0.96))] shadow-premium transition duration-500 hover:-translate-y-1 hover:border-champagne-gold/42 sm:basis-[62%] lg:basis-[calc((100%-3rem)/3)]"
+            className={`group relative flex min-h-[32rem] min-w-0 flex-col overflow-hidden border border-champagne-gold/18 bg-[linear-gradient(145deg,rgba(28,17,19,0.98),rgba(10,7,8,0.96))] shadow-premium transition duration-500 hover:-translate-y-1 hover:border-champagne-gold/42 ${
+              isGrid
+                ? "h-full"
+                : "shrink-0 basis-[86%] snap-start sm:basis-[62%] lg:basis-[calc((100%-3rem)/3)]"
+            }`}
           >
             <div
               className="pointer-events-none absolute -right-20 -top-20 size-56 rounded-full border border-champagne-gold/10 transition duration-700 group-hover:scale-110 group-hover:border-champagne-gold/18"
@@ -133,27 +144,31 @@ export function TestimonialsCarousel({
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={() => scroll(-1)}
-        disabled={!canScrollBack}
-        aria-label="Ver testimonios anteriores"
-        title="Testimonios anteriores"
-        className="absolute left-0 top-1/2 z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-champagne-gold/45 bg-warm-charcoal text-warm-cream shadow-lg transition hover:border-champagne-gold hover:bg-champagne-gold hover:text-background disabled:pointer-events-none disabled:opacity-35 max-sm:left-5 max-sm:translate-x-0"
-      >
-        <ArrowLeft size={22} aria-hidden="true" />
-      </button>
+      {!isGrid && (
+        <>
+          <button
+            type="button"
+            onClick={() => scroll(-1)}
+            disabled={!canScrollBack}
+            aria-label="Ver testimonios anteriores"
+            title="Testimonios anteriores"
+            className="absolute left-0 top-1/2 z-10 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-champagne-gold/45 bg-warm-charcoal text-warm-cream shadow-lg transition hover:border-champagne-gold hover:bg-champagne-gold hover:text-background disabled:pointer-events-none disabled:opacity-35 max-sm:left-5 max-sm:translate-x-0"
+          >
+            <ArrowLeft size={22} aria-hidden="true" />
+          </button>
 
-      <button
-        type="button"
-        onClick={() => scroll(1)}
-        disabled={!canScrollForward}
-        aria-label="Ver más testimonios"
-        title="Más testimonios"
-        className="absolute right-0 top-1/2 z-10 flex size-14 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-champagne-gold bg-champagne-gold text-background shadow-lg transition hover:bg-soft-gold disabled:pointer-events-none disabled:opacity-35 max-sm:right-5 max-sm:translate-x-0"
-      >
-        <ArrowRight size={22} aria-hidden="true" />
-      </button>
+          <button
+            type="button"
+            onClick={() => scroll(1)}
+            disabled={!canScrollForward}
+            aria-label="Ver más testimonios"
+            title="Más testimonios"
+            className="absolute right-0 top-1/2 z-10 flex size-14 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-champagne-gold bg-champagne-gold text-background shadow-lg transition hover:bg-soft-gold disabled:pointer-events-none disabled:opacity-35 max-sm:right-5 max-sm:translate-x-0"
+          >
+            <ArrowRight size={22} aria-hidden="true" />
+          </button>
+        </>
+      )}
     </div>
   );
 }

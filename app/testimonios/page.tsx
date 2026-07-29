@@ -7,7 +7,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Sparkles,
-  Star,
 } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
@@ -124,8 +123,8 @@ export default function TestimoniosPage() {
                   Experiencias contadas por ellas
                 </h2>
                 <p className="mt-5 max-w-2xl text-lead text-muted-taupe">
-                  Cuatro servicios y cuatro formas distintas de volver a
-                  sentirse cuidada, ligera y segura.
+                  Seis experiencias y distintas formas de volver a sentirse
+                  cuidada, ligera y segura.
                 </p>
               </div>
               <Button
@@ -139,74 +138,7 @@ export default function TestimoniosPage() {
             </div>
           </Reveal>
 
-          <TestimonialsCarousel testimonials={testimonials} />
-        </Container>
-      </Section>
-
-      <Section className="border-t border-champagne-gold/12" spacing="lg" tone="black">
-        <Container>
-          <Reveal>
-            <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
-              <div>
-                <DecorativeDivider />
-                <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-                  Cuatro resultados reales
-                </p>
-                <h2 className="mt-4 font-serif text-section-title text-champagne-gold text-balance">
-                  Una historia para cada servicio
-                </h2>
-              </div>
-              <p className="max-w-2xl text-lead text-muted-taupe">
-                Cada experiencia cambia, pero la sensación de haber recibido un
-                cuidado atento permanece.
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            {testimonials.map((testimonial, index) => (
-              <Reveal key={testimonial.name} delay={index * 0.07}>
-                <article className="group relative min-h-[31rem] overflow-hidden border border-champagne-gold/16 bg-warm-charcoal">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.imageAlt}
-                    fill
-                    sizes="(min-width: 768px) 43vw, 86vw"
-                    className="object-cover object-center transition duration-700 group-hover:scale-[1.025]"
-                  />
-                  <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.82)_34%,rgba(5,3,4,0.08)_72%)]" />
-                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="text-xs uppercase tracking-[0.2em] text-rose-pink">
-                        {testimonial.service}
-                      </span>
-                      <span className="flex gap-0.5 text-champagne-gold" aria-label="5 de 5 estrellas">
-                        {Array.from({ length: 5 }).map((_, starIndex) => (
-                          <Star
-                            key={starIndex}
-                            size={13}
-                            fill="currentColor"
-                            aria-hidden
-                          />
-                        ))}
-                      </span>
-                    </div>
-                    <blockquote className="mt-4 max-w-2xl font-serif text-2xl leading-8 text-warm-cream sm:text-3xl sm:leading-10">
-                      “{testimonial.quote}”
-                    </blockquote>
-                    <div className="mt-5 flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center border border-champagne-gold/35 bg-background/65 font-serif text-sm text-champagne-gold">
-                        {testimonial.initials}
-                      </span>
-                      <span className="text-sm text-warm-cream/78">
-                        {testimonial.name}
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          <TestimonialsCarousel testimonials={testimonials} layout="grid" />
         </Container>
       </Section>
 
