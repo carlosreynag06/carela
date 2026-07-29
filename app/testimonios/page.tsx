@@ -57,8 +57,8 @@ export default function TestimoniosPage() {
     <>
       <section className="relative isolate min-h-[72svh] overflow-hidden border-b border-champagne-gold/12 bg-background">
         <Image
-          src="/images/testimonial-cejas.png"
-          alt="Clienta admirando el resultado natural de su servicio CARELA"
+          src="/images/testimonios-hero-mirror-v2.png"
+          alt="Clienta admirando el resultado natural de sus cejas reflejado en un espejo"
           fill
           priority
           sizes="100vw"

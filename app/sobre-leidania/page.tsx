@@ -252,9 +252,9 @@ export default function SobreLeidaniaPage() {
 
       <Section className="border-t border-champagne-gold/12" spacing="lg" tone="charcoal">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-20">
-            <Reveal>
-              <div>
+          <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch lg:gap-20">
+            <Reveal className="h-full">
+              <div className="flex h-full flex-col">
                 <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
                   Experiencia boutique
                 </p>
@@ -278,7 +278,7 @@ export default function SobreLeidaniaPage() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-8 flex flex-wrap gap-3">
+                <div className="mt-auto flex flex-wrap gap-3 pt-8">
                   <Button
                     href="/servicios"
                     variant="ghost"
@@ -295,8 +295,8 @@ export default function SobreLeidaniaPage() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.1}>
-              <div className="relative aspect-[4/3] overflow-hidden border border-champagne-gold/20 shadow-premium">
+            <Reveal className="h-full" delay={0.1}>
+              <div className="relative aspect-[4/3] overflow-hidden border border-champagne-gold/20 shadow-premium lg:h-full lg:min-h-[30rem] lg:aspect-auto">
                 <Image
                   src="/images/testimonial-depilacion.png"
                   alt="Productos de cuidado para una experiencia de depilación con cera en CARELA"
