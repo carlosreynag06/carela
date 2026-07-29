@@ -129,8 +129,8 @@ function Hero() {
         sizes="100vw"
         className="object-cover object-center"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.96)_0%,rgba(5,3,4,0.86)_32%,rgba(5,3,4,0.42)_64%,rgba(5,3,4,0.16)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,3,4,0.62)_0%,rgba(5,3,4,0.12)_42%,rgba(5,3,4,0.8)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.96)_0%,rgba(5,3,4,0.86)_32%,rgba(5,3,4,0.3)_66%,rgba(5,3,4,0.06)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,3,4,0.48)_0%,rgba(5,3,4,0.08)_42%,rgba(5,3,4,0.64)_100%)]" />
 
       <Container className="relative z-10 flex min-h-svh items-center pt-28">
         <div className="w-full py-16">
