@@ -25,12 +25,6 @@ import { services } from "@/data/services";
 import { testimonials } from "@/data/testimonials";
 import { whatsapp } from "@/lib/site";
 
-const boutiqueBenefits = [
-  "Atención directa de Leidania",
-  "Ambiente acogedor",
-  "Servicio a domicilio disponible",
-];
-
 const whyUsItems = [
   {
     title: "Trato personal",
@@ -117,7 +111,6 @@ export default function Home() {
       <ServicesPreview />
       <WhyUsSection />
       <HowItWorksSection />
-      <BoutiqueExperience />
       <TestimonialsSection />
       <FAQSection />
       <BookingCTASection />
@@ -400,59 +393,6 @@ function HowItWorksSection() {
   );
 }
 
-function BoutiqueExperience() {
-  return (
-    <Section
-      className="isolate min-h-[340px] border-y border-champagne-gold/12"
-      spacing="none"
-      tone="black"
-    >
-      <Image
-        src="/images/boutique-experience-divider.png"
-        alt=""
-        fill
-        sizes="100vw"
-        className="object-cover object-center brightness-[1.14] saturate-[1.06]"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.88),rgba(5,3,4,0.55)_46%,rgba(5,3,4,0.08))]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_24%,rgba(217,75,140,0.08),transparent_34%)]" />
-
-      <Container className="relative z-10 flex min-h-[340px] items-center py-12">
-        <Reveal>
-          <div className="max-w-4xl">
-            <p className="text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
-              Experiencia boutique
-            </p>
-            <h2 className="mt-4 max-w-3xl font-serif text-4xl leading-tight text-champagne-gold text-balance sm:text-5xl">
-              Una experiencia privada, cálida y pensada solo para ti
-            </h2>
-            <p className="mt-5 max-w-2xl text-copy text-warm-cream/82">
-              Cada cita se trabaja con calma, detalle y atención personalizada
-              para que puedas desconectarte, verte mejor y volver a sentirte en
-              balance.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {boutiqueBenefits.map((benefit) => (
-                <span
-                  key={benefit}
-                  className="inline-flex items-center gap-2 border border-champagne-gold/22 bg-background/62 px-4 py-2.5 text-sm text-warm-cream/86 backdrop-blur-md"
-                >
-                  <CheckCircle2
-                    className="text-champagne-gold"
-                    size={16}
-                    aria-hidden
-                  />
-                  {benefit}
-                </span>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-      </Container>
-    </Section>
-  );
-}
-
 function TestimonialsSection() {
   return (
     <Section
@@ -567,16 +507,11 @@ function BookingCTASection() {
     <Section spacing="lg" tone="black">
       <Container>
         <Reveal>
-          <div className="relative isolate overflow-hidden border border-champagne-gold/28 bg-background shadow-premium">
-            <Image
-              src="/images/hero-carela-spa.png"
-              alt=""
-              fill
-              sizes="86vw"
-              className="object-cover object-center brightness-[1.12] saturate-[1.06]"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.92),rgba(5,3,4,0.62)_48%,rgba(5,3,4,0.1))]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(217,75,140,0.08),transparent_34%)]" />
+          <div className="relative isolate overflow-hidden border border-champagne-gold/28 bg-[linear-gradient(135deg,rgba(143,31,84,0.2),rgba(18,12,14,0.98)_42%,rgba(217,168,78,0.1))] shadow-premium">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-champagne-gold/90 to-transparent" />
+            <div className="absolute -right-28 -top-36 size-[28rem] rounded-full border border-champagne-gold/14" />
+            <div className="absolute -right-12 -top-20 size-72 rounded-full border border-rose-pink/12" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(217,75,140,0.17),transparent_30%),radial-gradient(circle_at_14%_88%,rgba(217,168,78,0.1),transparent_28%)]" />
 
             <div className="relative z-10 grid gap-10 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-end lg:p-14">
               <div className="max-w-3xl">
@@ -596,8 +531,16 @@ function BookingCTASection() {
                 </p>
               </div>
 
-              <div className="flex flex-col items-start gap-4 lg:items-end">
-                <Button href={whatsapp.url} icon={<ArrowRight size={18} />} size="lg">
+              <div className="flex flex-col items-start gap-4 border-l border-champagne-gold/25 pl-5 lg:items-end lg:border-l-0 lg:pl-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-warm-cream/58">
+                  Atención directa con Leidania
+                </p>
+                <Button
+                  className="w-full sm:w-auto"
+                  href={whatsapp.url}
+                  icon={<ArrowRight size={18} />}
+                  size="lg"
+                >
                   Reservar por WhatsApp
                 </Button>
                 <p className="max-w-xs text-sm leading-6 text-muted-taupe lg:text-right">
