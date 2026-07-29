@@ -298,8 +298,8 @@ export default function SobreLeidaniaPage() {
             <Reveal delay={0.1}>
               <div className="relative aspect-[4/3] overflow-hidden border border-champagne-gold/20 shadow-premium">
                 <Image
-                  src="/images/testimonial-cejas.png"
-                  alt="Clienta admirando el resultado natural de sus cejas en una experiencia CARELA"
+                  src="/images/testimonial-depilacion.png"
+                  alt="Productos de cuidado para una experiencia de depilación con cera en CARELA"
                   fill
                   sizes="(min-width: 1024px) 40vw, 86vw"
                   className="object-cover object-center brightness-[1.14]"
