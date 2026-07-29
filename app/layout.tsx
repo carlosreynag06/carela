@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Great_Vibes, Manrope } from "next/font/google";
 import { SiteFrame } from "@/components/layout/SiteFrame";
+import {
+  brandName,
+  siteUrl,
+  socialImages,
+  socialImageUrl,
+} from "@/lib/seo";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -22,49 +28,38 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
-const siteUrl = "https://www.carelaspa.com";
-const socialImageUrl = `${siteUrl}/og-carela-v5.jpg`;
-const fallbackSocialImageUrl = `${siteUrl}/og-carela-v5.png`;
+const homeTitle = `Masajes y belleza en Puerto Plata | ${brandName}`;
+const homeDescription =
+  "Masajes, cejas, pestañas y depilación con atención personalizada en Puerto Plata, República Dominicana. Reserva tu experiencia CARELA.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "CARELA Beauty & Wellness",
-  description:
-    "Belleza y bienestar personalizado con Leidania Carela en Puerto Plata.",
+  title: {
+    default: homeTitle,
+    template: `%s | ${brandName}`,
+  },
+  description: homeDescription,
   alternates: {
-    canonical: siteUrl,
+    canonical: "/",
   },
   openGraph: {
-    title: "CARELA Beauty & Wellness",
-    description:
-      "Eleva tu belleza y tu bienestar con una experiencia personalizada en Puerto Plata.",
+    title: homeTitle,
+    description: homeDescription,
     type: "website",
-    url: siteUrl,
+    url: "/",
     locale: "es_DO",
-    siteName: "CARELA Beauty & Wellness",
-    images: [
-      {
-        url: socialImageUrl,
-        width: 1200,
-        height: 630,
-        type: "image/jpeg",
-        alt: "CARELA Beauty & Wellness en Puerto Plata",
-      },
-      {
-        url: fallbackSocialImageUrl,
-        width: 1200,
-        height: 630,
-        type: "image/png",
-        alt: "CARELA Beauty & Wellness en Puerto Plata",
-      },
-    ],
+    siteName: brandName,
+    images: socialImages,
   },
   twitter: {
     card: "summary_large_image",
-    title: "CARELA Beauty & Wellness",
-    description:
-      "Eleva tu belleza y tu bienestar con una experiencia personalizada en Puerto Plata.",
+    title: homeTitle,
+    description: homeDescription,
     images: [socialImageUrl],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -75,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="es"
+      lang="es-DO"
       className={`${cormorant.variable} ${manrope.variable} ${greatVibes.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">

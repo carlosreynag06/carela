@@ -19,6 +19,7 @@ import { ImageFrame } from "@/components/ImageFrame";
 import { PremiumCard } from "@/components/PremiumCard";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
+import { LocalBusinessJsonLd } from "@/components/seo/LocalBusinessJsonLd";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { services } from "@/data/services";
 import { testimonials } from "@/data/testimonials";
@@ -111,6 +112,7 @@ const faqItems = [
 export default function Home() {
   return (
     <>
+      <LocalBusinessJsonLd />
       <Hero />
       <ServicesPreview />
       <WhyUsSection />

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { CalendarCheck, Eye, Flower2, HandHeart, MessageCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
@@ -6,13 +5,15 @@ import { FAQAccordion } from "@/components/FAQAccordion";
 import { SupportPageHero } from "@/components/SupportPageHero";
 import { SupportSidebar, type SupportSidebarItem } from "@/components/SupportSidebar";
 import { faqCategories } from "@/data/support";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Preguntas Frecuentes | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Preguntas frecuentes",
   description:
-    "Respuestas sobre reservas, servicios, precios y cuidados de CARELA Beauty & Wellness.",
-};
+    "Respuestas sobre reservas, servicios, precios y cuidados de CARELA Beauty & Wellness en Puerto Plata.",
+  path: "/preguntas",
+});
 
 const categoryIcons = [CalendarCheck, HandHeart, Eye, Sparkles, Flower2];
 

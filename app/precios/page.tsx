@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
@@ -6,13 +5,15 @@ import { DecorativeDivider } from "@/components/DecorativeDivider";
 import { PricingTabs } from "@/components/PricingTabs";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Precios | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Precios en Puerto Plata",
   description:
-    "Compara paquetes y precios para masajes, cejas, pestanas y depilacion en CARELA Beauty & Wellness.",
-};
+    "Compara precios de masajes, cejas, pestañas y depilación en CARELA Beauty & Wellness, Puerto Plata, República Dominicana.",
+  path: "/precios",
+});
 
 export default function PreciosPage() {
   return (

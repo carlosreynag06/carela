@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowRight, Check, Clock3, MessageCircle } from "lucide-react";
 import { Button } from "@/components/Button";
@@ -7,13 +6,15 @@ import { Reveal } from "@/components/Reveal";
 import { ServiceImageHero } from "@/components/ServiceImageHero";
 import { ServiceSectionTabs } from "@/components/ServiceSectionTabs";
 import { services } from "@/data/services";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Servicios | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Servicios en Puerto Plata",
   description:
-    "Conoce los servicios de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata.",
-};
+    "Conoce los servicios de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata, República Dominicana.",
+  path: "/servicios",
+});
 
 const serviceDetails = {
   masajes: {

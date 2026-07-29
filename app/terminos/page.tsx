@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import { BadgeDollarSign, CalendarClock, FileText, HeartHandshake, MessageCircle, Scale, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { SupportPageHero } from "@/components/SupportPageHero";
 import { SupportSidebar, type SupportSidebarItem } from "@/components/SupportSidebar";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Términos y Condiciones | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Términos y condiciones",
   description:
     "Términos y condiciones de reserva, atención y uso del sitio de CARELA Beauty & Wellness.",
-};
+  path: "/terminos",
+});
 
 const terms = [
   {

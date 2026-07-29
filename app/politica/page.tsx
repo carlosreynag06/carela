@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import { Database, Eye, FileKey2, LockKeyhole, MessageCircle, ShieldCheck, UserRoundCheck } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { SupportPageHero } from "@/components/SupportPageHero";
 import { SupportSidebar, type SupportSidebarItem } from "@/components/SupportSidebar";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Política de Privacidad | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Política de privacidad",
   description:
     "Cómo CARELA Beauty & Wellness trata la información compartida a través de su sitio y WhatsApp.",
-};
+  path: "/politica",
+});
 
 const policySections = [
   {

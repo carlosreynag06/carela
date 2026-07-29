@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,13 +16,15 @@ import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { testimonials } from "@/data/testimonials";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Testimonios | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Testimonios de clientas",
   description:
     "Conoce las experiencias de clientas de CARELA Beauty & Wellness en Puerto Plata.",
-};
+  path: "/testimonios",
+});
 
 const trustSignals = [
   { value: "4", label: "Servicios especializados" },

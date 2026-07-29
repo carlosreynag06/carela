@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -16,13 +15,15 @@ import { Container } from "@/components/Container";
 import { DecorativeDivider } from "@/components/DecorativeDivider";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
+import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Sobre Leidania | CARELA Beauty & Wellness",
+export const metadata = createPageMetadata({
+  title: "Sobre Leidania Carela",
   description:
     "Conoce la visión de Leidania Carela y la atención personal detrás de CARELA Beauty & Wellness en Puerto Plata.",
-};
+  path: "/sobre-leidania",
+});
 
 const values = [
   {
