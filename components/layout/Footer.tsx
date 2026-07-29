@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { AtSign, MapPin, MessageCircle } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/Button";
+import { InstagramMark } from "@/components/brand/InstagramMark";
+import { WhatsAppMark } from "@/components/brand/WhatsAppMark";
 import { DecorativeDivider } from "@/components/DecorativeDivider";
 import { navItems } from "@/data/nav";
 import { services } from "@/data/services";
@@ -33,7 +35,7 @@ export function Footer() {
           <div className="mt-7">
             <Button
               href={whatsapp.url}
-              icon={<MessageCircle size={18} />}
+              icon={<WhatsAppMark size={18} />}
               variant="primary"
             >
               Reservar por WhatsApp
@@ -60,13 +62,15 @@ export function Footer() {
         <FooterColumn title="Contacto">
           <FooterExternalLink
             href={whatsapp.url}
-            icon={<MessageCircle size={16} aria-hidden="true" />}
+            icon={<WhatsAppMark size={20} />}
+            iconClassName="text-[#25d366]"
           >
             WhatsApp: {whatsapp.label}
           </FooterExternalLink>
           <FooterExternalLink
-            href="https://www.instagram.com/carela_b.w"
-            icon={<AtSign size={16} aria-hidden="true" />}
+            href={site.instagramUrl}
+            icon={<InstagramMark size={20} />}
+            iconClassName="text-rose-pink"
           >
             Instagram: {site.instagram}
           </FooterExternalLink>
@@ -136,19 +140,25 @@ function FooterExternalLink({
   children,
   href,
   icon,
+  iconClassName,
 }: {
   children: ReactNode;
   href: string;
   icon: ReactNode;
+  iconClassName?: string;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="flex items-start gap-2 text-sm leading-6 text-muted-taupe transition hover:text-warm-cream"
+      className="group flex items-center gap-3 text-sm leading-6 text-muted-taupe transition hover:text-warm-cream"
     >
-      <span className="mt-1 shrink-0 text-champagne-gold">{icon}</span>
+      <span
+        className={`flex size-9 shrink-0 items-center justify-center border border-champagne-gold/20 bg-background/35 transition group-hover:border-champagne-gold/55 group-hover:bg-champagne-gold/8 ${iconClassName ?? "text-champagne-gold"}`}
+      >
+        {icon}
+      </span>
       <span>{children}</span>
     </a>
   );

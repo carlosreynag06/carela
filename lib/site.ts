@@ -3,6 +3,8 @@ export const site = {
   owner: "Leidania Carela",
   location: "Puerto Plata, República Dominicana",
   instagram: "@carela_b.w",
+  instagramUrl:
+    "https://www.instagram.com/carela_b.w?utm_source=qr&igsh=eXk1ampsYjJxNHlu",
 } as const;
 
 export const whatsapp = {
