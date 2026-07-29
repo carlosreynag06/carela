@@ -298,8 +298,8 @@ export default function SobreLeidaniaPage() {
             <Reveal delay={0.1}>
               <div className="relative aspect-[4/3] overflow-hidden border border-champagne-gold/20 shadow-premium">
                 <Image
-                  src="/images/boutique-experience-divider.png"
-                  alt="Ambiente boutique con velas, toallas y detalles de bienestar"
+                  src="/images/testimonial-cejas.png"
+                  alt="Clienta admirando el resultado natural de sus cejas en una experiencia CARELA"
                   fill
                   sizes="(min-width: 1024px) 40vw, 86vw"
                   className="object-cover object-center brightness-[1.14]"
