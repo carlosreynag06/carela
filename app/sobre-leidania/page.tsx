@@ -80,12 +80,12 @@ export default function SobreLeidaniaPage() {
     <>
       <section className="relative isolate min-h-[74svh] overflow-hidden border-b border-champagne-gold/15 bg-background">
         <Image
-          src="/images/hero-carela-spa.png"
-          alt="Ambiente cálido de CARELA Beauty & Wellness"
+          src="/images/sobre-leidania-hero.png"
+          alt="Profesional de CARELA escuchando con atención a una clienta en un espacio privado"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center brightness-[1.08]"
+          className="object-cover object-[72%_center] brightness-[1.08] lg:object-center"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.86)_46%,rgba(5,3,4,0.28)_78%,rgba(5,3,4,0.12)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.72),transparent_45%)]" />
