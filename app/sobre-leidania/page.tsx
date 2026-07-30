@@ -78,7 +78,7 @@ const experienceNotes = [
 export default function SobreLeidaniaPage() {
   return (
     <>
-      <section className="relative isolate min-h-[74svh] overflow-hidden border-b border-champagne-gold/15 bg-background">
+      <section className="relative isolate min-h-svh overflow-hidden border-b border-champagne-gold/15 bg-background">
         <Image
           src="/images/sobre-leidania-hero.png"
           alt="Profesional de CARELA escuchando con atención a una clienta en un espacio privado"
@@ -89,9 +89,9 @@ export default function SobreLeidaniaPage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.86)_46%,rgba(5,3,4,0.18)_78%,rgba(5,3,4,0.04)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.48),transparent_42%)]" />
-        <Container className="relative z-10 flex min-h-[74svh] items-end pb-16 pt-36 lg:pb-20">
-          <Reveal>
-            <div className="max-w-5xl">
+        <Container className="relative z-10 flex min-h-svh items-center py-24">
+          <Reveal className="w-full">
+            <div className="max-w-5xl text-left">
               <DecorativeDivider />
               <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
                 Sobre Leidania Carela
