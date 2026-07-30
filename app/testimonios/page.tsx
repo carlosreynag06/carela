@@ -62,10 +62,10 @@ export default function TestimoniosPage() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center brightness-[1.12]"
+          className="object-cover object-[center_25%] brightness-[1.12]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98),rgba(5,3,4,0.83)_48%,rgba(5,3,4,0.22))]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/65 via-transparent to-background/15" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.83)_48%,rgba(5,3,4,0.14)_78%,rgba(5,3,4,0.03)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.42)_0%,transparent_45%,rgba(5,3,4,0.05)_100%)]" />
         <Container className="relative z-10 flex min-h-[72svh] items-end pb-16 pt-36 lg:pb-20">
           <Reveal>
             <div className="max-w-5xl">
