@@ -78,14 +78,26 @@ export default function TestimoniosPage() {
             </div>
           </div>
 
-          <div className="relative min-h-[44svh] border-t border-champagne-gold/15 lg:min-h-0 lg:border-l lg:border-t-0">
+          <div className="relative min-h-[54svh] overflow-hidden border-t border-champagne-gold/15 bg-[#171311] lg:min-h-0 lg:border-l lg:border-t-0">
+            <Image
+              src="/images/testimonios-hero-portrait.png"
+              alt=""
+              fill
+              aria-hidden="true"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="scale-110 object-cover object-center opacity-35 blur-xl"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,4,4,0.52)_0%,rgba(5,4,4,0.08)_32%,rgba(5,4,4,0.06)_68%,rgba(5,4,4,0.38)_100%)]"
+            />
             <Image
               src="/images/testimonios-hero-portrait.png"
               alt="Clienta de CARELA mostrando un resultado natural y una expresión segura"
               fill
               priority
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover object-[center_20%]"
+              className="object-contain object-center"
             />
           </div>
         </div>
