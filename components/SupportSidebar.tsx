@@ -15,7 +15,7 @@ export function SupportSidebar({
   title?: string;
 }) {
   return (
-    <aside className="lg:sticky lg:top-28">
+    <aside className="lg:sticky lg:top-28 lg:self-start">
       <p className="text-eyebrow uppercase tracking-[0.26em] text-rose-pink">
         {title}
       </p>
