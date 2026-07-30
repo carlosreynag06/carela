@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
@@ -25,12 +24,6 @@ export const metadata = createPageMetadata({
   path: "/testimonios",
 });
 
-const trustSignals = [
-  { value: "4", label: "Servicios especializados" },
-  { value: "1:1", label: "Atención completamente personal" },
-  { value: "5/5", label: "Cuidado en cada detalle" },
-];
-
 const rememberedDetails = [
   {
     title: "Sentirse escuchadas",
@@ -55,60 +48,47 @@ const rememberedDetails = [
 export default function TestimoniosPage() {
   return (
     <>
-      <section className="relative isolate min-h-[72svh] overflow-hidden border-b border-champagne-gold/12 bg-background">
-        <Image
-          src="/images/testimonios-hero-mirror-v2.png"
-          alt="Clienta admirando el resultado natural de sus cejas reflejado en un espejo"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[center_25%] brightness-[1.12]"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,3,4,0.98)_0%,rgba(5,3,4,0.83)_48%,rgba(5,3,4,0.14)_78%,rgba(5,3,4,0.03)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(5,3,4,0.42)_0%,transparent_45%,rgba(5,3,4,0.05)_100%)]" />
-        <Container className="relative z-10 flex min-h-[72svh] items-end pb-16 pt-36 lg:pb-20">
-          <Reveal>
-            <div className="max-w-5xl">
-              <DecorativeDivider />
-              <p className="mt-7 text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
+      <section className="relative isolate min-h-[100svh] w-full overflow-hidden border-b border-champagne-gold/15 bg-background">
+        <div className="grid min-h-[100svh] pt-20 lg:grid-cols-2">
+          <div className="flex items-center bg-background px-[var(--site-edge-gap)] py-16 lg:py-20 lg:pr-14 xl:pr-20">
+            <div className="max-w-2xl text-left">
+              <p className="carela-fade-rise text-eyebrow uppercase tracking-[0.28em] text-rose-pink">
                 Testimonios CARELA
               </p>
-              <h1 className="mt-5 max-w-5xl font-serif text-display text-champagne-gold text-balance">
-                Cuidado que se siente, resultados que se recuerdan
+
+              <h1 className="carela-fade-rise mt-6 font-serif text-[clamp(3rem,5.8vw,5.9rem)] font-normal leading-[0.94] text-champagne-gold text-balance">
+                Resultados Inolvidables
               </h1>
-              <p className="mt-7 max-w-2xl text-lead text-warm-cream/86">
+
+              <p className="carela-fade-rise-delay mt-7 max-w-xl text-sm leading-7 text-warm-cream/90 sm:text-base sm:leading-8">
                 Historias de mujeres que eligieron regalarse una experiencia
                 personal, tranquila y cuidada con Leidania.
               </p>
-              <Link
-                href="#historias"
-                className="mt-8 inline-flex items-center gap-3 text-sm font-semibold text-soft-gold transition hover:text-rose-pink"
-              >
-                Leer sus historias
-                <ArrowDown size={17} aria-hidden />
-              </Link>
-            </div>
-          </Reveal>
-        </Container>
-      </section>
 
-      <section className="border-b border-champagne-gold/14 bg-warm-charcoal">
-        <Container>
-          <div className="grid md:grid-cols-3">
-            {trustSignals.map((signal, index) => (
-              <Reveal key={signal.label} delay={index * 0.06}>
-                <div className="flex min-h-36 items-center gap-5 border-b border-champagne-gold/14 py-7 md:border-b-0 md:border-r md:px-8 first:md:pl-0 last:md:border-r-0 last:md:pr-0">
-                  <span className="font-serif text-5xl text-champagne-gold">
-                    {signal.value}
-                  </span>
-                  <p className="max-w-[13rem] text-sm leading-6 text-muted-taupe">
-                    {signal.label}
-                  </p>
-                </div>
-              </Reveal>
-            ))}
+              <div className="carela-fade-rise-delay-2 mt-9">
+                <Button
+                  href="#historias"
+                  size="lg"
+                  icon={<ArrowDown size={18} />}
+                  iconPosition="right"
+                >
+                  Leer sus historias
+                </Button>
+              </div>
+            </div>
           </div>
-        </Container>
+
+          <div className="relative min-h-[44svh] border-t border-champagne-gold/15 lg:min-h-0 lg:border-l lg:border-t-0">
+            <Image
+              src="/images/testimonios-hero-portrait.png"
+              alt="Clienta de CARELA mostrando un resultado natural y una expresión segura"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover object-[center_20%]"
+            />
+          </div>
+        </div>
       </section>
 
       <Section id="historias" spacing="lg" tone="charcoal">
