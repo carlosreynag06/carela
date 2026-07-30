@@ -30,7 +30,7 @@ export default function PreciosPage() {
                 Compara paquetes
               </p>
               <h1 className="mt-4 max-w-4xl font-serif text-section-title text-champagne-gold text-balance">
-                Elige el precio que mejor acompaña tu momento de cuidado.
+                Precios y paquetes de servicios
               </h1>
             </div>
           </Reveal>
