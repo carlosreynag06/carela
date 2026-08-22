@@ -33,7 +33,7 @@ const terms = [
     title: "Precios y pagos",
     icon: BadgeDollarSign,
     content:
-      "Los precios publicados son una guía para ayudarte a comparar opciones. El valor final se confirma antes de la cita y puede depender de la duración, zonas elegidas, combinación de servicios o modalidad a domicilio.",
+      "El precio final se confirma directamente contigo antes de la cita y puede depender de la duración, las zonas elegidas, la combinación de servicios o la modalidad a domicilio.",
   },
   {
     id: "cambios",

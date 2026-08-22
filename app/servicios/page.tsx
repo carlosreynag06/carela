@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, Check, Clock3, MessageCircle } from "lucide-react";
+import { Check, Clock3, MessageCircle } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Container } from "@/components/Container";
 import { Reveal } from "@/components/Reveal";
@@ -157,20 +157,12 @@ export default function ServiciosPage() {
                         ))}
                       </div>
 
-                      <div className="mt-9 flex flex-wrap gap-3">
+                      <div className="mt-9">
                         <Button
                           href={`${whatsapp.url}?text=${encodeURIComponent(`Hola Leidania, me interesa el servicio de ${service.title}.`)}`}
                           icon={<MessageCircle size={17} />}
                         >
                           Consultar por WhatsApp
-                        </Button>
-                        <Button
-                          href={`/precios#${service.slug}`}
-                          variant="ghost"
-                          icon={<ArrowRight size={16} />}
-                          iconPosition="right"
-                        >
-                          Ver precios
                         </Button>
                       </div>
                     </div>
