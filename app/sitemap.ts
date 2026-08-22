@@ -4,6 +4,7 @@ import { siteUrl } from "@/lib/seo";
 const publicRoutes = [
   "",
   "/servicios",
+  "/galeria",
   "/sobre-leidania",
   "/testimonios",
   "/preguntas",

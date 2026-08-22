@@ -27,7 +27,9 @@ import {
   Edit3,
   Eye,
   EyeOff,
+  ExternalLink,
   HandCoins,
+  Images,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -47,11 +49,12 @@ import {
 import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import { FinanceReportPreview } from "@/components/dashboard/FinanceReportPreview";
+import { GalleryManager } from "@/components/dashboard/GalleryManager";
 import type { FinanceReportData } from "@/lib/financeReport";
 
 type ServiceKey = "masajes" | "cejas" | "pestanas" | "depilacion";
 type Status = "confirmada" | "completada" | "pendiente" | "cancelada";
-type View = "resumen" | "citas" | "clientes" | "finanzas";
+type View = "resumen" | "citas" | "clientes" | "finanzas" | "galeria";
 
 type Client = {
   id: number;
@@ -376,6 +379,7 @@ export function CarelaDashboard() {
     { id: "citas", label: "Citas", icon: CalendarDays },
     { id: "clientes", label: "Clientes", icon: Users },
     { id: "finanzas", label: "Finanzas", icon: WalletCards },
+    { id: "galeria", label: "Galería", icon: Images },
   ];
 
   return (
@@ -503,14 +507,27 @@ export function CarelaDashboard() {
               <Bell size={17} />
               <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#d94b8c]" />
             </button>
-            <button
-              onClick={() => setModal({ type: "appointment" })}
-              className="flex h-10 items-center gap-2 bg-[#d9a84e] px-3 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] sm:px-5"
-            >
-              <Plus size={16} />
-              <span className="hidden sm:inline">Nueva cita</span>
-              <span className="sm:hidden">Cita</span>
-            </button>
+            {view === "galeria" ? (
+              <Link
+                href="/galeria"
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-10 items-center gap-2 bg-[#d9a84e] px-3 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] sm:px-5"
+              >
+                <ExternalLink size={16} />
+                <span className="hidden sm:inline">Ver galería pública</span>
+                <span className="sm:hidden">Ver página</span>
+              </Link>
+            ) : (
+              <button
+                onClick={() => setModal({ type: "appointment" })}
+                className="flex h-10 items-center gap-2 bg-[#d9a84e] px-3 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] sm:px-5"
+              >
+                <Plus size={16} />
+                <span className="hidden sm:inline">Nueva cita</span>
+                <span className="sm:hidden">Cita</span>
+              </button>
+            )}
           </div>
         </header>
 
@@ -526,52 +543,59 @@ export function CarelaDashboard() {
                 </h1>
               </div>
 
-              <div className="flex flex-wrap items-end gap-3">
-                <label className="min-w-[150px] flex-1 sm:flex-none">
-                  <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
-                    Servicio
-                  </span>
-                  <span className="relative block">
-                    <select
-                      value={serviceFilter}
-                      onChange={(event) =>
-                        setServiceFilter(event.target.value as ServiceKey | "todos")
-                      }
-                      className={`${fieldClass} appearance-none pr-9`}
-                    >
-                      <option value="todos">Todos los servicios</option>
-                      {serviceKeys.map((key) => (
-                        <option key={key} value={key}>
-                          {SERVICES[key].label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-3 text-[#d9a84e]" size={16} />
-                  </span>
-                </label>
-                <label>
-                  <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
-                    Desde
-                  </span>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(event) => setStartDate(event.target.value)}
-                    className={`${fieldClass} w-[145px] [color-scheme:dark]`}
-                  />
-                </label>
-                <label>
-                  <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
-                    Hasta
-                  </span>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(event) => setEndDate(event.target.value)}
-                    className={`${fieldClass} w-[145px] [color-scheme:dark]`}
-                  />
-                </label>
-              </div>
+              {view !== "galeria" ? (
+                <div className="flex flex-wrap items-end gap-3">
+                  <label className="min-w-[150px] flex-1 sm:flex-none">
+                    <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
+                      Servicio
+                    </span>
+                    <span className="relative block">
+                      <select
+                        value={serviceFilter}
+                        onChange={(event) =>
+                          setServiceFilter(
+                            event.target.value as ServiceKey | "todos",
+                          )
+                        }
+                        className={`${fieldClass} appearance-none pr-9`}
+                      >
+                        <option value="todos">Todos los servicios</option>
+                        {serviceKeys.map((key) => (
+                          <option key={key} value={key}>
+                            {SERVICES[key].label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute right-3 top-3 text-[#d9a84e]"
+                        size={16}
+                      />
+                    </span>
+                  </label>
+                  <label>
+                    <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
+                      Desde
+                    </span>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(event) => setStartDate(event.target.value)}
+                      className={`${fieldClass} w-[145px] [color-scheme:dark]`}
+                    />
+                  </label>
+                  <label>
+                    <span className="mb-1.5 block text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#7f6f69]">
+                      Hasta
+                    </span>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(event) => setEndDate(event.target.value)}
+                      className={`${fieldClass} w-[145px] [color-scheme:dark]`}
+                    />
+                  </label>
+                </div>
+              ) : null}
             </div>
 
             {view === "resumen" && (
@@ -654,6 +678,8 @@ export function CarelaDashboard() {
                 }
               />
             )}
+
+            {view === "galeria" && <GalleryManager />}
           </div>
         </main>
       </div>
