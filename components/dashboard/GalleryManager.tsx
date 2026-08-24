@@ -8,12 +8,10 @@ import {
   ImagePlus,
   Pin,
   PinOff,
-  Play,
   Plus,
   Search,
   Trash2,
   Upload,
-  Video,
   X,
 } from "lucide-react";
 import { ChangeEvent, FormEvent, useMemo, useRef, useState } from "react";
@@ -21,27 +19,21 @@ import {
   galleryServiceInfo,
   galleryServiceOrder,
   initialGalleryItems,
-  isYouTubeUrl,
   sortGalleryItems,
   type GalleryItem,
-  type GalleryMediaType,
   type GalleryServiceKey,
 } from "@/data/gallery";
 
 type Draft = {
   title: string;
-  mediaType: GalleryMediaType;
   service: GalleryServiceKey;
-  youtubeUrl: string;
   imageUrl: string;
   isPinned: boolean;
 };
 
 const emptyDraft: Draft = {
   title: "",
-  mediaType: "video",
   service: "masajes",
-  youtubeUrl: "",
   imageUrl: "",
   isPinned: false,
 };
@@ -54,9 +46,6 @@ export function GalleryManager() {
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [serviceFilter, setServiceFilter] = useState<GalleryServiceKey | "todos">(
-    "todos",
-  );
-  const [typeFilter, setTypeFilter] = useState<GalleryMediaType | "todos">(
     "todos",
   );
   const [search, setSearch] = useState("");
@@ -72,15 +61,12 @@ export function GalleryManager() {
       items.filter(
         (item) =>
           (serviceFilter === "todos" || item.service === serviceFilter) &&
-          (typeFilter === "todos" || item.mediaType === typeFilter) &&
           (!query || item.title.toLowerCase().includes(query)),
       ),
     );
-  }, [items, search, serviceFilter, typeFilter]);
+  }, [items, search, serviceFilter]);
 
   const pinnedCount = items.filter((item) => item.isPinned).length;
-  const videoCount = items.filter((item) => item.mediaType === "video").length;
-  const imageCount = items.length - videoCount;
 
   function resetForm() {
     setDraft(emptyDraft);
@@ -97,15 +83,7 @@ export function GalleryManager() {
       return;
     }
 
-    if (draft.mediaType === "video" && !isYouTubeUrl(draft.youtubeUrl)) {
-      setNotice({
-        tone: "error",
-        message: "Agrega una URL válida de YouTube, youtu.be o YouTube Shorts.",
-      });
-      return;
-    }
-
-    if (draft.mediaType === "image" && !draft.imageUrl) {
+    if (!draft.imageUrl) {
       setNotice({ tone: "error", message: "Selecciona una imagen para continuar." });
       return;
     }
@@ -114,13 +92,8 @@ export function GalleryManager() {
     const item: GalleryItem = {
       id: existing?.id ?? `gallery-${Date.now()}`,
       title: draft.title.trim(),
-      mediaType: draft.mediaType,
       service: draft.service,
-      youtubeUrl: draft.mediaType === "video" ? draft.youtubeUrl.trim() : undefined,
-      imageUrl:
-        draft.mediaType === "image"
-          ? draft.imageUrl
-          : galleryServiceInfo[draft.service].images[0],
+      imageUrl: draft.imageUrl,
       isPinned: draft.isPinned,
       createdAt: existing?.createdAt ?? new Date().toISOString(),
     };
@@ -133,8 +106,8 @@ export function GalleryManager() {
     setNotice({
       tone: "success",
       message: existing
-        ? "Contenido actualizado en esta demostración."
-        : "Contenido agregado a la galería de demostración.",
+        ? "Foto actualizada en esta demostración."
+        : "Foto agregada a la galería de demostración.",
     });
     resetForm();
   }
@@ -161,13 +134,11 @@ export function GalleryManager() {
     setEditingId(item.id);
     setDraft({
       title: item.title,
-      mediaType: item.mediaType,
       service: item.service,
-      youtubeUrl: item.youtubeUrl ?? "",
-      imageUrl: item.mediaType === "image" ? item.imageUrl : "",
+      imageUrl: item.imageUrl,
       isPinned: item.isPinned,
     });
-    setFileName(item.mediaType === "image" ? "Imagen actual" : "");
+    setFileName("Imagen actual");
     setNotice(null);
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -181,17 +152,16 @@ export function GalleryManager() {
   }
 
   function deleteItem(id: string) {
-    if (!window.confirm("¿Eliminar este contenido de la demostración?")) return;
+    if (!window.confirm("¿Eliminar esta foto de la demostración?")) return;
     setItems((current) => current.filter((item) => item.id !== id));
     if (editingId === id) resetForm();
   }
 
   return (
     <div className="mt-8 space-y-8">
-      <section className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
-        <GalleryMetric label="Contenido total" value={items.length} icon={ImageIcon} />
-        <GalleryMetric label="Videos" value={videoCount} icon={Video} />
-        <GalleryMetric label="Imágenes" value={imageCount} icon={ImagePlus} />
+      <section className="grid gap-4 sm:grid-cols-3">
+        <GalleryMetric label="Fotos publicadas" value={items.length} icon={ImagePlus} />
+        <GalleryMetric label="Servicios" value={galleryServiceOrder.length} icon={ImageIcon} />
         <GalleryMetric label="Anclados" value={pinnedCount} icon={Pin} />
       </section>
 
@@ -201,14 +171,14 @@ export function GalleryManager() {
             <Plus size={20} />
           </span>
           <p className="mt-7 text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#d94b8c]">
-            Contenido público
+            Fotos públicas
           </p>
           <h2 className="mt-3 max-w-lg font-serif text-4xl leading-tight text-[#f7efe7]">
-            {editingId ? "Editar contenido" : "Agregar contenido"}
+            {editingId ? "Editar foto" : "Agregar foto"}
           </h2>
           <p className="mt-4 max-w-lg text-sm leading-7 text-[#b8a49b]">
-            Organiza cada pieza por servicio. Los elementos anclados aparecerán
-            antes que el contenido regular en su sección de la galería.
+            Organiza cada foto por servicio. Las fotos ancladas aparecerán antes
+            que el contenido regular en su sección de la galería.
           </p>
 
           <div className="mt-8 border-l-2 border-[#d9a84e]/45 pl-4">
@@ -238,27 +208,11 @@ export function GalleryManager() {
             />
           </AdminField>
 
-          <AdminField id="gallery-media-type" label="Tipo de contenido">
-            <select
-              id="gallery-media-type"
-              value={draft.mediaType}
-              onChange={(event) => {
-                setFileName("");
-                setDraft((current) => ({
-                  ...current,
-                  mediaType: event.target.value as GalleryMediaType,
-                  youtubeUrl: "",
-                  imageUrl: "",
-                }));
-              }}
-              className={fieldClass}
-            >
-              <option value="video">Video</option>
-              <option value="image">Imagen</option>
-            </select>
-          </AdminField>
-
-          <AdminField id="gallery-service" label="Servicio">
+          <AdminField
+            id="gallery-service"
+            label="Servicio"
+            className="sm:col-span-2"
+          >
             <select
               id="gallery-service"
               value={draft.service}
@@ -278,67 +232,46 @@ export function GalleryManager() {
             </select>
           </AdminField>
 
-          {draft.mediaType === "video" ? (
-            <AdminField id="gallery-video-url" label="Video URL" className="sm:col-span-2">
-              <div className="relative">
-                <Video
-                  size={17}
-                  className="pointer-events-none absolute left-4 top-3.5 text-[#d9a84e]"
-                />
-                <input
-                  id="gallery-video-url"
-                  required
-                  type="url"
-                  value={draft.youtubeUrl}
-                  onChange={(event) =>
-                    setDraft((current) => ({
-                      ...current,
-                      youtubeUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="https://youtube.com/watch?v=..."
-                  className={`${fieldClass} pl-11`}
-                />
-              </div>
-              <span className="mt-2 block text-xs leading-5 text-[#7f6f69]">
-                Aceptará enlaces estándar, youtu.be y YouTube Shorts.
+          <AdminField
+            id="gallery-image-upload"
+            label="Imagen"
+            className="sm:col-span-2"
+          >
+            <label
+              htmlFor="gallery-image-upload"
+              className="group grid cursor-pointer gap-4 border border-dashed border-[#d9a84e]/28 bg-[#0d090a] p-4 transition hover:border-[#d9a84e]/62 sm:grid-cols-[7rem_1fr] sm:items-center"
+            >
+              <input
+                id="gallery-image-upload"
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleImage}
+              />
+              <span className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#171012] text-[#d9a84e]">
+                {draft.imageUrl ? (
+                  <Image
+                    src={draft.imageUrl}
+                    alt="Vista previa de la imagen seleccionada"
+                    fill
+                    unoptimized={draft.imageUrl.startsWith("data:")}
+                    className="object-cover"
+                  />
+                ) : (
+                  <Upload size={24} />
+                )}
               </span>
-            </AdminField>
-          ) : (
-            <AdminField id="gallery-image-upload" label="Imagen" className="sm:col-span-2">
-              <label htmlFor="gallery-image-upload" className="group grid cursor-pointer gap-4 border border-dashed border-[#d9a84e]/28 bg-[#0d090a] p-4 transition hover:border-[#d9a84e]/62 sm:grid-cols-[7rem_1fr] sm:items-center">
-                <input
-                  id="gallery-image-upload"
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  onChange={handleImage}
-                />
-                <span className="relative flex aspect-square items-center justify-center overflow-hidden bg-[#171012] text-[#d9a84e]">
-                  {draft.imageUrl ? (
-                    <Image
-                      src={draft.imageUrl}
-                      alt="Vista previa de la imagen seleccionada"
-                      fill
-                      unoptimized={draft.imageUrl.startsWith("data:")}
-                      className="object-cover"
-                    />
-                  ) : (
-                    <Upload size={24} />
-                  )}
+              <span>
+                <span className="block text-sm font-bold text-[#f7efe7]">
+                  {fileName || "Seleccionar una imagen"}
                 </span>
-                <span>
-                  <span className="block text-sm font-bold text-[#f7efe7]">
-                    {fileName || "Seleccionar una imagen"}
-                  </span>
-                  <span className="mt-2 block text-xs leading-6 text-[#7f6f69]">
-                    Vista previa local para revisar el flujo. El archivo no se
-                    sube a ningún servicio externo.
-                  </span>
+                <span className="mt-2 block text-xs leading-6 text-[#7f6f69]">
+                  Vista previa local para revisar el flujo. El archivo no se
+                  sube a ningún servicio externo.
                 </span>
-              </label>
-            </AdminField>
-          )}
+              </span>
+            </label>
+          </AdminField>
 
           <div className="sm:col-span-2">
             <button
@@ -357,10 +290,10 @@ export function GalleryManager() {
                 <Pin className="mt-0.5 shrink-0 text-[#d9a84e]" size={17} />
                 <span>
                   <span className="block text-sm font-bold text-[#f7efe7]">
-                    Anclar este contenido
+                    Anclar esta foto
                   </span>
                   <span className="mt-1 block text-xs leading-5 text-[#7f6f69]">
-                    Aparecerá antes del contenido regular del mismo tipo y servicio.
+                    Aparecerá antes del contenido regular del mismo servicio.
                   </span>
                 </span>
               </span>
@@ -409,7 +342,7 @@ export function GalleryManager() {
               className="flex h-12 items-center justify-center gap-2 bg-[#d9a84e] px-6 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f3d48a]"
             >
               {editingId ? <Check size={16} /> : <Plus size={16} />}
-              {editingId ? "Guardar cambios" : "Agregar contenido"}
+              {editingId ? "Guardar cambios" : "Agregar foto"}
             </button>
           </div>
         </form>
@@ -420,7 +353,7 @@ export function GalleryManager() {
           <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
             <div>
               <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#d94b8c]">
-                Biblioteca de contenido
+                Biblioteca de fotos
               </p>
               <h2 className="mt-2 font-serif text-3xl text-[#f7efe7] sm:text-4xl">
                 Galería publicada
@@ -430,7 +363,7 @@ export function GalleryManager() {
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="relative sm:min-w-56">
                 <span className="sr-only">Buscar por título</span>
                 <Search
@@ -464,21 +397,6 @@ export function GalleryManager() {
                   ))}
                 </select>
               </label>
-              <label>
-                <span className="sr-only">Filtrar por tipo</span>
-                <select
-                  aria-label="Filtrar por tipo"
-                  value={typeFilter}
-                  onChange={(event) =>
-                    setTypeFilter(event.target.value as GalleryMediaType | "todos")
-                  }
-                  className={fieldClass}
-                >
-                  <option value="todos">Videos e imágenes</option>
-                  <option value="video">Videos</option>
-                  <option value="image">Imágenes</option>
-                </select>
-              </label>
             </div>
           </div>
         </div>
@@ -498,10 +416,10 @@ export function GalleryManager() {
             <div className="flex min-h-48 flex-col items-center justify-center gap-3 p-8 text-center">
               <Search size={24} className="text-[#d9a84e]" />
               <p className="font-serif text-2xl text-[#f7efe7]">
-                No encontramos contenido
+                No encontramos fotos
               </p>
               <p className="text-sm text-[#7f6f69]">
-                Prueba otro servicio, tipo o término de búsqueda.
+                Prueba otro servicio o término de búsqueda.
               </p>
             </div>
           )}
@@ -575,7 +493,7 @@ function AdminGalleryRow({
 
   return (
     <article className="grid gap-4 p-4 transition hover:bg-white/[0.018] sm:p-5 lg:grid-cols-[8.5rem_minmax(0,1fr)_10rem_8rem_auto] lg:items-center lg:gap-5">
-      <div className="relative aspect-video overflow-hidden bg-[#171012]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#171012]">
         <Image
           src={item.imageUrl}
           alt=""
@@ -584,20 +502,13 @@ function AdminGalleryRow({
           sizes="136px"
           className="object-cover"
         />
-        {item.mediaType === "video" ? (
-          <span className="absolute inset-0 flex items-center justify-center bg-black/24">
-            <span className="flex size-9 items-center justify-center rounded-full bg-[#d9a84e] text-[#080506]">
-              <Play size={14} fill="currentColor" />
-            </span>
-          </span>
-        ) : null}
       </div>
 
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 border border-[#d9a84e]/18 px-2 py-1 text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[#d9a84e]">
-            {item.mediaType === "video" ? <Video size={11} /> : <ImageIcon size={11} />}
-            {item.mediaType === "video" ? "Video" : "Imagen"}
+            <ImageIcon size={11} />
+            Imagen
           </span>
           {item.isPinned ? (
             <span className="inline-flex items-center gap-1.5 bg-[#d94b8c]/12 px-2 py-1 text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[#ef9bc2]">

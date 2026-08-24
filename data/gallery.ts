@@ -4,14 +4,10 @@ export type GalleryServiceKey =
   | "pestanas"
   | "depilacion";
 
-export type GalleryMediaType = "video" | "image";
-
 export type GalleryItem = {
   id: string;
   title: string;
-  mediaType: GalleryMediaType;
   service: GalleryServiceKey;
-  youtubeUrl?: string;
   imageUrl: string;
   isPinned: boolean;
   createdAt: string;
@@ -83,65 +79,6 @@ export const galleryServiceInfo: Record<
   },
 };
 
-const videoTitles: Record<GalleryServiceKey, string[]> = {
-  masajes: [
-    "Una pausa para soltar la tensión",
-    "Preparando el ambiente CARELA",
-    "Movimiento lento, alivio profundo",
-    "Cuidado de espalda y hombros",
-    "Un ritual para volver a ti",
-    "Detalles que invitan a respirar",
-    "Atención adaptada a tu cuerpo",
-    "Calma desde el primer momento",
-    "Masaje terapéutico personalizado",
-    "El cierre perfecto para tu sesión",
-    "Bienestar en un espacio privado",
-    "Una experiencia sin prisa",
-  ],
-  cejas: [
-    "Diseño que respeta tu expresión",
-    "Cómo elegimos el tono ideal",
-    "Definición suave y natural",
-    "Preparación antes del tintado",
-    "Cejas cuidadas, mirada elevada",
-    "Precisión en cada detalle",
-    "Un acabado limpio y elegante",
-    "El proceso de diseño CARELA",
-    "Antes y después del tintado",
-    "Simetría sin perder naturalidad",
-    "Cuidado posterior para tus cejas",
-    "Una mirada más armoniosa",
-  ],
-  pestanas: [
-    "Una mirada delicada y femenina",
-    "Preparación higiénica de pestañas",
-    "Diseño según la forma de tus ojos",
-    "Aplicación cómoda y cuidadosa",
-    "Naturalidad con más presencia",
-    "El detalle que cambia la mirada",
-    "Pestañas ligeras y favorecedoras",
-    "Cómo cuidarlas después de tu cita",
-    "Un set pensado para ti",
-    "Precisión, calma y comodidad",
-    "Resultado boutique CARELA",
-    "Mirada lista para brillar",
-  ],
-  depilacion: [
-    "Preparación cuidadosa de la piel",
-    "Una experiencia privada y cómoda",
-    "Suavidad con atención profesional",
-    "Cuidado antes y después de la cera",
-    "Higiene en cada paso",
-    "Cómo preparamos cada zona",
-    "Piel calmada después de tu cita",
-    "Consejos para prolongar la suavidad",
-    "Depilación con respeto y cuidado",
-    "Detalles para una sesión cómoda",
-    "Tu piel, atendida sin prisa",
-    "El acabado CARELA",
-  ],
-};
-
 const imageTitles: Record<GalleryServiceKey, string[]> = {
   masajes: [
     "Calma preparada para ti",
@@ -207,24 +144,10 @@ function buildMockItems(): GalleryItem[] {
   galleryServiceOrder.forEach((service, serviceIndex) => {
     const images = galleryServiceInfo[service].images;
 
-    videoTitles[service].forEach((title, index) => {
-      items.push({
-        id: `${service}-video-${index + 1}`,
-        title,
-        mediaType: "video",
-        service,
-        youtubeUrl: `https://youtu.be/carela${serviceIndex}${String(index + 1).padStart(4, "0")}`,
-        imageUrl: images[index % images.length],
-        isPinned: index < 2,
-        createdAt: new Date(Date.UTC(2026, 7, 20 - index, 15, serviceIndex)).toISOString(),
-      });
-    });
-
     imageTitles[service].forEach((title, index) => {
       items.push({
         id: `${service}-image-${index + 1}`,
         title,
-        mediaType: "image",
         service,
         imageUrl: images[(index + 1) % images.length],
         isPinned: index === 0,
@@ -243,17 +166,4 @@ export function sortGalleryItems(items: GalleryItem[]) {
     if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
     return Date.parse(b.createdAt) - Date.parse(a.createdAt);
   });
-}
-
-export function isYouTubeUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return (
-      url.hostname === "youtu.be" ||
-      url.hostname.endsWith("youtube.com") ||
-      url.hostname.endsWith("youtube-nocookie.com")
-    );
-  } catch {
-    return false;
-  }
 }

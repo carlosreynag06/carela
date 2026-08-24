@@ -10,7 +10,6 @@ import {
   ImageIcon,
   MessageCircle,
   Pin,
-  Play,
   Sparkles,
   X,
 } from "lucide-react";
@@ -25,7 +24,6 @@ import {
   initialGalleryItems,
   sortGalleryItems,
   type GalleryItem,
-  type GalleryMediaType,
   type GalleryServiceKey,
 } from "@/data/gallery";
 import { whatsapp } from "@/lib/site";
@@ -92,11 +90,10 @@ export function GalleryExperience() {
     window.history.replaceState(null, "", `#${service}`);
   }
 
-  function revealMore(service: GalleryServiceKey, mediaType: GalleryMediaType) {
-    const key = `${service}-${mediaType}`;
+  function revealMore(service: GalleryServiceKey) {
     setVisibleCounts((counts) => ({
       ...counts,
-      [key]: (counts[key] ?? batchSize) + batchSize,
+      [service]: (counts[service] ?? batchSize) + batchSize,
     }));
   }
 
@@ -253,7 +250,7 @@ function ServiceGallerySection({
   service: GalleryServiceKey;
   index: number;
   visibleCounts: Record<string, number>;
-  onMore: (service: GalleryServiceKey, mediaType: GalleryMediaType) => void;
+  onMore: (service: GalleryServiceKey) => void;
   onPreview: (item: GalleryItem) => void;
 }) {
   const info = galleryServiceInfo[service];
@@ -296,18 +293,8 @@ function ServiceGallerySection({
 
         <MediaSubsection
           service={service}
-          mediaType="video"
-          items={items.filter((item) => item.mediaType === "video")}
-          visibleCount={visibleCounts[`${service}-video`] ?? batchSize}
-          onMore={onMore}
-          onPreview={onPreview}
-        />
-
-        <MediaSubsection
-          service={service}
-          mediaType="image"
-          items={items.filter((item) => item.mediaType === "image")}
-          visibleCount={visibleCounts[`${service}-image`] ?? batchSize}
+          items={items}
+          visibleCount={visibleCounts[service] ?? batchSize}
           onMore={onMore}
           onPreview={onPreview}
         />
@@ -318,20 +305,17 @@ function ServiceGallerySection({
 
 function MediaSubsection({
   service,
-  mediaType,
   items,
   visibleCount,
   onMore,
   onPreview,
 }: {
   service: GalleryServiceKey;
-  mediaType: GalleryMediaType;
   items: GalleryItem[];
   visibleCount: number;
-  onMore: (service: GalleryServiceKey, mediaType: GalleryMediaType) => void;
+  onMore: (service: GalleryServiceKey) => void;
   onPreview: (item: GalleryItem) => void;
 }) {
-  const isVideo = mediaType === "video";
   const visibleItems = items.slice(0, visibleCount);
   const remaining = items.length - visibleItems.length;
 
@@ -340,25 +324,21 @@ function MediaSubsection({
       <div className="mb-7 flex items-end justify-between gap-4 sm:mb-8">
         <div>
           <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-muted-taupe">
-            {String(items.length).padStart(2, "0")} piezas
+            {String(items.length).padStart(2, "0")} fotos
           </p>
           <h3 className="mt-1 font-serif text-4xl text-warm-cream sm:text-5xl">
-            {isVideo ? "Videos" : "Fotos"}
+            Fotos
           </h3>
         </div>
         <span className="flex size-10 items-center justify-center border border-champagne-gold/22 text-champagne-gold">
-          {isVideo ? <Play size={17} /> : <ImageIcon size={17} />}
+          <ImageIcon size={17} />
         </span>
       </div>
 
       <div className="grid grid-cols-1 gap-x-4 gap-y-8 min-[520px]:grid-cols-2 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
         {visibleItems.map((item, itemIndex) => (
           <Reveal key={item.id} delay={Math.min(itemIndex % 4, 3) * 0.035}>
-            {isVideo ? (
-              <VideoCard item={item} onPreview={onPreview} />
-            ) : (
-              <ImageCard item={item} onPreview={onPreview} />
-            )}
+            <ImageCard item={item} onPreview={onPreview} />
           </Reveal>
         ))}
       </div>
@@ -367,58 +347,18 @@ function MediaSubsection({
         <div className="mt-10 flex justify-center lg:mt-12">
           <button
             type="button"
-            onClick={() => onMore(service, mediaType)}
+            onClick={() => onMore(service)}
             className="inline-flex min-h-12 items-center gap-2 border border-champagne-gold/32 px-6 text-sm font-bold text-champagne-gold transition hover:border-champagne-gold hover:bg-champagne-gold/10 hover:text-soft-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soft-gold"
           >
             Ver más
             <ChevronDown size={17} aria-hidden="true" />
             <span className="sr-only">
-              {isVideo ? "videos" : "fotos"} de {galleryServiceInfo[service].title}
+              fotos de {galleryServiceInfo[service].title}
             </span>
           </button>
         </div>
       ) : null}
     </div>
-  );
-}
-
-function VideoCard({
-  item,
-  onPreview,
-}: {
-  item: GalleryItem;
-  onPreview: (item: GalleryItem) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onPreview(item)}
-      aria-label={`Ver video: ${item.title}`}
-      className="group block w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soft-gold"
-    >
-      <span className="relative block aspect-video overflow-hidden border border-champagne-gold/16 bg-warm-charcoal shadow-premium">
-        <Image
-          src={item.imageUrl}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 24vw, (min-width: 520px) 50vw, 100vw"
-          className="object-cover transition duration-700 group-hover:scale-[1.05]"
-        />
-        <span className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/8 to-background/10 transition group-hover:from-background/64" />
-        <span className="absolute inset-0 flex items-center justify-center">
-          <span className="flex size-14 items-center justify-center rounded-full border border-warm-cream/45 bg-background/72 text-warm-cream shadow-[0_12px_35px_rgba(0,0,0,0.35)] backdrop-blur transition duration-300 group-hover:scale-110 group-hover:border-champagne-gold group-hover:bg-champagne-gold group-hover:text-background">
-            <Play size={20} fill="currentColor" aria-hidden="true" />
-          </span>
-        </span>
-        {item.isPinned ? <PinnedBadge /> : null}
-        <span className="absolute bottom-3 right-3 bg-background/80 px-2 py-1 text-[0.58rem] font-bold uppercase tracking-[0.16em] text-warm-cream backdrop-blur">
-          YouTube
-        </span>
-      </span>
-      <span className="mt-3 block font-serif text-xl leading-tight text-warm-cream transition group-hover:text-soft-gold">
-        {item.title}
-      </span>
-    </button>
   );
 }
 
@@ -465,8 +405,6 @@ function PinnedBadge() {
 }
 
 function MediaPreview({ item, onClose }: { item: GalleryItem; onClose: () => void }) {
-  const isVideo = item.mediaType === "video";
-
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-background/92 p-4 backdrop-blur-md sm:p-8"
@@ -479,7 +417,7 @@ function MediaPreview({ item, onClose }: { item: GalleryItem; onClose: () => voi
         <div className="flex items-center justify-between border-b border-champagne-gold/14 px-4 py-3 sm:px-5">
           <div className="min-w-0">
             <p className="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-rose-pink">
-              {isVideo ? "Video de YouTube" : "Foto CARELA"}
+              Foto CARELA
             </p>
             <h2
               id="gallery-preview-title"
@@ -497,28 +435,14 @@ function MediaPreview({ item, onClose }: { item: GalleryItem; onClose: () => voi
             <X size={20} />
           </button>
         </div>
-        <div className={`relative ${isVideo ? "aspect-video" : "max-h-[74vh] min-h-[60vh]"}`}>
+        <div className="relative max-h-[74vh] min-h-[60vh]">
           <Image
             src={item.imageUrl}
-            alt={isVideo ? "" : item.title}
+            alt={item.title}
             fill
             sizes="(min-width: 1024px) 900px, 94vw"
-            className={isVideo ? "object-cover" : "object-contain"}
+            className="object-contain"
           />
-          {isVideo ? (
-            <>
-              <div className="absolute inset-0 bg-background/28" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
-                <span className="flex size-18 items-center justify-center rounded-full bg-champagne-gold text-background shadow-[0_20px_55px_rgba(0,0,0,0.45)]">
-                  <Play size={26} fill="currentColor" />
-                </span>
-                <p className="max-w-md text-sm leading-7 text-warm-cream/86">
-                  Vista previa del video. La reproducción desde YouTube quedará
-                  conectada en la siguiente fase.
-                </p>
-              </div>
-            </>
-          ) : null}
         </div>
       </div>
     </div>
