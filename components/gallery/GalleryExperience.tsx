@@ -7,7 +7,6 @@ import {
   Eye,
   Flower2,
   HandHeart,
-  ImageIcon,
   MessageCircle,
   Pin,
   Sparkles,
@@ -105,7 +104,7 @@ export function GalleryExperience() {
         <Container>
           <nav
             aria-label="Ir a la galería de cada servicio"
-            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] md:justify-center [&::-webkit-scrollbar]:hidden"
           >
             {galleryServiceOrder.map((service) => {
               const info = galleryServiceInfo[service];
@@ -321,20 +320,6 @@ function MediaSubsection({
 
   return (
     <div className="pt-12 lg:pt-16">
-      <div className="mb-7 flex items-end justify-between gap-4 sm:mb-8">
-        <div>
-          <p className="text-[0.66rem] font-bold uppercase tracking-[0.24em] text-muted-taupe">
-            {String(items.length).padStart(2, "0")} fotos
-          </p>
-          <h3 className="mt-1 font-serif text-4xl text-warm-cream sm:text-5xl">
-            Fotos
-          </h3>
-        </div>
-        <span className="flex size-10 items-center justify-center border border-champagne-gold/22 text-champagne-gold">
-          <ImageIcon size={17} />
-        </span>
-      </div>
-
       <div className="grid grid-cols-1 gap-x-4 gap-y-8 min-[520px]:grid-cols-2 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-10">
         {visibleItems.map((item, itemIndex) => (
           <Reveal key={item.id} delay={Math.min(itemIndex % 4, 3) * 0.035}>
