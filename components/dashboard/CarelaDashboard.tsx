@@ -132,96 +132,18 @@ const SERVICES: Record<
 
 const serviceKeys = Object.keys(SERVICES) as ServiceKey[];
 
-const seedClients: Client[] = [
-  ["Ana Lucía Pérez", "809-555-0142", "analucia@email.com", "masajes", "2026-01-12", 8, "Prefiere presión media."],
-  ["Camila Rodríguez", "829-555-0187", "camila@email.com", "cejas", "2026-02-03", 5, "Tono castaño natural."],
-  ["Gabriela Martínez", "849-555-0129", "gabriela@email.com", "pestanas", "2026-02-18", 6, "Acabado clásico y ligero."],
-  ["Sofía Castillo", "809-555-0164", "sofia@email.com", "depilacion", "2026-03-02", 4, "Piel sensible."],
-  ["Valentina Cruz", "829-555-0116", "valentina@email.com", "masajes", "2026-03-21", 7, "Trabajar hombros y cuello."],
-  ["Isabella Santos", "849-555-0153", "isabella@email.com", "cejas", "2026-04-09", 3, "Mantener forma natural."],
-  ["Mariana Díaz", "809-555-0198", "mariana@email.com", "pestanas", "2026-04-22", 5, "Prefiere volumen medio."],
-  ["Daniela Reyes", "829-555-0137", "daniela@email.com", "depilacion", "2026-05-01", 3, "Combo de zonas."],
-  ["Natalia Gómez", "849-555-0175", "natalia@email.com", "masajes", "2026-05-11", 4, "Cita a domicilio."],
-  ["Paola Vargas", "809-555-0108", "paola@email.com", "cejas", "2026-05-19", 2, "Primera vez con tintado."],
-  ["Laura Méndez", "829-555-0149", "laura@email.com", "pestanas", "2026-05-27", 4, "Set boutique."],
-  ["Andrea Jiménez", "849-555-0181", "andrea@email.com", "depilacion", "2026-06-02", 3, "Axilas y piernas."],
-  ["Elena Fernández", "809-555-0121", "elena@email.com", "masajes", "2026-06-08", 3, "Sesiones de 75 minutos."],
-  ["Carolina Herrera", "829-555-0168", "carolina@email.com", "cejas", "2026-06-14", 2, "Tono suave."],
-  ["Lucía Rosario", "849-555-0103", "lucia@email.com", "pestanas", "2026-06-24", 2, "Ojos sensibles."],
-  ["Adriana Peña", "809-555-0156", "adriana@email.com", "depilacion", "2026-07-01", 2, "Cuidado calmante."],
-  ["Victoria Núñez", "829-555-0192", "victoria@email.com", "masajes", "2026-07-05", 2, "Renovación profunda."],
-  ["Sara Batista", "849-555-0134", "sara@email.com", "cejas", "2026-07-09", 1, "Diseño CARELA."],
-  ["Mía Cabrera", "809-555-0179", "mia@email.com", "pestanas", "2026-07-13", 1, "Toque natural."],
-  ["Emma Tavárez", "829-555-0106", "emma@email.com", "depilacion", "2026-07-18", 1, "Una zona."],
-].map(([name, phone, email, service, joined, visits, notes], index) => ({
-  id: index + 1,
-  name: String(name),
-  phone: String(phone),
-  email: String(email),
-  service: service as ServiceKey,
-  joined: String(joined),
-  visits: Number(visits),
-  notes: String(notes),
-}));
+const formatInputDate = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+    date.getDate(),
+  ).padStart(2, "0")}`;
 
-const appointmentRows: Omit<Appointment, "id">[] = [
-  [1, "2026-05-05", "10:00", "masajes", "Ritual CARELA", 3600, "completada", "Estudio"],
-  [2, "2026-05-07", "14:30", "cejas", "Diseño CARELA", 1450, "completada", "Estudio"],
-  [3, "2026-05-12", "11:00", "pestanas", "Mirada CARELA", 2600, "completada", "Estudio"],
-  [4, "2026-05-15", "15:00", "depilacion", "Combo CARELA", 1850, "completada", "Estudio"],
-  [5, "2026-05-21", "09:30", "masajes", "Renovación Profunda", 4800, "completada", "Domicilio"],
-  [6, "2026-05-28", "13:00", "cejas", "Mirada Completa", 1950, "completada", "Estudio"],
-  [7, "2026-06-03", "10:30", "pestanas", "Set Boutique", 3400, "completada", "Estudio"],
-  [8, "2026-06-06", "16:00", "depilacion", "Suavidad Total", 3200, "completada", "Estudio"],
-  [9, "2026-06-10", "12:00", "masajes", "Ritual CARELA", 3600, "completada", "Domicilio"],
-  [10, "2026-06-13", "09:00", "cejas", "Color Suave", 950, "completada", "Estudio"],
-  [11, "2026-06-18", "14:00", "pestanas", "Mirada CARELA", 2600, "completada", "Estudio"],
-  [12, "2026-06-23", "11:30", "depilacion", "Combo CARELA", 1850, "completada", "Estudio"],
-  [13, "2026-06-27", "15:30", "masajes", "Pausa Esencial", 2200, "completada", "Estudio"],
-  [14, "2026-07-02", "10:00", "cejas", "Diseño CARELA", 1450, "completada", "Estudio"],
-  [15, "2026-07-04", "13:30", "pestanas", "Toque Natural", 1800, "completada", "Estudio"],
-  [16, "2026-07-08", "09:30", "depilacion", "Combo CARELA", 1850, "completada", "Estudio"],
-  [17, "2026-07-11", "11:00", "masajes", "Renovación Profunda", 4800, "completada", "Domicilio"],
-  [18, "2026-07-15", "14:30", "cejas", "Mirada Completa", 1950, "completada", "Estudio"],
-  [19, "2026-07-18", "10:00", "pestanas", "Set Boutique", 3400, "completada", "Estudio"],
-  [20, "2026-07-21", "16:00", "depilacion", "Suavidad Total", 3200, "completada", "Estudio"],
-  [1, "2026-07-25", "09:00", "masajes", "Ritual CARELA", 3600, "completada", "Estudio"],
-  [16, "2026-07-28", "10:00", "depilacion", "Combo CARELA", 1850, "confirmada", "Estudio"],
-  [17, "2026-07-28", "12:30", "masajes", "Renovación Profunda", 4800, "confirmada", "Domicilio"],
-  [18, "2026-07-28", "16:00", "cejas", "Diseño CARELA", 1450, "pendiente", "Estudio"],
-  [19, "2026-07-29", "09:30", "pestanas", "Mirada CARELA", 2600, "confirmada", "Estudio"],
-  [20, "2026-07-30", "14:00", "depilacion", "Zona Esencial", 850, "pendiente", "Estudio"],
-  [5, "2026-08-04", "11:00", "masajes", "Ritual CARELA", 3600, "confirmada", "Domicilio"],
-  [6, "2026-08-07", "15:30", "cejas", "Diseño CARELA", 1450, "confirmada", "Estudio"],
-].map(([clientId, date, time, service, packageName, amount, status, location]) => ({
-  clientId: Number(clientId),
-  date: String(date),
-  time: String(time),
-  service: service as ServiceKey,
-  package: String(packageName),
-  amount: Number(amount),
-  status: status as Status,
-  location: location as "Estudio" | "Domicilio",
-}));
-
-const seedAppointments: Appointment[] = appointmentRows.map((row, index) => ({
-  id: index + 1,
-  ...row,
-}));
-
-const seedExpenses: Expense[] = [
-  { id: 1, date: "2026-05-04", category: "Insumos", description: "Aceites y aromas", amount: 2850, service: "masajes" },
-  { id: 2, date: "2026-05-11", category: "Insumos", description: "Cera profesional", amount: 2100, service: "depilacion" },
-  { id: 3, date: "2026-05-18", category: "Operación", description: "Lavandería y limpieza", amount: 1650, service: "general" },
-  { id: 4, date: "2026-06-02", category: "Insumos", description: "Pestañas y adhesivo", amount: 3400, service: "pestanas" },
-  { id: 5, date: "2026-06-12", category: "Insumos", description: "Tintes de cejas", amount: 1800, service: "cejas" },
-  { id: 6, date: "2026-06-20", category: "Transporte", description: "Citas a domicilio", amount: 1200, service: "masajes" },
-  { id: 7, date: "2026-07-03", category: "Insumos", description: "Toallas y aceites", amount: 3100, service: "masajes" },
-  { id: 8, date: "2026-07-09", category: "Insumos", description: "Cera y cuidado calmante", amount: 2450, service: "depilacion" },
-  { id: 9, date: "2026-07-14", category: "Insumos", description: "Sets de pestañas", amount: 3750, service: "pestanas" },
-  { id: 10, date: "2026-07-19", category: "Marketing", description: "Contenido de redes", amount: 2200, service: "general" },
-  { id: 11, date: "2026-07-23", category: "Insumos", description: "Tinte y aplicadores", amount: 1350, service: "cejas" },
-];
+const getCurrentMonthRange = () => {
+  const today = new Date();
+  return {
+    start: formatInputDate(new Date(today.getFullYear(), today.getMonth(), 1)),
+    end: formatInputDate(new Date(today.getFullYear(), today.getMonth() + 1, 0)),
+  };
+};
 
 const formatMoney = (value: number) =>
   new Intl.NumberFormat("es-DO", {
@@ -243,12 +165,12 @@ const fieldClass =
 
 export function CarelaDashboard() {
   const [view, setView] = useState<View>("resumen");
-  const [clients, setClients] = useState(seedClients);
-  const [appointments, setAppointments] = useState(seedAppointments);
-  const [expenses, setExpenses] = useState(seedExpenses);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [serviceFilter, setServiceFilter] = useState<ServiceKey | "todos">("todos");
-  const [startDate, setStartDate] = useState("2026-07-01");
-  const [endDate, setEndDate] = useState("2026-07-31");
+  const [startDate, setStartDate] = useState(() => getCurrentMonthRange().start);
+  const [endDate, setEndDate] = useState(() => getCurrentMonthRange().end);
   const [search, setSearch] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -448,7 +370,7 @@ export function CarelaDashboard() {
           <button
             onClick={() =>
               window.alert(
-                "La configuración de cuenta estará disponible cuando conectemos Supabase.",
+                "La configuración de cuenta estará disponible en una próxima fase.",
               )
             }
             className="flex h-11 w-full items-center gap-3 px-3 text-sm text-[#b8a49b] transition hover:text-white"
@@ -456,13 +378,15 @@ export function CarelaDashboard() {
             <Settings size={17} />
             Configuración
           </button>
-          <Link
-            href="/login"
-            className="flex h-11 w-full items-center gap-3 px-3 text-sm text-[#b8a49b] transition hover:text-white"
-          >
-            <LogOut size={17} />
-            Cerrar sesión
-          </Link>
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="flex h-11 w-full items-center gap-3 px-3 text-sm text-[#b8a49b] transition hover:text-white"
+            >
+              <LogOut size={17} />
+              Cerrar sesión
+            </button>
+          </form>
           <div className="mt-3 flex items-center gap-3 border border-[#d9a84e]/12 bg-black/20 p-3">
             <div className="flex size-10 items-center justify-center rounded-full bg-[#8f1f54] font-serif text-lg">
               LC
@@ -498,7 +422,7 @@ export function CarelaDashboard() {
             <button
               onClick={() =>
                 window.alert(
-                  "Estás al día. No tienes notificaciones nuevas en esta demostración.",
+                  "Estás al día. No tienes notificaciones nuevas.",
                 )
               }
               className="relative flex size-10 items-center justify-center border border-[#d9a84e]/14 text-[#b8a49b] hover:text-white"
@@ -741,8 +665,9 @@ function Overview({
   onNewExpense: () => void;
   onNavigate: (view: View) => void;
 }) {
+  const today = formatInputDate(new Date());
   const upcoming = appointments
-    .filter((item) => item.date >= "2026-07-28" && item.status !== "cancelada")
+    .filter((item) => item.date >= today && item.status !== "cancelada")
     .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
     .slice(0, 4);
   return (
@@ -751,7 +676,7 @@ function Overview({
         <MetricCard
           label="Ingresos"
           value={balanceVisible ? formatMoney(income) : "••••••"}
-          detail="+18.4% vs. período anterior"
+          detail={income ? "Citas completadas en el período" : "Sin ingresos registrados"}
           icon={CircleDollarSign}
           positive
           action={() => setBalanceVisible(!balanceVisible)}
@@ -1562,7 +1487,7 @@ function ClientModal({ item, onClose, onSave }: { item?: Client; onClose: () => 
         <Field label="Teléfono"><input name="phone" required defaultValue={item?.phone} placeholder="809-555-0000" className={fieldClass} /></Field>
         <Field label="Correo electrónico"><input name="email" type="email" defaultValue={item?.email} placeholder="correo@email.com" className={fieldClass} /></Field>
         <Field label="Servicio de interés"><select name="service" defaultValue={item?.service ?? "masajes"} className={fieldClass}>{serviceKeys.map((key) => <option value={key} key={key}>{SERVICES[key].label}</option>)}</select></Field>
-        <Field label="Fecha de ingreso"><input name="joined" type="date" required defaultValue={item?.joined ?? "2026-07-28"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
+        <Field label="Fecha de ingreso"><input name="joined" type="date" required defaultValue={item?.joined ?? formatInputDate(new Date())} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Notas y preferencias" className="sm:col-span-2"><textarea name="notes" defaultValue={item?.notes} rows={3} placeholder="Preferencias, sensibilidad, detalles importantes…" className={`${fieldClass} h-auto py-3`} /></Field>
         <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Crear clienta"} /></div>
       </form>
@@ -1600,7 +1525,7 @@ function AppointmentModal({
     <ModalShell eyebrow="Agenda CARELA" title={item ? "Editar cita" : "Reservar una cita"} onClose={onClose}>
       <form onSubmit={submit} className="grid gap-5 p-6 sm:grid-cols-2">
         <Field label="Clienta" className="sm:col-span-2"><select name="clientId" defaultValue={item?.clientId ?? initialClientId ?? clients[0]?.id} required className={fieldClass}>{clients.map((client) => <option key={client.id} value={client.id}>{client.name} · {client.phone}</option>)}</select></Field>
-        <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? "2026-07-28"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
+        <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? formatInputDate(new Date())} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Hora"><input name="time" type="time" required defaultValue={item?.time ?? "10:00"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Servicio"><select name="service" value={service} onChange={(event) => setService(event.target.value as ServiceKey)} className={fieldClass}>{serviceKeys.map((key) => <option key={key} value={key}>{SERVICES[key].label}</option>)}</select></Field>
         <Field label="Paquete"><select key={service} name="package" defaultValue={defaultPackage} className={fieldClass}>{SERVICES[service].packages.map((entry) => <option key={entry.name} value={entry.name}>{entry.name} · {formatMoney(entry.price)}</option>)}</select></Field>
@@ -1622,7 +1547,7 @@ function ExpenseModal({ item, onClose, onSave }: { item?: Expense; onClose: () =
   return (
     <ModalShell eyebrow="Control de gastos" title={item ? "Editar gasto" : "Registrar un gasto"} onClose={onClose}>
       <form onSubmit={submit} className="grid gap-5 p-6 sm:grid-cols-2">
-        <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? "2026-07-28"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
+        <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? formatInputDate(new Date())} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Categoría"><select name="category" defaultValue={item?.category ?? "Insumos"} className={fieldClass}><option>Insumos</option><option>Operación</option><option>Transporte</option><option>Marketing</option><option>Otro</option></select></Field>
         <Field label="Descripción" className="sm:col-span-2"><input name="description" required defaultValue={item?.description} placeholder="Ej. Aceites y aromas" className={fieldClass} /></Field>
         <Field label="Monto RD$"><input name="amount" type="number" min="1" required defaultValue={item?.amount} placeholder="0" className={fieldClass} /></Field>

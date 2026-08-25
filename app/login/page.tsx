@@ -2,18 +2,51 @@
 
 import { ArrowRight, Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { carelaOwnerEmail, carelaOwnerId } from "@/lib/supabase/config";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState(carelaOwnerEmail);
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    window.setTimeout(() => router.push("/dashboard"), 450);
+    setErrorMessage("");
+
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error || !data.user) {
+        setErrorMessage(
+          "No pudimos iniciar sesión. Revisa el correo y la contraseña.",
+        );
+        setLoading(false);
+        return;
+      }
+
+      if (data.user.id !== carelaOwnerId) {
+        await supabase.auth.signOut();
+        setErrorMessage("Esta cuenta no tiene acceso al estudio de gestión.");
+        setLoading(false);
+        return;
+      }
+
+      window.location.assign("/dashboard");
+    } catch {
+      setErrorMessage(
+        "No pudimos conectar con el servicio de acceso. Inténtalo nuevamente.",
+      );
+      setLoading(false);
+    }
   }
 
   return (
@@ -83,7 +116,9 @@ export default function LoginPage() {
                   </span>
                   <input
                     type="email"
-                    defaultValue="leidania@carelaspa.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    autoComplete="email"
                     required
                     className="h-14 w-full border border-champagne-gold/18 bg-background/70 px-4 text-sm text-warm-cream outline-none transition placeholder:text-muted-taupe/50 focus:border-champagne-gold"
                   />
@@ -96,7 +131,9 @@ export default function LoginPage() {
                   <span className="relative block">
                     <input
                       type={showPassword ? "text" : "password"}
-                      defaultValue="carela2026"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      autoComplete="current-password"
                       required
                       className="h-14 w-full border border-champagne-gold/18 bg-background/70 px-4 pr-12 text-sm text-warm-cream outline-none transition focus:border-champagne-gold"
                     />
@@ -111,16 +148,12 @@ export default function LoginPage() {
                   </span>
                 </label>
 
-                <div className="flex items-center justify-between gap-4 text-xs">
-                  <label className="flex items-center gap-2 text-muted-taupe">
-                    <input type="checkbox" defaultChecked className="accent-[#d9a84e]" />
-                    Recordarme
-                  </label>
+                <div className="flex justify-end text-xs">
                   <button
                     type="button"
                     onClick={() =>
                       window.alert(
-                        "La recuperación de contraseña estará disponible al conectar la autenticación.",
+                        "La recuperación de contraseña se habilitará en una próxima fase.",
                       )
                     }
                     className="text-champagne-gold hover:text-soft-gold"
@@ -128,6 +161,15 @@ export default function LoginPage() {
                     ¿Olvidaste tu contraseña?
                   </button>
                 </div>
+
+                {errorMessage ? (
+                  <div
+                    role="alert"
+                    className="border border-rose-pink/28 bg-rose-pink/8 px-4 py-3 text-sm leading-6 text-[#ef9bc2]"
+                  >
+                    {errorMessage}
+                  </div>
+                ) : null}
 
                 <button
                   type="submit"
@@ -141,8 +183,7 @@ export default function LoginPage() {
 
               <div className="mt-6 flex items-start gap-3 border-t border-champagne-gold/12 pt-5 text-xs leading-5 text-muted-taupe">
                 <ShieldCheck size={17} className="mt-0.5 shrink-0 text-rose-pink" />
-                Vista de demostración. Puedes entrar con los datos precargados;
-                la autenticación segura se conectará más adelante.
+                Acceso privado protegido con las credenciales de la propietaria.
               </div>
             </div>
           </div>

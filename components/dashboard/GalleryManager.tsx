@@ -18,7 +18,6 @@ import { ChangeEvent, FormEvent, useMemo, useRef, useState } from "react";
 import {
   galleryServiceInfo,
   galleryServiceOrder,
-  initialGalleryItems,
   sortGalleryItems,
   type GalleryItem,
   type GalleryServiceKey,
@@ -42,7 +41,7 @@ const fieldClass =
   "h-12 w-full border border-[#d9a84e]/18 bg-[#0d090a] px-4 text-sm text-[#f7efe7] outline-none transition placeholder:text-[#7f6f69] focus:border-[#d9a84e] focus:ring-1 focus:ring-[#d9a84e]/20";
 
 export function GalleryManager() {
-  const [items, setItems] = useState<GalleryItem[]>(initialGalleryItems);
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [serviceFilter, setServiceFilter] = useState<GalleryServiceKey | "todos">(
@@ -106,8 +105,8 @@ export function GalleryManager() {
     setNotice({
       tone: "success",
       message: existing
-        ? "Foto actualizada en esta demostración."
-        : "Foto agregada a la galería de demostración.",
+        ? "Foto actualizada durante esta sesión."
+        : "Foto agregada durante esta sesión.",
     });
     resetForm();
   }
@@ -152,7 +151,7 @@ export function GalleryManager() {
   }
 
   function deleteItem(id: string) {
-    if (!window.confirm("¿Eliminar esta foto de la demostración?")) return;
+    if (!window.confirm("¿Eliminar esta foto?")) return;
     setItems((current) => current.filter((item) => item.id !== id));
     if (editingId === id) resetForm();
   }
@@ -182,10 +181,10 @@ export function GalleryManager() {
           </p>
 
           <div className="mt-8 border-l-2 border-[#d9a84e]/45 pl-4">
-            <p className="text-xs font-bold text-[#f3d48a]">Demostración local</p>
+            <p className="text-xs font-bold text-[#f3d48a]">Carga temporal</p>
             <p className="mt-1 text-xs leading-6 text-[#7f6f69]">
-              Los cambios funcionan en el navegador y se reinician al actualizar.
-              No hay almacenamiento ni Supabase conectado.
+              Las fotos que agregues permanecerán durante esta sesión. El
+              almacenamiento de la galería se conectará en la próxima fase.
             </p>
           </div>
         </div>
