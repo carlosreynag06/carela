@@ -259,7 +259,13 @@ export function CarelaDashboard({
   const visibleAppointments = dateAndServiceAppointments
     .filter((item) => {
       const client = clientsWithVisits.find((entry) => entry.id === item.clientId);
-      return !search || client?.name.toLowerCase().includes(search.toLowerCase());
+      const query = search.toLowerCase();
+      return (
+        !query ||
+        client?.name.toLowerCase().includes(query) ||
+        client?.phone.includes(query) ||
+        client?.email.toLowerCase().includes(query)
+      );
     })
     .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
 
@@ -960,7 +966,7 @@ function MetricCard({
 }) {
   return (
     <article className="relative overflow-hidden border border-[#d9a84e]/12 bg-[#100a0c] p-5 sm:p-6">
-      <div className="absolute right-0 top-0 size-28 bg-[radial-gradient(circle_at_top_right,rgba(217,168,78,0.10),transparent_66%)]" />
+      <div className="pointer-events-none absolute right-0 top-0 size-28 bg-[radial-gradient(circle_at_top_right,rgba(217,168,78,0.10),transparent_66%)]" />
       <div className="flex items-start justify-between">
         <div className="flex size-10 items-center justify-center border border-[#d9a84e]/18 bg-black/20 text-[#d9a84e]"><Icon size={18} /></div>
         {action && ActionIcon && (
@@ -1635,10 +1641,29 @@ function AppointmentModal({
   onSave: (data: Omit<Appointment, "id"> & { id?: string }) => Promise<void>;
   saving: boolean;
 }) {
-  const [service, setService] = useState<ServiceKey>(
-    item?.service ?? initialService ?? "masajes",
+  const startingService = item?.service ?? initialService ?? "masajes";
+  const startingPackage =
+    item?.package ?? SERVICES[startingService].packages[0].name;
+  const [service, setService] = useState<ServiceKey>(startingService);
+  const [packageName, setPackageName] = useState(startingPackage);
+  const [amount, setAmount] = useState(
+    String(item?.amount ?? SERVICES[startingService].packages[0].price),
   );
-  const defaultPackage = item?.package ?? SERVICES[service].packages[0].name;
+
+  function changeService(nextService: ServiceKey) {
+    const nextPackage = SERVICES[nextService].packages[0];
+    setService(nextService);
+    setPackageName(nextPackage.name);
+    setAmount(String(nextPackage.price));
+  }
+
+  function changePackage(nextPackageName: string) {
+    const nextPackage = SERVICES[service].packages.find(
+      (entry) => entry.name === nextPackageName,
+    );
+    setPackageName(nextPackageName);
+    if (nextPackage) setAmount(String(nextPackage.price));
+  }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -1652,9 +1677,9 @@ function AppointmentModal({
         <Field label="Clienta" className="sm:col-span-2"><select name="clientId" defaultValue={item?.clientId ?? initialClientId ?? clients[0]?.id} required className={fieldClass}>{clients.map((client) => <option key={client.id} value={client.id}>{client.name} · {client.phone}</option>)}</select></Field>
         <Field label="Fecha"><input name="date" type="date" required defaultValue={item?.date ?? formatInputDate(new Date())} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Hora"><input name="time" type="time" required defaultValue={item?.time ?? "10:00"} className={`${fieldClass} [color-scheme:dark]`} /></Field>
-        <Field label="Servicio"><select name="service" value={service} onChange={(event) => setService(event.target.value as ServiceKey)} className={fieldClass}>{serviceKeys.map((key) => <option key={key} value={key}>{SERVICES[key].label}</option>)}</select></Field>
-        <Field label="Paquete"><select key={service} name="package" defaultValue={defaultPackage} className={fieldClass}>{SERVICES[service].packages.map((entry) => <option key={entry.name} value={entry.name}>{entry.name} · {formatMoney(entry.price)}</option>)}</select></Field>
-        <Field label="Precio final"><input name="amount" type="number" min="0" defaultValue={item?.amount ?? SERVICES[service].packages[0].price} className={fieldClass} /></Field>
+        <Field label="Servicio"><select name="service" value={service} onChange={(event) => changeService(event.target.value as ServiceKey)} className={fieldClass}>{serviceKeys.map((key) => <option key={key} value={key}>{SERVICES[key].label}</option>)}</select></Field>
+        <Field label="Paquete"><select name="package" value={packageName} onChange={(event) => changePackage(event.target.value)} className={fieldClass}>{SERVICES[service].packages.map((entry) => <option key={entry.name} value={entry.name}>{entry.name} · {formatMoney(entry.price)}</option>)}</select></Field>
+        <Field label="Precio final"><input name="amount" type="number" min="0" value={amount} onChange={(event) => setAmount(event.target.value)} className={fieldClass} /></Field>
         <Field label="Modalidad"><select name="location" defaultValue={item?.location ?? "Estudio"} className={fieldClass}><option>Estudio</option><option>Domicilio</option></select></Field>
         <Field label="Estado" className="sm:col-span-2"><select name="status" defaultValue={item?.status ?? "confirmada"} className={fieldClass}><option value="confirmada">Confirmada</option><option value="pendiente">Pendiente</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></Field>
         <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Confirmar cita"} saving={saving} /></div>
