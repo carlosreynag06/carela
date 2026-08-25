@@ -9,6 +9,7 @@ export type GalleryItem = {
   title: string;
   service: GalleryServiceKey;
   imageUrl: string;
+  imagePath: string;
   isPinned: boolean;
   createdAt: string;
 };
@@ -26,7 +27,6 @@ export const galleryServiceInfo: Record<
     title: string;
     shortTitle: string;
     description: string;
-    images: string[];
   }
 > = {
   masajes: {
@@ -34,132 +34,26 @@ export const galleryServiceInfo: Record<
     shortTitle: "Masajes",
     description:
       "Momentos de calma, atención personalizada y alivio para volver a sentir el cuerpo ligero.",
-    images: [
-      "/images/service-masajes-v2.png",
-      "/images/service-page-masajes.png",
-      "/images/testimonial-masajes.png",
-      "/images/service-masajes.png",
-    ],
   },
   cejas: {
     title: "Tintado de cejas",
     shortTitle: "Cejas",
     description:
       "Diseños definidos con suavidad para enmarcar la mirada sin perder naturalidad.",
-    images: [
-      "/images/service-cejas-v2.png",
-      "/images/service-page-cejas.png",
-      "/images/testimonial-cejas.png",
-      "/images/service-cejas.png",
-    ],
   },
   pestanas: {
     title: "Postura de pestañas",
     shortTitle: "Pestañas",
     description:
       "Resultados femeninos y favorecedores, trabajados con precisión para cada mirada.",
-    images: [
-      "/images/service-pestanas-v2.png",
-      "/images/service-page-pestanas.png",
-      "/images/testimonial-pestanas.png",
-      "/images/service-pestanas.png",
-    ],
   },
   depilacion: {
     title: "Depilación con cera",
     shortTitle: "Depilación",
     description:
       "Cuidado de la piel en un ambiente privado, higiénico y pensado para tu comodidad.",
-    images: [
-      "/images/service-depilacion-v2.png",
-      "/images/service-page-depilacion.png",
-      "/images/testimonial-depilacion.png",
-      "/images/service-depilacion.png",
-    ],
   },
 };
-
-const imageTitles: Record<GalleryServiceKey, string[]> = {
-  masajes: [
-    "Calma preparada para ti",
-    "Ritual de bienestar",
-    "Un espacio para respirar",
-    "Atención a cada tensión",
-    "Ambiente íntimo y cuidado",
-    "Descanso para cuerpo y mente",
-    "Tu momento CARELA",
-    "Detalles que reconfortan",
-    "Bienestar personalizado",
-    "Pausa profunda",
-    "Cuidado que se siente",
-    "Renovación y ligereza",
-  ],
-  cejas: [
-    "Definición natural",
-    "Diseño a tu medida",
-    "Tono suave y favorecedor",
-    "Mirada en armonía",
-    "Precisión CARELA",
-    "Acabado limpio",
-    "Cejas con intención",
-    "Belleza sin excesos",
-    "Forma y equilibrio",
-    "Resultado personalizado",
-    "Detalles de tintado",
-    "Una mirada más pulida",
-  ],
-  pestanas: [
-    "Mirada sutil",
-    "Aplicación delicada",
-    "Pestañas con movimiento",
-    "Resultado femenino",
-    "Detalle y precisión",
-    "Comodidad en cada paso",
-    "Diseño favorecedor",
-    "Ligereza natural",
-    "Set personalizado",
-    "Mirada CARELA",
-    "Cuidado posterior",
-    "Belleza que se nota",
-  ],
-  depilacion: [
-    "Piel suave y cuidada",
-    "Preparación profesional",
-    "Privacidad y comodidad",
-    "Cuidado calmante",
-    "Higiene y detalle",
-    "Suavidad prolongada",
-    "Atención respetuosa",
-    "Piel lista y luminosa",
-    "Rutina de cuidado",
-    "Resultado uniforme",
-    "Bienestar para tu piel",
-    "Cierre calmante",
-  ],
-};
-
-function buildMockItems(): GalleryItem[] {
-  const items: GalleryItem[] = [];
-
-  galleryServiceOrder.forEach((service, serviceIndex) => {
-    const images = galleryServiceInfo[service].images;
-
-    imageTitles[service].forEach((title, index) => {
-      items.push({
-        id: `${service}-image-${index + 1}`,
-        title,
-        service,
-        imageUrl: images[(index + 1) % images.length],
-        isPinned: index === 0,
-        createdAt: new Date(Date.UTC(2026, 7, 19 - index, 16, serviceIndex)).toISOString(),
-      });
-    });
-  });
-
-  return items;
-}
-
-export const initialGalleryItems = buildMockItems();
 
 export function sortGalleryItems(items: GalleryItem[]) {
   return [...items].sort((a, b) => {

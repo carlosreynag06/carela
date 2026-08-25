@@ -20,7 +20,6 @@ import { Reveal } from "@/components/Reveal";
 import {
   galleryServiceInfo,
   galleryServiceOrder,
-  initialGalleryItems,
   sortGalleryItems,
   type GalleryItem,
   type GalleryServiceKey,
@@ -36,7 +35,7 @@ const serviceIcons = {
   depilacion: Flower2,
 } as const;
 
-export function GalleryExperience() {
+export function GalleryExperience({ items }: { items: GalleryItem[] }) {
   const [activeService, setActiveService] =
     useState<GalleryServiceKey>("masajes");
   const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({});
@@ -141,6 +140,7 @@ export function GalleryExperience() {
             visibleCounts={visibleCounts}
             onMore={revealMore}
             onPreview={setPreviewItem}
+            items={items}
           />
         ))}
       </div>
@@ -245,21 +245,23 @@ function ServiceGallerySection({
   visibleCounts,
   onMore,
   onPreview,
+  items: allItems,
 }: {
   service: GalleryServiceKey;
   index: number;
   visibleCounts: Record<string, number>;
   onMore: (service: GalleryServiceKey) => void;
   onPreview: (item: GalleryItem) => void;
+  items: GalleryItem[];
 }) {
   const info = galleryServiceInfo[service];
   const Icon = serviceIcons[service];
-  const items = useMemo(
+  const serviceItems = useMemo(
     () =>
       sortGalleryItems(
-        initialGalleryItems.filter((item) => item.service === service),
+        allItems.filter((item) => item.service === service),
       ),
-    [service],
+    [allItems, service],
   );
 
   return (
@@ -292,7 +294,7 @@ function ServiceGallerySection({
 
         <MediaSubsection
           service={service}
-          items={items}
+          items={serviceItems}
           visibleCount={visibleCounts[service] ?? batchSize}
           onMore={onMore}
           onPreview={onPreview}
@@ -327,6 +329,17 @@ function MediaSubsection({
           </Reveal>
         ))}
       </div>
+
+      {!items.length ? (
+        <div className="flex min-h-56 flex-col items-center justify-center border border-champagne-gold/14 bg-warm-charcoal/34 px-6 text-center">
+          <p className="font-serif text-2xl text-warm-cream">
+            Nuevos resultados próximamente
+          </p>
+          <p className="mt-3 max-w-lg text-sm leading-6 text-muted-taupe">
+            Estamos preparando las fotos de este servicio para compartirlas contigo.
+          </p>
+        </div>
+      ) : null}
 
       {remaining > 0 ? (
         <div className="mt-10 flex justify-center lg:mt-12">

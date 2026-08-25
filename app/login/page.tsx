@@ -12,11 +12,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setErrorMessage("");
+    setSuccessMessage("");
 
     try {
       const supabase = createClient();
@@ -45,6 +47,28 @@ export default function LoginPage() {
       setErrorMessage(
         "No pudimos conectar con el servicio de acceso. Inténtalo nuevamente.",
       );
+      setLoading(false);
+    }
+  }
+
+  async function handlePasswordReset() {
+    setLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/auth/callback?next=/restablecer-contrasena`,
+      });
+      if (error) throw error;
+      setSuccessMessage(
+        "Revisa tu correo. Te enviamos un enlace seguro para cambiar la contraseña.",
+      );
+    } catch {
+      setErrorMessage(
+        "No pudimos enviar el enlace. Verifica el correo e inténtalo nuevamente.",
+      );
+    } finally {
       setLoading(false);
     }
   }
@@ -151,11 +175,8 @@ export default function LoginPage() {
                 <div className="flex justify-end text-xs">
                   <button
                     type="button"
-                    onClick={() =>
-                      window.alert(
-                        "La recuperación de contraseña se habilitará en una próxima fase.",
-                      )
-                    }
+                    onClick={handlePasswordReset}
+                    disabled={loading || !email.trim()}
                     className="text-champagne-gold hover:text-soft-gold"
                   >
                     ¿Olvidaste tu contraseña?
@@ -168,6 +189,15 @@ export default function LoginPage() {
                     className="border border-rose-pink/28 bg-rose-pink/8 px-4 py-3 text-sm leading-6 text-[#ef9bc2]"
                   >
                     {errorMessage}
+                  </div>
+                ) : null}
+
+                {successMessage ? (
+                  <div
+                    role="status"
+                    className="border border-emerald-500/28 bg-emerald-500/8 px-4 py-3 text-sm leading-6 text-emerald-200"
+                  >
+                    {successMessage}
                   </div>
                 ) : null}
 

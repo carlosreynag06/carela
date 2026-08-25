@@ -22,6 +22,8 @@ import {
   type GalleryItem,
   type GalleryServiceKey,
 } from "@/data/gallery";
+import { carelaOwnerId } from "@/lib/supabase/config";
+import { createClient } from "@/lib/supabase/client";
 
 type Draft = {
   title: string;
@@ -40,8 +42,9 @@ const emptyDraft: Draft = {
 const fieldClass =
   "h-12 w-full border border-[#d9a84e]/18 bg-[#0d090a] px-4 text-sm text-[#f7efe7] outline-none transition placeholder:text-[#7f6f69] focus:border-[#d9a84e] focus:ring-1 focus:ring-[#d9a84e]/20";
 
-export function GalleryManager() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
+export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }) {
+  const supabase = useMemo(() => createClient(), []);
+  const [items, setItems] = useState<GalleryItem[]>(initialItems);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [serviceFilter, setServiceFilter] = useState<GalleryServiceKey | "todos">(
@@ -49,6 +52,8 @@ export function GalleryManager() {
   );
   const [search, setSearch] = useState("");
   const [fileName, setFileName] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<
     { tone: "success" | "error"; message: string } | null
   >(null);
@@ -68,12 +73,16 @@ export function GalleryManager() {
   const pinnedCount = items.filter((item) => item.isPinned).length;
 
   function resetForm() {
+    if (selectedFile && draft.imageUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(draft.imageUrl);
+    }
     setDraft(emptyDraft);
     setEditingId(null);
     setFileName("");
+    setSelectedFile(null);
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setNotice(null);
 
@@ -82,33 +91,85 @@ export function GalleryManager() {
       return;
     }
 
-    if (!draft.imageUrl) {
+    if (!draft.imageUrl || (!editingId && !selectedFile)) {
       setNotice({ tone: "error", message: "Selecciona una imagen para continuar." });
       return;
     }
 
     const existing = items.find((item) => item.id === editingId);
-    const item: GalleryItem = {
-      id: existing?.id ?? `gallery-${Date.now()}`,
-      title: draft.title.trim(),
-      service: draft.service,
-      imageUrl: draft.imageUrl,
-      isPinned: draft.isPinned,
-      createdAt: existing?.createdAt ?? new Date().toISOString(),
-    };
+    let uploadedPath: string | null = null;
+    setSaving(true);
 
-    setItems((current) =>
-      existing
-        ? current.map((entry) => (entry.id === existing.id ? item : entry))
-        : [item, ...current],
-    );
-    setNotice({
-      tone: "success",
-      message: existing
-        ? "Foto actualizada durante esta sesión."
-        : "Foto agregada durante esta sesión.",
-    });
-    resetForm();
+    try {
+      if (selectedFile) {
+        const extension = selectedFile.name.split(".").pop()?.toLowerCase() || "jpg";
+        uploadedPath = `${carelaOwnerId}/${crypto.randomUUID()}.${extension}`;
+        const { error: uploadError } = await supabase.storage
+          .from("gallery")
+          .upload(uploadedPath, selectedFile, {
+            cacheControl: "31536000",
+            contentType: selectedFile.type,
+            upsert: false,
+          });
+        if (uploadError) throw uploadError;
+      }
+
+      const imagePath = uploadedPath ?? existing?.imagePath;
+      if (!imagePath) throw new Error("No image path available");
+
+      const payload = {
+        title: draft.title.trim(),
+        service: draft.service,
+        image_path: imagePath,
+        is_pinned: draft.isPinned,
+      };
+      const query = existing
+        ? supabase.from("gallery_items").update(payload).eq("id", existing.id)
+        : supabase
+            .from("gallery_items")
+            .insert({ ...payload, owner_id: carelaOwnerId });
+      const { data: row, error } = await query.select("*").single();
+      if (error) throw error;
+
+      const imageUrl = supabase.storage.from("gallery").getPublicUrl(row.image_path)
+        .data.publicUrl;
+      const item: GalleryItem = {
+        id: row.id,
+        title: row.title,
+        service: row.service,
+        imageUrl,
+        imagePath: row.image_path,
+        isPinned: row.is_pinned,
+        createdAt: row.created_at,
+      };
+
+      setItems((current) =>
+        existing
+          ? current.map((entry) => (entry.id === existing.id ? item : entry))
+          : [item, ...current],
+      );
+
+      if (uploadedPath && existing?.imagePath) {
+        await supabase.storage.from("gallery").remove([existing.imagePath]);
+      }
+
+      setNotice({
+        tone: "success",
+        message: existing ? "Foto actualizada y publicada." : "Foto publicada.",
+      });
+      resetForm();
+    } catch (error) {
+      console.error(error);
+      if (uploadedPath) {
+        await supabase.storage.from("gallery").remove([uploadedPath]);
+      }
+      setNotice({
+        tone: "error",
+        message: "No pudimos guardar la foto. Inténtalo nuevamente.",
+      });
+    } finally {
+      setSaving(false);
+    }
   }
 
   function handleImage(event: ChangeEvent<HTMLInputElement>) {
@@ -120,13 +181,34 @@ export function GalleryManager() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setDraft((current) => ({ ...current, imageUrl: String(reader.result) }));
-      setFileName(file.name);
-      setNotice(null);
-    };
-    reader.readAsDataURL(file);
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+      "image/gif",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      setNotice({
+        tone: "error",
+        message: "Usa una imagen JPG, PNG, WebP, AVIF o GIF.",
+      });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setNotice({ tone: "error", message: "La imagen no puede superar los 10 MB." });
+      return;
+    }
+
+    if (selectedFile && draft.imageUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(draft.imageUrl);
+    }
+    const previewUrl = URL.createObjectURL(file);
+    setDraft((current) => ({ ...current, imageUrl: previewUrl }));
+    setSelectedFile(file);
+    setFileName(file.name);
+    setNotice(null);
   }
 
   function startEditing(item: GalleryItem) {
@@ -138,22 +220,47 @@ export function GalleryManager() {
       isPinned: item.isPinned,
     });
     setFileName("Imagen actual");
+    setSelectedFile(null);
     setNotice(null);
     formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function togglePinned(id: string) {
+  async function togglePinned(id: string) {
+    const item = items.find((entry) => entry.id === id);
+    if (!item) return;
+    const isPinned = !item.isPinned;
+    const { error } = await supabase
+      .from("gallery_items")
+      .update({ is_pinned: isPinned })
+      .eq("id", id);
+    if (error) {
+      console.error(error);
+      setNotice({ tone: "error", message: "No pudimos cambiar el anclado." });
+      return;
+    }
     setItems((current) =>
-      current.map((item) =>
-        item.id === id ? { ...item, isPinned: !item.isPinned } : item,
-      ),
+      current.map((entry) => (entry.id === id ? { ...entry, isPinned } : entry)),
     );
+    setNotice({ tone: "success", message: isPinned ? "Foto anclada." : "Foto desanclada." });
   }
 
-  function deleteItem(id: string) {
+  async function deleteItem(id: string) {
     if (!window.confirm("¿Eliminar esta foto?")) return;
+    const item = items.find((entry) => entry.id === id);
+    if (!item) return;
+    const { error } = await supabase.from("gallery_items").delete().eq("id", id);
+    if (error) {
+      console.error(error);
+      setNotice({ tone: "error", message: "No pudimos eliminar la foto." });
+      return;
+    }
+    const { error: storageError } = await supabase.storage
+      .from("gallery")
+      .remove([item.imagePath]);
+    if (storageError) console.error(storageError);
     setItems((current) => current.filter((item) => item.id !== id));
     if (editingId === id) resetForm();
+    setNotice({ tone: "success", message: "Foto eliminada." });
   }
 
   return (
@@ -181,10 +288,10 @@ export function GalleryManager() {
           </p>
 
           <div className="mt-8 border-l-2 border-[#d9a84e]/45 pl-4">
-            <p className="text-xs font-bold text-[#f3d48a]">Carga temporal</p>
+            <p className="text-xs font-bold text-[#f3d48a]">Publicación inmediata</p>
             <p className="mt-1 text-xs leading-6 text-[#7f6f69]">
-              Las fotos que agregues permanecerán durante esta sesión. El
-              almacenamiento de la galería se conectará en la próxima fase.
+              Las fotos se guardan de forma segura y aparecen en la galería
+              pública al terminar la carga.
             </p>
           </div>
         </div>
@@ -253,7 +360,7 @@ export function GalleryManager() {
                     src={draft.imageUrl}
                     alt="Vista previa de la imagen seleccionada"
                     fill
-                    unoptimized={draft.imageUrl.startsWith("data:")}
+                    unoptimized={draft.imageUrl.startsWith("blob:")}
                     className="object-cover"
                   />
                 ) : (
@@ -265,8 +372,7 @@ export function GalleryManager() {
                   {fileName || "Seleccionar una imagen"}
                 </span>
                 <span className="mt-2 block text-xs leading-6 text-[#7f6f69]">
-                  Vista previa local para revisar el flujo. El archivo no se
-                  sube a ningún servicio externo.
+                  JPG, PNG, WebP, AVIF o GIF. Tamaño máximo: 10 MB.
                 </span>
               </span>
             </label>
@@ -330,18 +436,20 @@ export function GalleryManager() {
             {editingId ? (
               <button
                 type="button"
+                disabled={saving}
                 onClick={resetForm}
-                className="h-12 border border-[#d9a84e]/16 px-5 text-xs font-bold text-[#b8a49b] transition hover:text-white"
+                className="h-12 border border-[#d9a84e]/16 px-5 text-xs font-bold text-[#b8a49b] transition hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Cancelar edición
               </button>
             ) : null}
             <button
               type="submit"
-              className="flex h-12 items-center justify-center gap-2 bg-[#d9a84e] px-6 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f3d48a]"
+              disabled={saving}
+              className="flex h-12 items-center justify-center gap-2 bg-[#d9a84e] px-6 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f3d48a] disabled:cursor-wait disabled:opacity-60"
             >
               {editingId ? <Check size={16} /> : <Plus size={16} />}
-              {editingId ? "Guardar cambios" : "Agregar foto"}
+              {saving ? "Guardando…" : editingId ? "Guardar cambios" : "Agregar foto"}
             </button>
           </div>
         </form>

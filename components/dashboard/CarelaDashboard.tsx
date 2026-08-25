@@ -17,7 +17,6 @@ import {
 import {
   ArrowDownRight,
   ArrowUpRight,
-  Bell,
   CalendarDays,
   Check,
   ChevronDown,
@@ -36,7 +35,6 @@ import {
   Plus,
   ReceiptText,
   Search,
-  Settings,
   Trash2,
   TrendingUp,
   Users,
@@ -47,43 +45,21 @@ import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 import { FinanceReportPreview } from "@/components/dashboard/FinanceReportPreview";
 import { GalleryManager } from "@/components/dashboard/GalleryManager";
+import type { GalleryItem } from "@/data/gallery";
+import type {
+  AdminData,
+  Appointment,
+  AppointmentStatus,
+  Client,
+  Expense,
+  ServiceKey,
+} from "@/lib/admin/types";
 import type { FinanceReportData } from "@/lib/financeReport";
+import { carelaOwnerId } from "@/lib/supabase/config";
+import { createClient } from "@/lib/supabase/client";
 
-type ServiceKey = "masajes" | "cejas" | "pestanas" | "depilacion";
-type Status = "confirmada" | "completada" | "pendiente" | "cancelada";
+type Status = AppointmentStatus;
 type View = "resumen" | "citas" | "clientes" | "finanzas" | "galeria";
-
-type Client = {
-  id: number;
-  name: string;
-  phone: string;
-  email: string;
-  service: ServiceKey;
-  joined: string;
-  visits: number;
-  notes: string;
-};
-
-type Appointment = {
-  id: number;
-  clientId: number;
-  date: string;
-  time: string;
-  service: ServiceKey;
-  package: string;
-  amount: number;
-  status: Status;
-  location: "Estudio" | "Domicilio";
-};
-
-type Expense = {
-  id: number;
-  date: string;
-  category: string;
-  description: string;
-  amount: number;
-  service: ServiceKey | "general";
-};
 
 const SERVICES: Record<
   ServiceKey,
@@ -160,23 +136,46 @@ const formatDate = (value: string, options?: Intl.DateTimeFormatOptions) =>
 const fieldClass =
   "h-11 w-full border border-[#d9a84e]/18 bg-[#0d090a] px-3 text-sm text-[#f7efe7] outline-none transition placeholder:text-[#7f6f69] focus:border-[#d9a84e]";
 
-export function CarelaDashboard() {
+export function CarelaDashboard({
+  initialData,
+  initialGalleryItems,
+  initialError,
+}: {
+  initialData: AdminData;
+  initialGalleryItems: GalleryItem[];
+  initialError?: string;
+}) {
+  const supabase = useMemo(() => createClient(), []);
   const [view, setView] = useState<View>("resumen");
-  const [clients, setClients] = useState<Client[]>([]);
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [clients, setClients] = useState<Client[]>(initialData.clients);
+  const [appointments, setAppointments] = useState<Appointment[]>(
+    initialData.appointments,
+  );
+  const [expenses, setExpenses] = useState<Expense[]>(initialData.expenses);
   const [serviceFilter, setServiceFilter] = useState<ServiceKey | "todos">("todos");
   const [startDate, setStartDate] = useState(() => getCurrentMonthRange().start);
   const [endDate, setEndDate] = useState(() => getCurrentMonthRange().end);
   const [search, setSearch] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [balanceVisible, setBalanceVisible] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [operationNotice, setOperationNotice] = useState<{
+    tone: "success" | "error";
+    message: string;
+  } | null>(
+    initialError
+      ? {
+          tone: "error",
+          message: "No pudimos cargar los datos. Actualiza la página para intentarlo de nuevo.",
+        }
+      : null,
+  );
   const [modal, setModal] = useState<
     | { type: "client"; item?: Client }
     | {
         type: "appointment";
         item?: Appointment;
-        clientId?: number;
+        clientId?: string;
         service?: ServiceKey;
       }
     | { type: "expense"; item?: Expense }
@@ -234,7 +233,20 @@ export function CarelaDashboard() {
       .map((row) => ({ ...row, label: formatDate(row.date) }));
   }, [dateAndServiceAppointments, filteredExpenses]);
 
-  const visibleClients = clients.filter((client) => {
+  const clientsWithVisits = useMemo(
+    () =>
+      clients.map((client) => ({
+        ...client,
+        visits: appointments.filter(
+          (appointment) =>
+            appointment.clientId === client.id &&
+            appointment.status === "completada",
+        ).length,
+      })),
+    [appointments, clients],
+  );
+
+  const visibleClients = clientsWithVisits.filter((client) => {
     const query = search.toLowerCase();
     return (
       (serviceFilter === "todos" || client.service === serviceFilter) &&
@@ -246,51 +258,203 @@ export function CarelaDashboard() {
 
   const visibleAppointments = dateAndServiceAppointments
     .filter((item) => {
-      const client = clients.find((entry) => entry.id === item.clientId);
+      const client = clientsWithVisits.find((entry) => entry.id === item.clientId);
       return !search || client?.name.toLowerCase().includes(search.toLowerCase());
     })
     .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
 
-  function saveClient(data: Omit<Client, "id" | "visits"> & { id?: number }) {
-    if (data.id) {
-      setClients((items) =>
-        items.map((item) => (item.id === data.id ? { ...item, ...data } : item)),
-      );
-    } else {
-      setClients((items) => [
-        ...items,
-        { ...data, id: Math.max(0, ...items.map((item) => item.id)) + 1, visits: 0 },
-      ]);
+  async function runMutation<T>(
+    operation: () => Promise<T>,
+    successMessage: string,
+  ) {
+    setSaving(true);
+    setOperationNotice(null);
+    try {
+      const result = await operation();
+      setOperationNotice({ tone: "success", message: successMessage });
+      return result;
+    } catch (error) {
+      console.error(error);
+      setOperationNotice({
+        tone: "error",
+        message: "No pudimos guardar el cambio. Inténtalo nuevamente.",
+      });
+      return null;
+    } finally {
+      setSaving(false);
     }
+  }
+
+  async function saveClient(
+    data: Omit<Client, "id" | "visits"> & { id?: string },
+  ) {
+    const payload = {
+      name: data.name.trim(),
+      phone: data.phone.trim(),
+      email: data.email.trim(),
+      service: data.service,
+      joined: data.joined,
+      notes: data.notes.trim(),
+    };
+    const saved = await runMutation(async () => {
+      const query = data.id
+        ? supabase.from("clients").update(payload).eq("id", data.id)
+        : supabase.from("clients").insert({ ...payload, owner_id: carelaOwnerId });
+      const { data: row, error } = await query.select("*").single();
+      if (error) throw error;
+      return {
+        id: row.id,
+        ...payload,
+        visits: clientsWithVisits.find((client) => client.id === row.id)?.visits ?? 0,
+      } satisfies Client;
+    }, data.id ? "Clienta actualizada." : "Clienta incorporada.");
+    if (!saved) return;
+    setClients((items) =>
+      data.id
+        ? items.map((item) => (item.id === data.id ? saved : item))
+        : [saved, ...items],
+    );
     setModal(null);
   }
 
-  function saveAppointment(data: Omit<Appointment, "id"> & { id?: number }) {
-    if (data.id) {
+  async function saveAppointment(
+    data: Omit<Appointment, "id"> & { id?: string },
+  ) {
+    const payload = {
+      client_id: data.clientId,
+      appointment_date: data.date,
+      appointment_time: data.time,
+      service: data.service,
+      package_name: data.package.trim(),
+      amount: data.amount,
+      status: data.status,
+      location: data.location,
+    };
+    const saved = await runMutation(async () => {
+      const query = data.id
+        ? supabase.from("appointments").update(payload).eq("id", data.id)
+        : supabase
+            .from("appointments")
+            .insert({ ...payload, owner_id: carelaOwnerId });
+      const { data: row, error } = await query.select("*").single();
+      if (error) throw error;
+      return {
+        id: row.id,
+        clientId: row.client_id,
+        date: row.appointment_date,
+        time: String(row.appointment_time).slice(0, 5),
+        service: row.service,
+        package: row.package_name,
+        amount: Number(row.amount),
+        status: row.status,
+        location: row.location,
+      } satisfies Appointment;
+    }, data.id ? "Cita actualizada." : "Cita reservada.");
+    if (!saved) return;
+    setAppointments((items) =>
+      data.id
+        ? items.map((item) => (item.id === data.id ? saved : item))
+        : [...items, saved],
+    );
+    setModal(null);
+  }
+
+  async function saveExpense(
+    data: Omit<Expense, "id"> & { id?: string },
+  ) {
+    const payload = {
+      expense_date: data.date,
+      category: data.category.trim(),
+      description: data.description.trim(),
+      amount: data.amount,
+      service: data.service,
+    };
+    const saved = await runMutation(async () => {
+      const query = data.id
+        ? supabase.from("expenses").update(payload).eq("id", data.id)
+        : supabase.from("expenses").insert({ ...payload, owner_id: carelaOwnerId });
+      const { data: row, error } = await query.select("*").single();
+      if (error) throw error;
+      return {
+        id: row.id,
+        date: row.expense_date,
+        category: row.category,
+        description: row.description,
+        amount: Number(row.amount),
+        service: row.service,
+      } satisfies Expense;
+    }, data.id ? "Gasto actualizado." : "Gasto registrado.");
+    if (!saved) return;
+    setExpenses((items) =>
+      data.id
+        ? items.map((item) => (item.id === data.id ? saved : item))
+        : [saved, ...items],
+    );
+    setModal(null);
+  }
+
+  async function deleteClient(id: string) {
+    if (!window.confirm("¿Eliminar esta clienta, su ficha y todas sus citas?")) return;
+    const deleted = await runMutation(async () => {
+      const { error } = await supabase.from("clients").delete().eq("id", id);
+      if (error) throw error;
+      return true;
+    }, "Clienta eliminada.");
+    if (!deleted) return;
+    setClients((items) => items.filter((item) => item.id !== id));
+    setAppointments((items) => items.filter((item) => item.clientId !== id));
+  }
+
+  async function deleteAppointment(id: string) {
+    if (!window.confirm("¿Eliminar esta cita?")) return;
+    const deleted = await runMutation(async () => {
+      const { error } = await supabase.from("appointments").delete().eq("id", id);
+      if (error) throw error;
+      return true;
+    }, "Cita eliminada.");
+    if (deleted) {
+      setAppointments((items) => items.filter((item) => item.id !== id));
+    }
+  }
+
+  async function updateAppointmentStatus(id: string, status: Status) {
+    const updated = await runMutation(async () => {
+      const { error } = await supabase
+        .from("appointments")
+        .update({ status })
+        .eq("id", id);
+      if (error) throw error;
+      return true;
+    }, "Estado de la cita actualizado.");
+    if (updated) {
       setAppointments((items) =>
-        items.map((item) => (item.id === data.id ? { ...item, ...data } : item)),
+        items.map((item) => (item.id === id ? { ...item, status } : item)),
       );
-    } else {
-      setAppointments((items) => [
-        ...items,
-        { ...data, id: Math.max(0, ...items.map((item) => item.id)) + 1 },
-      ]);
     }
-    setModal(null);
   }
 
-  function saveExpense(data: Omit<Expense, "id"> & { id?: number }) {
-    if (data.id) {
-      setExpenses((items) =>
-        items.map((item) => (item.id === data.id ? { ...item, ...data } : item)),
-      );
-    } else {
-      setExpenses((items) => [
-        ...items,
-        { ...data, id: Math.max(0, ...items.map((item) => item.id)) + 1 },
-      ]);
+  async function deleteExpense(id: string) {
+    if (!window.confirm("¿Eliminar este gasto?")) return;
+    const deleted = await runMutation(async () => {
+      const { error } = await supabase.from("expenses").delete().eq("id", id);
+      if (error) throw error;
+      return true;
+    }, "Gasto eliminado.");
+    if (deleted) {
+      setExpenses((items) => items.filter((item) => item.id !== id));
     }
-    setModal(null);
+  }
+
+  function openNewAppointment() {
+    if (!clients.length) {
+      setOperationNotice({
+        tone: "error",
+        message: "Incorpora una clienta antes de reservar una cita.",
+      });
+      setView("clientes");
+      return;
+    }
+    setModal({ type: "appointment" });
   }
 
   const navigation: { id: View; label: string; icon: typeof LayoutDashboard }[] = [
@@ -364,17 +528,6 @@ export function CarelaDashboard() {
         </div>
 
         <div className="mt-auto border-t border-[#d9a84e]/10 p-4">
-          <button
-            onClick={() =>
-              window.alert(
-                "La configuración de cuenta estará disponible en una próxima fase.",
-              )
-            }
-            className="flex h-11 w-full items-center gap-3 px-3 text-sm text-[#b8a49b] transition hover:text-white"
-          >
-            <Settings size={17} />
-            Configuración
-          </button>
           <form action="/auth/signout" method="post">
             <button
               type="submit"
@@ -407,8 +560,12 @@ export function CarelaDashboard() {
               <Menu size={22} />
             </button>
             <div>
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#d94b8c]">
-                Martes, 28 de julio
+              <p suppressHydrationWarning className="text-[0.65rem] font-bold uppercase tracking-[0.25em] text-[#d94b8c]">
+                {new Intl.DateTimeFormat("es-DO", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                }).format(new Date())}
               </p>
               <p className="mt-1 hidden text-sm text-[#b8a49b] sm:block">
                 Buenos días, Leidania.
@@ -416,18 +573,6 @@ export function CarelaDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() =>
-                window.alert(
-                  "Estás al día. No tienes notificaciones nuevas.",
-                )
-              }
-              className="relative flex size-10 items-center justify-center border border-[#d9a84e]/14 text-[#b8a49b] hover:text-white"
-              aria-label="Ver notificaciones"
-            >
-              <Bell size={17} />
-              <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#d94b8c]" />
-            </button>
             {view === "galeria" ? (
               <Link
                 href="/galeria"
@@ -441,7 +586,7 @@ export function CarelaDashboard() {
               </Link>
             ) : (
               <button
-                onClick={() => setModal({ type: "appointment" })}
+                onClick={openNewAppointment}
                 className="flex h-10 items-center gap-2 bg-[#d9a84e] px-3 text-xs font-extrabold text-[#080506] transition hover:bg-[#f3d48a] sm:px-5"
               >
                 <Plus size={16} />
@@ -454,6 +599,26 @@ export function CarelaDashboard() {
 
         <main className="px-4 py-7 sm:px-7 lg:px-10 lg:py-9">
           <div className="mx-auto max-w-[1540px]">
+            {operationNotice ? (
+              <div
+                role="status"
+                className={`mb-5 flex items-center justify-between gap-4 border px-4 py-3 text-sm ${
+                  operationNotice.tone === "success"
+                    ? "border-emerald-500/25 bg-emerald-500/10 text-emerald-200"
+                    : "border-[#d94b8c]/30 bg-[#d94b8c]/10 text-[#ef9bc2]"
+                }`}
+              >
+                <span>{operationNotice.message}</span>
+                <button
+                  type="button"
+                  onClick={() => setOperationNotice(null)}
+                  aria-label="Cerrar mensaje"
+                  className="shrink-0"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ) : null}
             <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
               <div>
                 <p className="font-script text-2xl text-[#d94b8c]">
@@ -528,7 +693,7 @@ export function CarelaDashboard() {
                 serviceIncome={serviceIncome}
                 dailyData={dailyData}
                 appointments={appointments}
-                clients={clients}
+                clients={clientsWithVisits}
                 balanceVisible={balanceVisible}
                 setBalanceVisible={setBalanceVisible}
                 onNavigate={setView}
@@ -538,20 +703,13 @@ export function CarelaDashboard() {
             {view === "citas" && (
               <AppointmentsView
                 appointments={visibleAppointments}
-                clients={clients}
+                clients={clientsWithVisits}
                 search={search}
                 setSearch={setSearch}
-                onAdd={() => setModal({ type: "appointment" })}
+                onAdd={openNewAppointment}
                 onEdit={(item) => setModal({ type: "appointment", item })}
-                onDelete={(id) =>
-                  window.confirm("¿Eliminar esta cita?") &&
-                  setAppointments((items) => items.filter((item) => item.id !== id))
-                }
-                onStatus={(id, status) =>
-                  setAppointments((items) =>
-                    items.map((item) => (item.id === id ? { ...item, status } : item)),
-                  )
-                }
+                onDelete={deleteAppointment}
+                onStatus={updateAppointmentStatus}
               />
             )}
 
@@ -569,10 +727,7 @@ export function CarelaDashboard() {
                     service: client.service,
                   })
                 }
-                onDelete={(id) =>
-                  window.confirm("¿Eliminar esta clienta y su ficha?") &&
-                  setClients((items) => items.filter((item) => item.id !== id))
-                }
+                onDelete={deleteClient}
               />
             )}
 
@@ -585,20 +740,19 @@ export function CarelaDashboard() {
                 dailyData={dailyData}
                 expenseRows={filteredExpenses}
                 completedAppointments={completedAppointments}
-                clients={clients}
+                clients={clientsWithVisits}
                 startDate={startDate}
                 endDate={endDate}
                 serviceFilter={serviceFilter}
                 onAdd={() => setModal({ type: "expense" })}
                 onEdit={(item) => setModal({ type: "expense", item })}
-                onDelete={(id) =>
-                  window.confirm("¿Eliminar este gasto?") &&
-                  setExpenses((items) => items.filter((item) => item.id !== id))
-                }
+                onDelete={deleteExpense}
               />
             )}
 
-            {view === "galeria" && <GalleryManager />}
+            {view === "galeria" && (
+              <GalleryManager initialItems={initialGalleryItems} />
+            )}
           </div>
         </main>
       </div>
@@ -606,6 +760,7 @@ export function CarelaDashboard() {
       {modal?.type === "client" && (
         <ClientModal
           item={modal.item}
+          saving={saving}
           onClose={() => setModal(null)}
           onSave={saveClient}
         />
@@ -613,9 +768,10 @@ export function CarelaDashboard() {
       {modal?.type === "appointment" && (
         <AppointmentModal
           item={modal.item}
-          clients={clients}
+          clients={clientsWithVisits}
           initialClientId={modal.clientId}
           initialService={modal.service}
+          saving={saving}
           onClose={() => setModal(null)}
           onSave={saveAppointment}
         />
@@ -623,6 +779,7 @@ export function CarelaDashboard() {
       {modal?.type === "expense" && (
         <ExpenseModal
           item={modal.item}
+          saving={saving}
           onClose={() => setModal(null)}
           onSave={saveExpense}
         />
@@ -866,7 +1023,7 @@ function Toolbar({ search, setSearch, buttonLabel, onAdd }: { search: string; se
 }
 
 function AppointmentsView({ appointments, clients, search, setSearch, onAdd, onEdit, onDelete, onStatus }: {
-  appointments: Appointment[]; clients: Client[]; search: string; setSearch: (value: string) => void; onAdd: () => void; onEdit: (item: Appointment) => void; onDelete: (id: number) => void; onStatus: (id: number, status: Status) => void;
+  appointments: Appointment[]; clients: Client[]; search: string; setSearch: (value: string) => void; onAdd: () => void; onEdit: (item: Appointment) => void; onDelete: (id: string) => void; onStatus: (id: string, status: Status) => void;
 }) {
   return (
     <>
@@ -989,7 +1146,7 @@ function ClientsView({
   onAdd: () => void;
   onEdit: (item: Client) => void;
   onBook: (item: Client) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <>
@@ -1013,7 +1170,7 @@ function ClientsView({
                   <div className="min-w-0">
                     <h2 className="truncate font-serif text-xl">{client.name}</h2>
                     <p className="mt-1 text-[0.65rem] text-[#7f6f69]">
-                      CL-{String(client.id).padStart(3, "0")}
+                      CL-{client.id.slice(0, 6).toUpperCase()}
                     </p>
                   </div>
                   <ServicePill service={client.service} />
@@ -1111,7 +1268,7 @@ function ClientsView({
                     <div>
                       <strong className="block text-[#f7efe7]">{client.name}</strong>
                       <span className="mt-1 block text-[0.68rem] text-[#7f6f69]">
-                        CL-{String(client.id).padStart(3, "0")}
+                        CL-{client.id.slice(0, 6).toUpperCase()}
                       </span>
                     </div>
                   </div>
@@ -1193,7 +1350,7 @@ function FinancesView({
   serviceFilter: ServiceKey | "todos";
   onAdd: () => void;
   onEdit: (item: Expense) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 }) {
   const [reportPreview, setReportPreview] = useState<FinanceReportData | null>(
     null,
@@ -1432,19 +1589,19 @@ function ModalShell({ title, eyebrow, onClose, children }: { title: string; eyeb
   );
 }
 
-function FormActions({ onClose, label }: { onClose: () => void; label: string }) {
-  return <div className="flex justify-end gap-3 border-t border-[#d9a84e]/10 pt-5"><button type="button" onClick={onClose} className="h-11 border border-[#d9a84e]/16 px-5 text-xs font-bold text-[#b8a49b] hover:text-white">Cancelar</button><button type="submit" className="flex h-11 items-center gap-2 bg-[#d9a84e] px-5 text-xs font-extrabold text-[#080506] hover:bg-[#f3d48a]"><Check size={16} /> {label}</button></div>;
+function FormActions({ onClose, label, saving }: { onClose: () => void; label: string; saving: boolean }) {
+  return <div className="flex justify-end gap-3 border-t border-[#d9a84e]/10 pt-5"><button type="button" disabled={saving} onClick={onClose} className="h-11 border border-[#d9a84e]/16 px-5 text-xs font-bold text-[#b8a49b] hover:text-white disabled:cursor-not-allowed disabled:opacity-50">Cancelar</button><button type="submit" disabled={saving} className="flex h-11 items-center gap-2 bg-[#d9a84e] px-5 text-xs font-extrabold text-[#080506] hover:bg-[#f3d48a] disabled:cursor-wait disabled:opacity-60"><Check size={16} /> {saving ? "Guardando…" : label}</button></div>;
 }
 
 function Field({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) {
   return <label className={className}><span className="mb-2 block text-[0.62rem] font-bold uppercase tracking-[0.17em] text-[#b8a49b]">{label}</span>{children}</label>;
 }
 
-function ClientModal({ item, onClose, onSave }: { item?: Client; onClose: () => void; onSave: (data: Omit<Client, "id" | "visits"> & { id?: number }) => void }) {
-  function submit(event: FormEvent<HTMLFormElement>) {
+function ClientModal({ item, onClose, onSave, saving }: { item?: Client; onClose: () => void; onSave: (data: Omit<Client, "id" | "visits"> & { id?: string }) => Promise<void>; saving: boolean }) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    onSave({ id: item?.id, name: String(form.get("name")), phone: String(form.get("phone")), email: String(form.get("email")), service: String(form.get("service")) as ServiceKey, joined: String(form.get("joined")), notes: String(form.get("notes")) });
+    await onSave({ id: item?.id, name: String(form.get("name")), phone: String(form.get("phone")), email: String(form.get("email")), service: String(form.get("service")) as ServiceKey, joined: String(form.get("joined")), notes: String(form.get("notes")) });
   }
   return (
     <ModalShell eyebrow="Ficha de clienta" title={item ? "Editar clienta" : "Incorporar clienta"} onClose={onClose}>
@@ -1455,7 +1612,7 @@ function ClientModal({ item, onClose, onSave }: { item?: Client; onClose: () => 
         <Field label="Servicio de interés"><select name="service" defaultValue={item?.service ?? "masajes"} className={fieldClass}>{serviceKeys.map((key) => <option value={key} key={key}>{SERVICES[key].label}</option>)}</select></Field>
         <Field label="Fecha de ingreso"><input name="joined" type="date" required defaultValue={item?.joined ?? formatInputDate(new Date())} className={`${fieldClass} [color-scheme:dark]`} /></Field>
         <Field label="Notas y preferencias" className="sm:col-span-2"><textarea name="notes" defaultValue={item?.notes} rows={3} placeholder="Preferencias, sensibilidad, detalles importantes…" className={`${fieldClass} h-auto py-3`} /></Field>
-        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Crear clienta"} /></div>
+        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Crear clienta"} saving={saving} /></div>
       </form>
     </ModalShell>
   );
@@ -1468,24 +1625,26 @@ function AppointmentModal({
   initialService,
   onClose,
   onSave,
+  saving,
 }: {
   item?: Appointment;
   clients: Client[];
-  initialClientId?: number;
+  initialClientId?: string;
   initialService?: ServiceKey;
   onClose: () => void;
-  onSave: (data: Omit<Appointment, "id"> & { id?: number }) => void;
+  onSave: (data: Omit<Appointment, "id"> & { id?: string }) => Promise<void>;
+  saving: boolean;
 }) {
   const [service, setService] = useState<ServiceKey>(
     item?.service ?? initialService ?? "masajes",
   );
   const defaultPackage = item?.package ?? SERVICES[service].packages[0].name;
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const packageName = String(form.get("package"));
     const packageItem = SERVICES[service].packages.find((entry) => entry.name === packageName);
-    onSave({ id: item?.id, clientId: Number(form.get("clientId")), date: String(form.get("date")), time: String(form.get("time")), service, package: packageName, amount: Number(form.get("amount")) || packageItem?.price || 0, status: String(form.get("status")) as Status, location: String(form.get("location")) as "Estudio" | "Domicilio" });
+    await onSave({ id: item?.id, clientId: String(form.get("clientId")), date: String(form.get("date")), time: String(form.get("time")), service, package: packageName, amount: Number(form.get("amount")) || packageItem?.price || 0, status: String(form.get("status")) as Status, location: String(form.get("location")) as "Estudio" | "Domicilio" });
   }
   return (
     <ModalShell eyebrow="Agenda CARELA" title={item ? "Editar cita" : "Reservar una cita"} onClose={onClose}>
@@ -1498,17 +1657,17 @@ function AppointmentModal({
         <Field label="Precio final"><input name="amount" type="number" min="0" defaultValue={item?.amount ?? SERVICES[service].packages[0].price} className={fieldClass} /></Field>
         <Field label="Modalidad"><select name="location" defaultValue={item?.location ?? "Estudio"} className={fieldClass}><option>Estudio</option><option>Domicilio</option></select></Field>
         <Field label="Estado" className="sm:col-span-2"><select name="status" defaultValue={item?.status ?? "confirmada"} className={fieldClass}><option value="confirmada">Confirmada</option><option value="pendiente">Pendiente</option><option value="completada">Completada</option><option value="cancelada">Cancelada</option></select></Field>
-        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Confirmar cita"} /></div>
+        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Confirmar cita"} saving={saving} /></div>
       </form>
     </ModalShell>
   );
 }
 
-function ExpenseModal({ item, onClose, onSave }: { item?: Expense; onClose: () => void; onSave: (data: Omit<Expense, "id"> & { id?: number }) => void }) {
-  function submit(event: FormEvent<HTMLFormElement>) {
+function ExpenseModal({ item, onClose, onSave, saving }: { item?: Expense; onClose: () => void; onSave: (data: Omit<Expense, "id"> & { id?: string }) => Promise<void>; saving: boolean }) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    onSave({ id: item?.id, date: String(form.get("date")), category: String(form.get("category")), description: String(form.get("description")), amount: Number(form.get("amount")), service: String(form.get("service")) as ServiceKey | "general" });
+    await onSave({ id: item?.id, date: String(form.get("date")), category: String(form.get("category")), description: String(form.get("description")), amount: Number(form.get("amount")), service: String(form.get("service")) as ServiceKey | "general" });
   }
   return (
     <ModalShell eyebrow="Control de gastos" title={item ? "Editar gasto" : "Registrar un gasto"} onClose={onClose}>
@@ -1518,7 +1677,7 @@ function ExpenseModal({ item, onClose, onSave }: { item?: Expense; onClose: () =
         <Field label="Descripción" className="sm:col-span-2"><input name="description" required defaultValue={item?.description} placeholder="Ej. Aceites y aromas" className={fieldClass} /></Field>
         <Field label="Monto RD$"><input name="amount" type="number" min="1" required defaultValue={item?.amount} placeholder="0" className={fieldClass} /></Field>
         <Field label="Servicio relacionado"><select name="service" defaultValue={item?.service ?? "general"} className={fieldClass}><option value="general">General / Todo el negocio</option>{serviceKeys.map((key) => <option key={key} value={key}>{SERVICES[key].label}</option>)}</select></Field>
-        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Registrar gasto"} /></div>
+        <div className="sm:col-span-2"><FormActions onClose={onClose} label={item ? "Guardar cambios" : "Registrar gasto"} saving={saving} /></div>
       </form>
     </ModalShell>
   );
