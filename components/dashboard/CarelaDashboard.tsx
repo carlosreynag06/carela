@@ -28,7 +28,6 @@ import {
   Eye,
   EyeOff,
   ExternalLink,
-  HandCoins,
   Images,
   LayoutDashboard,
   LogOut,
@@ -38,10 +37,8 @@ import {
   ReceiptText,
   Search,
   Settings,
-  Sparkles,
   Trash2,
   TrendingUp,
-  UserPlus,
   Users,
   WalletCards,
   X,
@@ -534,8 +531,6 @@ export function CarelaDashboard() {
                 clients={clients}
                 balanceVisible={balanceVisible}
                 setBalanceVisible={setBalanceVisible}
-                onNewClient={() => setModal({ type: "client" })}
-                onNewExpense={() => setModal({ type: "expense" })}
                 onNavigate={setView}
               />
             )}
@@ -647,8 +642,6 @@ function Overview({
   clients,
   balanceVisible,
   setBalanceVisible,
-  onNewClient,
-  onNewExpense,
   onNavigate,
 }: {
   income: number;
@@ -661,8 +654,6 @@ function Overview({
   clients: Client[];
   balanceVisible: boolean;
   setBalanceVisible: (value: boolean) => void;
-  onNewClient: () => void;
-  onNewExpense: () => void;
   onNavigate: (view: View) => void;
 }) {
   const today = formatInputDate(new Date());
@@ -757,7 +748,7 @@ function Overview({
         </ChartCard>
       </section>
 
-      <section className="mt-5 grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
+      <section className="mt-5">
         <div className="border border-[#d9a84e]/12 bg-[#100a0c]">
           <div className="flex items-center justify-between border-b border-[#d9a84e]/10 px-5 py-4 sm:px-6">
             <div>
@@ -788,21 +779,6 @@ function Overview({
           </div>
         </div>
 
-        <div className="border border-[#d9a84e]/12 bg-[linear-gradient(145deg,#171011,#100a0c)] p-6">
-          <div className="flex size-11 items-center justify-center border border-[#d94b8c]/30 bg-[#8f1f54]/15 text-[#d94b8c]">
-            <Sparkles size={18} />
-          </div>
-          <p className="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-[#d94b8c]">Primeros pasos</p>
-          <h2 className="mt-2 font-serif text-3xl text-[#d9a84e]">Tu estudio está listo</h2>
-          <p className="mt-3 text-sm leading-6 text-[#b8a49b]">
-            Prueba el flujo completo: incorpora una clienta, reserva su cita y registra un gasto.
-          </p>
-          <div className="mt-6 space-y-3">
-            <QuickAction icon={UserPlus} label="Incorporar clienta" onClick={onNewClient} />
-            <QuickAction icon={HandCoins} label="Registrar gasto" onClick={onNewExpense} />
-            <QuickAction icon={TrendingUp} label="Revisar finanzas" onClick={() => onNavigate("finanzas")} />
-          </div>
-        </div>
       </section>
     </>
   );
@@ -872,16 +848,6 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
         </p>
       ))}
     </div>
-  );
-}
-
-function QuickAction({ icon: Icon, label, onClick }: { icon: typeof UserPlus; label: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className="flex w-full items-center gap-3 border border-[#d9a84e]/12 bg-black/15 px-4 py-3 text-left text-xs font-bold transition hover:border-[#d9a84e]/35 hover:bg-[#d9a84e]/5">
-      <Icon size={16} className="text-[#d9a84e]" />
-      {label}
-      <ArrowUpRight className="ml-auto text-[#7f6f69]" size={14} />
-    </button>
   );
 }
 
