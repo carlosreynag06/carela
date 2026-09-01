@@ -80,7 +80,7 @@ export default function SobreLeidaniaPage() {
     <>
       <section className="relative isolate min-h-svh overflow-hidden border-b border-champagne-gold/15 bg-background">
         <Image
-          src="/images/sobre-leidania-hero.png"
+          src="/images/sobre-leidania-hero.webp"
           alt="Profesional de CARELA escuchando con atención a una clienta en un espacio privado"
           fill
           priority
@@ -122,7 +122,7 @@ export default function SobreLeidaniaPage() {
             <Reveal>
               <div className="relative mx-auto aspect-[4/5] w-full max-w-[34rem] overflow-hidden border border-champagne-gold/20 shadow-premium lg:mx-0">
                 <Image
-                  src="/images/sobre-intencion-carela.png"
+                  src="/images/sobre-intencion-carela.webp"
                   alt="Profesional de bienestar preparando con calma un espacio de atención personalizado"
                   fill
                   sizes="(min-width: 1024px) 34rem, 86vw"
@@ -298,7 +298,7 @@ export default function SobreLeidaniaPage() {
             <Reveal className="h-full" delay={0.1}>
               <div className="relative aspect-[4/5] overflow-hidden border border-champagne-gold/20 shadow-premium lg:h-full lg:min-h-[34rem] lg:aspect-auto">
                 <Image
-                  src="/images/sobre-experiencia-boutique.png"
+                  src="/images/sobre-experiencia-boutique.webp"
                   alt="Espacio boutique de CARELA preparado con camilla, toallas y detalles cálidos"
                   fill
                   sizes="(min-width: 1024px) 40vw, 86vw"

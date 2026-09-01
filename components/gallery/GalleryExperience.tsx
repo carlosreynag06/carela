@@ -192,7 +192,7 @@ function GalleryHero() {
           <div className="relative mx-auto grid w-full max-w-3xl grid-cols-[1.08fr_0.92fr] gap-3 sm:gap-4">
             <div className="relative aspect-[4/5] overflow-hidden border border-champagne-gold/20 shadow-premium">
               <Image
-                src="/images/service-page-masajes.png"
+                src="/images/service-page-masajes.webp"
                 alt="Experiencia de masaje CARELA"
                 fill
                 priority
@@ -204,7 +204,7 @@ function GalleryHero() {
             <div className="grid gap-3 pt-8 sm:gap-4 sm:pt-12">
               <div className="relative aspect-square overflow-hidden border border-champagne-gold/20">
                 <Image
-                  src="/images/service-page-cejas.png"
+                  src="/images/service-page-cejas.webp"
                   alt="Detalle de tintado de cejas CARELA"
                   fill
                   priority
@@ -214,11 +214,10 @@ function GalleryHero() {
               </div>
               <div className="relative aspect-[5/4] overflow-hidden border border-champagne-gold/20">
                 <Image
-                  src="/images/service-page-pestanas.png"
+                  src="/images/service-page-pestanas.webp"
                   alt="Postura de pestañas CARELA"
                   fill
                   priority
-                  unoptimized
                   sizes="(min-width: 1024px) 24vw, 40vw"
                   className="object-cover"
                 />

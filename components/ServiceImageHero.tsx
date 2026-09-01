@@ -37,7 +37,7 @@ export function ServiceImageHero() {
 
         <div className="relative min-h-[44svh] border-t border-champagne-gold/15 lg:min-h-0 lg:border-l lg:border-t-0">
           <Image
-            src="/images/service-page-masajes.png"
+            src="/images/service-page-masajes.webp"
             alt="Experiencia de masaje y bienestar en CARELA"
             fill
             priority

@@ -122,7 +122,7 @@ function Hero() {
   return (
     <section className="relative isolate min-h-svh overflow-hidden bg-background">
       <Image
-        src="/images/hero-carela-spa.png"
+        src="/images/hero-carela-spa.webp"
         alt="Ambiente privado de spa con velas, toallas y detalles dorados"
         fill
         priority
@@ -263,7 +263,7 @@ function WhyUsSection() {
           <Reveal>
             <ImageFrame className="aspect-[4/5] min-h-0">
               <Image
-                src="/images/why-carela-dominican-spa.png"
+                src="/images/why-carela-dominican-spa.webp"
                 alt="Mujer dominicana adulta en uniforme negro preparando toallas en un ambiente spa"
                 fill
                 sizes="(min-width: 1024px) 38vw, 86vw"

@@ -19,7 +19,7 @@ export const metadata = createPageMetadata({
 const serviceDetails = {
   masajes: {
     number: "01",
-    image: "/images/service-page-masajes.png",
+    image: "/images/service-page-masajes.webp",
     duration: "Sesión personalizada",
     accent: "Pausa, alivio y bienestar",
     detail:
@@ -27,7 +27,7 @@ const serviceDetails = {
   },
   cejas: {
     number: "02",
-    image: "/images/service-page-cejas.png",
+    image: "/images/service-page-cejas.webp",
     duration: "Diseño y tintado",
     accent: "Definición que se siente natural",
     detail:
@@ -35,7 +35,7 @@ const serviceDetails = {
   },
   pestanas: {
     number: "03",
-    image: "/images/service-page-pestanas.png",
+    image: "/images/service-page-pestanas.webp",
     duration: "Aplicación personalizada",
     accent: "Una mirada suave y expresiva",
     detail:
@@ -43,7 +43,7 @@ const serviceDetails = {
   },
   depilacion: {
     number: "04",
-    image: "/images/service-page-depilacion.png",
+    image: "/images/service-page-depilacion.webp",
     duration: "Zonas a elección",
     accent: "Suavidad con atención cuidadosa",
     detail:

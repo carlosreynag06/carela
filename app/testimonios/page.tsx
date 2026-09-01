@@ -80,7 +80,7 @@ export default function TestimoniosPage() {
 
           <div className="relative min-h-[54svh] overflow-hidden border-t border-champagne-gold/15 bg-[#171311] lg:min-h-0 lg:border-l lg:border-t-0">
             <Image
-              src="/images/testimonios-hero-wide.png"
+              src="/images/testimonios-hero-wide.webp"
               alt="Clienta de CARELA mostrando un resultado natural y una expresión segura"
               fill
               priority

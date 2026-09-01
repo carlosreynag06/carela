@@ -42,6 +42,46 @@ const emptyDraft: Draft = {
 const fieldClass =
   "h-12 w-full border border-[#d9a84e]/18 bg-[#0d090a] px-4 text-sm text-[#f7efe7] outline-none transition placeholder:text-[#7f6f69] focus:border-[#d9a84e] focus:ring-1 focus:ring-[#d9a84e]/20";
 
+const galleryImageMaxEdge = 2400;
+
+async function optimizeGalleryImage(file: File) {
+  if (file.type === "image/gif") return file;
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(
+      1,
+      galleryImageMaxEdge / Math.max(bitmap.width, bitmap.height),
+    );
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      bitmap.close();
+      return file;
+    }
+
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", 0.84),
+    );
+
+    if (!blob || blob.size >= file.size) return file;
+
+    const baseName = file.name.replace(/\.[^.]+$/, "");
+    return new File([blob], `${baseName}.webp`, {
+      type: "image/webp",
+      lastModified: file.lastModified,
+    });
+  } catch {
+    return file;
+  }
+}
+
 export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }) {
   const supabase = useMemo(() => createClient(), []);
   const [items, setItems] = useState<GalleryItem[]>(initialItems);
@@ -172,7 +212,7 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
     }
   }
 
-  function handleImage(event: ChangeEvent<HTMLInputElement>) {
+  async function handleImage(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -201,13 +241,15 @@ export function GalleryManager({ initialItems }: { initialItems: GalleryItem[] }
       return;
     }
 
+    const optimizedFile = await optimizeGalleryImage(file);
+
     if (selectedFile && draft.imageUrl.startsWith("blob:")) {
       URL.revokeObjectURL(draft.imageUrl);
     }
-    const previewUrl = URL.createObjectURL(file);
+    const previewUrl = URL.createObjectURL(optimizedFile);
     setDraft((current) => ({ ...current, imageUrl: previewUrl }));
-    setSelectedFile(file);
-    setFileName(file.name);
+    setSelectedFile(optimizedFile);
+    setFileName(optimizedFile.name);
     setNotice(null);
   }
 
