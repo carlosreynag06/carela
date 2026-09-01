@@ -34,6 +34,10 @@ const homeDescription =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: brandName,
+  creator: "Leidania Carela",
+  publisher: brandName,
+  category: "Belleza y bienestar",
   title: {
     default: homeTitle,
     template: `%s | ${brandName}`,
@@ -60,6 +64,13 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 

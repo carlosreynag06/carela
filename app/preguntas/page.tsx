@@ -4,6 +4,7 @@ import { Container } from "@/components/Container";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { SupportPageHero } from "@/components/SupportPageHero";
 import { SupportSidebar, type SupportSidebarItem } from "@/components/SupportSidebar";
+import { FaqJsonLd } from "@/components/seo/FaqJsonLd";
 import { faqCategories } from "@/data/support";
 import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
@@ -11,7 +12,7 @@ import { whatsapp } from "@/lib/site";
 export const metadata = createPageMetadata({
   title: "Preguntas frecuentes",
   description:
-    "Respuestas sobre reservas, servicios, precios y cuidados de CARELA Beauty & Wellness en Puerto Plata.",
+    "Respuestas sobre reservas, masajes, cejas, pestañas, depilación y atención a domicilio de CARELA en Puerto Plata, República Dominicana.",
   path: "/preguntas",
 });
 
@@ -26,6 +27,7 @@ const sidebarItems: SupportSidebarItem[] = faqCategories.map((category, index) =
 export default function PreguntasPage() {
   return (
     <>
+      <FaqJsonLd items={faqCategories.flatMap((category) => category.items)} />
       <SupportPageHero
         icon={MessageCircle}
         eyebrow="Ayuda CARELA"

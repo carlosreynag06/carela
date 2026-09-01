@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 export const brandName = "CARELA Beauty & Wellness";
+export const brandShortName = "CARELA";
 export const siteUrl = "https://www.carelaspa.com";
 export const socialImageUrl = `${siteUrl}/og-carela-v5.jpg`;
 export const fallbackSocialImageUrl = `${siteUrl}/og-carela-v5.png`;
@@ -55,6 +56,17 @@ export function createPageMetadata({
       title: socialTitle,
       description,
       images: [socialImageUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
   };
 }

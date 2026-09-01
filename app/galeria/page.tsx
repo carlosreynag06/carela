@@ -6,9 +6,9 @@ import { createClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 
 export const metadata = createPageMetadata({
-  title: "Galería de resultados",
+  title: "Galería de resultados en Puerto Plata",
   description:
-    "Explora fotos de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata.",
+    "Explora resultados de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata, República Dominicana.",
   path: "/galeria",
 });
 

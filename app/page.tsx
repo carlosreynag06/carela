@@ -19,6 +19,7 @@ import { ImageFrame } from "@/components/ImageFrame";
 import { PremiumCard } from "@/components/PremiumCard";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/Section";
+import { FaqJsonLd } from "@/components/seo/FaqJsonLd";
 import { LocalBusinessJsonLd } from "@/components/seo/LocalBusinessJsonLd";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { services } from "@/data/services";
@@ -107,6 +108,7 @@ export default function Home() {
   return (
     <>
       <LocalBusinessJsonLd />
+      <FaqJsonLd items={faqItems} />
       <Hero />
       <ServicesPreview />
       <WhyUsSection />

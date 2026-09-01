@@ -21,7 +21,7 @@ import { whatsapp } from "@/lib/site";
 export const metadata = createPageMetadata({
   title: "Sobre Leidania Carela",
   description:
-    "Conoce la visión de Leidania Carela y la atención personal detrás de CARELA Beauty & Wellness en Puerto Plata.",
+    "Conoce a Leidania Carela y la atención personal detrás de CARELA Beauty & Wellness en Puerto Plata, República Dominicana.",
   path: "/sobre-leidania",
 });
 

@@ -18,9 +18,9 @@ import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "Testimonios de clientas",
+  title: "Testimonios de CARELA en Puerto Plata",
   description:
-    "Conoce las experiencias de clientas de CARELA Beauty & Wellness en Puerto Plata.",
+    "Conoce las experiencias de clientas de CARELA con sus servicios de masajes, cejas, pestañas y depilación en Puerto Plata, República Dominicana.",
   path: "/testimonios",
 });
 

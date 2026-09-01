@@ -5,14 +5,15 @@ import { Container } from "@/components/Container";
 import { Reveal } from "@/components/Reveal";
 import { ServiceImageHero } from "@/components/ServiceImageHero";
 import { ServiceSectionTabs } from "@/components/ServiceSectionTabs";
+import { ServiceCatalogJsonLd } from "@/components/seo/ServiceCatalogJsonLd";
 import { services } from "@/data/services";
 import { createPageMetadata } from "@/lib/seo";
 import { whatsapp } from "@/lib/site";
 
 export const metadata = createPageMetadata({
-  title: "Servicios en Puerto Plata",
+  title: "Servicios de belleza en Puerto Plata",
   description:
-    "Conoce los servicios de masajes, cejas, pestañas y depilación de CARELA Beauty & Wellness en Puerto Plata, República Dominicana.",
+    "Reserva masajes relajantes y terapéuticos, tintado de cejas, postura de pestañas y depilación con cera en Puerto Plata, República Dominicana.",
   path: "/servicios",
 });
 
@@ -54,6 +55,7 @@ const serviceDetails = {
 export default function ServiciosPage() {
   return (
     <>
+      <ServiceCatalogJsonLd />
       <ServiceImageHero />
 
       <section

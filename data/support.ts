@@ -51,9 +51,9 @@ export const faqCategories: FAQCategory[] = [
     description: "Dudas sobre tensión, duración y modalidad.",
     items: [
       {
-        question: "¿Qué paquete de masaje me conviene si tengo mucha tensión?",
+        question: "¿Qué masaje me conviene si tengo mucha tensión?",
         answer:
-          "Ritual CARELA funciona muy bien para tensión general. Si vienes con cansancio fuerte o varias zonas cargadas, Renovación Profunda da más tiempo para trabajar sin prisa.",
+          "Cuéntale a Leidania dónde sientes la tensión y desde cuándo. Ella te orientará sobre la duración y el enfoque más adecuados para trabajar esas zonas sin prisa.",
       },
       {
         question: "¿El masaje puede ser a domicilio?",
@@ -97,7 +97,7 @@ export const faqCategories: FAQCategory[] = [
       {
         question: "¿Las pestañas se ven exageradas?",
         answer:
-          "No tiene que ser así. El paquete se adapta a la forma de tus ojos y al nivel de naturalidad que prefieras.",
+          "No tiene que ser así. El servicio se adapta a la forma de tus ojos y al nivel de naturalidad que prefieras.",
       },
       {
         question: "¿Cuánto tiempo toma la postura?",
@@ -119,7 +119,7 @@ export const faqCategories: FAQCategory[] = [
       {
         question: "¿El precio cambia según la zona?",
         answer:
-          "Sí. Estos paquetes son una guía; el precio final se confirma según las zonas elegidas y si combinas varios servicios.",
+          "Sí. El precio final se confirma directamente contigo según las zonas elegidas y si combinas varios servicios.",
       },
       {
         question: "¿La depilación se realiza con privacidad?",
